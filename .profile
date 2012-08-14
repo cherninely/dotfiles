@@ -1,12 +1,13 @@
 export PATH=$HOME/node_modules/.bin:$HOME/bin:$PATH:/sbin:/bin:/usr/sbin:/bin:/usr/bin:/usr/local/bin:/sbin:/usr/sbin:/usr/local/sbin:/Berkanavt/bin:/Berkanavt/bin/scripts:$HOME/bin
 
-BLOCKSIZE=K;    export BLOCKSIZE
-EDITOR=vim;     export EDITOR
-PAGER=more;     export PAGER
+export BLOCKSIZE=K;
+export EDITOR=vim;
+export PAGER=more;
 
 alias ll='ls -laFo'
 alias l='ls -l'
 alias la='ls -la'
+alias ltr='ls -ltr'
 
 alias vim='vim -O'
 
@@ -35,6 +36,12 @@ svndiff()
 gitdiff()
 {
     git diff "${@}" | colordiff
+}
+
+# показать svn коммиты пользователя за сегодня
+userlogs()
+{
+    svn log ${@:2} -r {`date -v+1d +"%Y-%m-%d"`}:{`date +"%Y-%m-%d"`} | sed -n "/| $1 |/,/-----$/ p"
 }
 
 export LANG=ru_RU.UTF-8
