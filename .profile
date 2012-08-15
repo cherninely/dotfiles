@@ -88,20 +88,26 @@ _expand()
 # Work Copy Update
 # wcup - update default project in local jail
 # wcup <project> [server] - update project on specified jail
+# wcup project1+project2[+projectN] [server] - update multiple project on specified jail
 wcup()
 {
     DEFAULT_PROJECT="images2"
     DEFAULT_JAIL=$(hostname)
 
     JAIL=${2:-$DEFAULT_JAIL}
-    PROJECT=${1:-$DEFAULT_PROJECT}
-    PROJECT_PATH="/hol/arkanavt/report/templates/YxWeb/"$PROJECT;
+    PROJECTS=${1:-$DEFAULT_PROJECT}
 
-    echo -e "\033[33m=== UPDATE === \nPROJECT: \033[31m$PROJECT \033[33m\nJAIL   : \033[31m$JAIL \033[0m"
+    export IFS="+"
+    for PROJECT in $PROJECTS; do
 
-    if [[ $DEFAULT_JAIL == $JAIL* ]]; then
-        sudo chown -R $USER:www $PROJECT_PATH && svn up $PROJECT_PATH/* && gmake -B -C $PROJECT_PATH
-    else
-        echo $PROJECT | ssh -i ~/.ssh/zelo-access-one kaa@$JAIL
-    fi
+        echo -e "\033[33m=== UPDATE === \nPROJECT: \033[31m$PROJECT \033[33m\nJAIL   : \033[31m$JAIL \033[0m"
+
+        if [[ $DEFAULT_JAIL == $JAIL* ]]; then
+            PROJECT_PATH="/hol/arkanavt/report/templates/YxWeb/"$PROJECT;
+            sudo chown -R $USER:www $PROJECT_PATH && svn up $PROJECT_PATH/* && gmake -B -C $PROJECT_PATH
+        else
+            echo $PROJECT | ssh -i ~/.ssh/zelo-access-one kaa@$JAIL
+        fi
+
+    done
 }
