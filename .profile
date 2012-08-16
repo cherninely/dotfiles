@@ -87,8 +87,8 @@ _expand()
 
 # Work Copy Update
 # wcup - update default project in local jail
-# wcup <project> [server] - update project on specified jail
-# wcup project1+project2[+projectN] [server] - update multiple project on specified jail
+# wcup project [server] - update project on specified jail
+# wcup project1+project2[+projectN] [server] - update multiple projects on specified jail
 wcup()
 {
     DEFAULT_PROJECT="images2"
@@ -113,7 +113,7 @@ wcup()
 }
 
 # рисует горизонтальную линию и очищает экран
-c()
+drawline()
 {
     SEPARATOR="-"
     WIDTH=$(tput cols);
