@@ -111,3 +111,14 @@ wcup()
 
     done
 }
+
+# рисует горизонтальную линию и очищает экран
+c()
+{
+    SEPARATOR="-"
+    WIDTH=$(tput cols);
+    echo -e "\033[$(($RANDOM % 7 + 31))m"
+    for ((i=0; i<$WIDTH; i++)); do echo -n $SEPARATOR ; done
+    echo -e "\033[0m"
+    clear
+}
