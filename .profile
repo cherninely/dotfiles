@@ -69,7 +69,7 @@ wcup()
             PROJECT_PATH="/hol/arkanavt/report/templates/YxWeb/"$PROJECT;
             sudo chown -R $USER:www $PROJECT_PATH && svn up $PROJECT_PATH/* && gmake -B -C $PROJECT_PATH
         else
-            echo $PROJECT | ssh -i ~/.ssh/zelo-access-one kaa@$JAIL
+            echo $PROJECT | ssh -i ~/dotfiles/ssh/zelo-access-one kaa@$JAIL
         fi
 
     done
