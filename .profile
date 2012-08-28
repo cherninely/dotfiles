@@ -75,6 +75,12 @@ wcup()
     done
 }
 
+dataup()
+{
+    sudo rsync -av --exclude '*.000' zelo::arkanavt/data.runtime/ /hol/arkanavt/data.runtime
+    sudo rsync -av --exclude '*.000' zelo::arkanavt/passport/ /hol/arkanavt/passport
+}
+
 # рисует горизонтальную линию и очищает экран
 drawline()
 {
