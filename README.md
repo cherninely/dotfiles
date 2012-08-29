@@ -5,4 +5,4 @@ dotfiles
 
 Использование:
 
-    wget 'https://github.yandex-team.ru/search-interfaces/dotfiles/raw/master/install.sh' | bash -s
+    wget -O - 'https://github.yandex-team.ru/search-interfaces/dotfiles/raw/master/install.sh' --no-check-certificate | bash
