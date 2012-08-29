@@ -1,3 +1,8 @@
+# add ~/bin to PATH
+if [ -d "$HOME/bin" ]; then
+    PATH="$HOME/bin:$PATH"
+fi
+
 # export
 export LANG=ru_RU.UTF-8
 export PS1="`whoami`@`hostname | sed 's/\..*//'`:\w > "
@@ -17,7 +22,9 @@ alias restart-apache='/hol/arkanavt/report/scripts/dev/restart-upperapache'
 alias stop-apache='sudo sudo /usr/local/etc/rc.d/apache.sh stop'
 alias start-apache='sudo /usr/local/etc/rc.d/apache.sh start'
 
-alias svn='~/bin/svn'
+if [ -f ~/bin/svn ]; then
+    alias svn='~/bin/svn';
+fi
 alias svn-conflict='svn st | awk ''$1 ~ "C" { print $2 }'''
 alias mo='mergeone'
 
