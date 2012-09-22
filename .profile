@@ -18,9 +18,9 @@ alias ltr='ls -ltr'
 
 alias vim='vim -O'
 
-alias restart-apache='/hol/arkanavt/report/scripts/dev/restart-upperapache'
-alias stop-apache='sudo sudo /usr/local/etc/rc.d/apache.sh stop'
-alias start-apache='sudo /usr/local/etc/rc.d/apache.sh start'
+alias apache-restart='sudo /usr/local/etc/rc.d/apache.sh restart'
+alias apache-stop='sudo /usr/local/etc/rc.d/apache.sh stop'
+alias apache-start='sudo /usr/local/etc/rc.d/apache.sh start'
 
 if [ -f ~/bin/svn ]; then
     alias svn='~/bin/svn';
