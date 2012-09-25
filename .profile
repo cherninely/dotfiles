@@ -9,6 +9,7 @@ export PS1="`whoami`@`hostname | sed 's/\..*//'`:\w > "
 export BLOCKSIZE=K;
 export EDITOR=vim;
 export PAGER=more;
+export CLICOLOR=yes; # git colors
 
 # aliases
 alias ll='ls -laFo'
@@ -21,6 +22,8 @@ alias vim='vim -O'
 alias apache-restart='sudo /usr/local/etc/rc.d/apache.sh restart'
 alias apache-stop='sudo /usr/local/etc/rc.d/apache.sh stop'
 alias apache-start='sudo /usr/local/etc/rc.d/apache.sh start'
+
+alias mine='sudo chown -R $USER:www .'
 
 if [ -f ~/bin/svn ]; then
     alias svn='~/bin/svn';
@@ -50,9 +53,11 @@ gitdiff()
 }
 
 # показать svn коммиты пользователя за сегодня
+# или за диапазон, указанный вторым параметром (ex: -7d)
 userlogs()
 {
-    svn log ${@:2} -r {`date -v+1d +"%Y-%m-%d"`}:{`date +"%Y-%m-%d"`} | sed -n "/| $1 |/,/-----$/ p"
+    DATE=${2:-+0d}
+    svn log -r {`date -v+1d +"%Y-%m-%d"`}:{`date -v$DATE +"%Y-%m-%d"`} | sed -n "/| $1 |/,/-----$/ p"
 }
 
 # Work Copy Update
