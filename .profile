@@ -3,6 +3,8 @@ if [ -d "$HOME/bin" ]; then
     PATH="$HOME/bin:$PATH"
 fi
 
+source ~/dotfiles/git-completion.bash
+
 # export
 export LANG=ru_RU.UTF-8
 export PS1="`whoami`@`hostname | sed 's/\..*//'`:\w > "
