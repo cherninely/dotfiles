@@ -52,6 +52,8 @@ gitdiff()
     git diff "${@}" | colordiff
 }
 
+alias gitlog="git log --graph --oneline --all --no-color"
+
 # показать svn коммиты пользователя за сегодня
 # или за диапазон, указанный вторым параметром (ex: -7d)
 userlogs()
