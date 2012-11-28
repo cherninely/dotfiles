@@ -54,7 +54,7 @@ gitdiff()
     git diff "${@}" | colordiff
 }
 
-alias gitlog="git log --graph --oneline --all"
+alias gitlog="git log --graph --oneline --all --date=short"
 
 # показать svn коммиты пользователя за сегодня
 # или за диапазон, указанный вторым параметром (ex: -7d)
@@ -106,4 +106,10 @@ drawline()
     for ((i=0; i<$WIDTH; i++)); do echo -n $SEPARATOR ; done
     echo -e "\033[0m"
     clear
+}
+
+#редактировать commit-message указанного коммита
+svnedit()
+{
+    svn propedit -r${1} --revprop svn:log
 }
