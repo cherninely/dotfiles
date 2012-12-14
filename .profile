@@ -38,9 +38,9 @@ alias mo='mergeone'
 wclog()
 {
     if [ -z "$1" -o ! -d "/home/$USER/$1/" ]; then
-        tail -f "/var/tmp/$USER-d-trunk.log"
+        tail -f "/var/tmp/$USER-d-trunk"*
     else
-        tail -f "/var/tmp/$USER-d-${1}.log"
+        tail -f "/var/tmp/$USER-d-${1}"*
     fi
 }
 
