@@ -83,7 +83,9 @@ wcup()
 
         if [[ $DEFAULT_JAIL == $JAIL* ]]; then
             PROJECT_PATH="/hol/arkanavt/report/templates/YxWeb/"$PROJECT;
-            sudo chown -R $USER:www $PROJECT_PATH && svn up $PROJECT_PATH/* && gmake -B -C $PROJECT_PATH
+            TEMP_PRJ_PATH=$PROJECT_PATH;
+            export TEMP_PRJ_PATH;
+            sudo chown -R $USER:www $PROJECT_PATH && bash -c 'cd $TEMP_PRJ_PATH/;  git pull --rebase' && gmake -B -C $PROJECT_PATH
         else
             echo $PROJECT | ssh -i ~/dotfiles/ssh/zelo-access-one kaa@$JAIL
         fi
