@@ -35,6 +35,7 @@ alias mo='mergeone'
 
 # functions
 
+# посмотреть логи рабочей копии
 wclog()
 {
     if [ -z "$1" -o ! -d "/home/$USER/$1/" ]; then
@@ -44,11 +45,13 @@ wclog()
     fi
 }
 
+# цветной diff svn
 svndiff()
 {
     svn diff "${@}" | colordiff
 }
 
+# цветной diff git
 gitdiff()
 {
     git diff "${@}" | colordiff
@@ -93,6 +96,7 @@ wcup()
     done
 }
 
+# обновить данные джейла с zelo
 dataup()
 {
     sudo rsync -av --exclude '*.000' zelo::arkanavt/data.runtime/ /hol/arkanavt/data.runtime
@@ -110,8 +114,34 @@ drawline()
     clear
 }
 
-#редактировать commit-message указанного коммита
+# редактировать commit-message указанного коммита
 svnedit()
 {
     svn propedit -r${1} --revprop svn:log
+}
+
+# подмаунтить jail
+# используется http://osxfuse.github.com/
+jailon()
+{
+    if [ -z "$1" ]; then
+        jailoff $1
+        sshfs sbmaxx@boogie4.yandex.ru:/ /mount/boogie4.yandex.ru -oauto_cache,reconnect
+    else
+        if [ ! -d "$1" ]; then
+            mkdir -p /mount/$1
+        fi
+        jailoff $1
+        sshfs sbmaxx@$1:/ /mount/$1 -oauto_cache,reconnect
+    fi
+}
+
+# размаунтить джейл
+jailoff()
+{
+    if [ -z "$1" ]; then
+        umount /mount/boogie4.yandex.ru >/dev/null
+    else
+        umount /mount/$1 >/dev/null
+    fi
 }
