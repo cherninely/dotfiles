@@ -122,26 +122,18 @@ svnedit()
 
 # подмаунтить jail
 # используется http://osxfuse.github.com/
-jailon()
+jailmount()
 {
-    if [ -z "$1" ]; then
-        jailoff $1
-        sshfs $USER@boogie4.yandex.ru:/ /mount/boogie4.yandex.ru -oauto_cache,reconnect
-    else
-        if [ ! -d "$1" ]; then
-            mkdir -p /mount/$1
-        fi
-        jailoff $1
-        sshfs $USER@$1:/ /mount/$1 -oauto_cache,reconnect
-    fi
+    JAIL=${1:-"boogie4.yandex.ru"}
+    echo -e "\033[33m===> MOUNT JAIL: \033[31m$JAIL \033[0m"
+    mkdir -p /mount/$JAIL
+    jailunmount $JAIL
+    sshfs $USER@$JAIL:/ /mount/$JAIL -oauto_cache,reconnect,volname=$1
 }
 
 # размаунтить джейл
-jailoff()
+jailunmount()
 {
-    if [ -z "$1" ]; then
-        umount /mount/boogie4.yandex.ru >/dev/null
-    else
-        umount /mount/$1 >/dev/null
-    fi
+    JAIL=${1:-"boogie4.yandex.ru"}
+    umount /mount/$1 >/dev/null
 }
