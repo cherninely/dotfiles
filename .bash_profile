@@ -126,13 +126,13 @@ jailon()
 {
     if [ -z "$1" ]; then
         jailoff $1
-        sshfs sbmaxx@boogie4.yandex.ru:/ /mount/boogie4.yandex.ru -oauto_cache,reconnect
+        sshfs $USER@boogie4.yandex.ru:/ /mount/boogie4.yandex.ru -oauto_cache,reconnect
     else
         if [ ! -d "$1" ]; then
             mkdir -p /mount/$1
         fi
         jailoff $1
-        sshfs sbmaxx@$1:/ /mount/$1 -oauto_cache,reconnect
+        sshfs $USER@$1:/ /mount/$1 -oauto_cache,reconnect
     fi
 }
 
