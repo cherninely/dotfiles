@@ -38,11 +38,7 @@ alias mo='mergeone'
 # посмотреть логи рабочей копии
 wclog()
 {
-    if [ -z "$1" -o ! -d "/home/$USER/$1/" ]; then
-        tail -f "/var/tmp/$USER-d-trunk"*
-    else
-        tail -f "/var/tmp/$USER-d-${1}"*
-    fi
+    tail -f /var/tmp/$USER-d-*
 }
 
 # цветной diff svn
