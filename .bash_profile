@@ -120,7 +120,7 @@ svnedit()
 # используется http://osxfuse.github.com/
 jailmount()
 {
-    JAIL=${1:-"boogie4.yandex.ru"}
+    JAIL=${1:-"leon42.yandex.ru"}
     echo -e "\033[33m===> MOUNT JAIL: \033[31m$JAIL \033[0m"
     mkdir -p /mount/$JAIL
     jailunmount $JAIL
