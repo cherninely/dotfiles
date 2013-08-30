@@ -133,3 +133,6 @@ jailunmount()
     JAIL=${1:-"boogie4.yandex.ru"}
     umount /mount/$1 >/dev/null
 }
+
+# replace git read-only protocol to pushable ssh in current git repo
+alias gitssh='sed -ie "s/git:\/\/\([^\/]*\)\/\(.*\)/git@\1:\2/g" .git/config'
