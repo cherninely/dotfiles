@@ -130,7 +130,7 @@ jailmount()
 # размаунтить джейл
 jailunmount()
 {
-    JAIL=${1:-"boogie4.yandex.ru"}
+    JAIL=${1:-"leon42.yandex.ru"}
     umount /mount/$1 >/dev/null
 }
 
