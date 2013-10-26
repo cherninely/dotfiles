@@ -12,6 +12,7 @@ export BLOCKSIZE=K;
 export EDITOR=vim;
 export PAGER=more;
 export CLICOLOR=yes; # git colors
+export TERM=screen-256color
 
 # aliases
 alias ll='ls -laFo'
