@@ -141,6 +141,7 @@ alias gitssh='sed -ie "s/git:\/\/\([^\/]*\)\/\(.*\)/git@\1:\2/g" .git/config'
 # Tmux stuff
 alias tm="tmux -2 -S /tmp/tm-`whoami`"
 # Save ssh agent socket for using in tmux sessions
-if [[ $SSH_AUTH_SOCK && `readlink ~/.ssh/ssh_auth_sock` != $SSH_AUTH_SOCK ]]; then
+if [[ $SSH_AUTH_SOCK && $SSH_AUTH_SOCK != $HOME/.ssh/ssh_auth_sock ]]
+then
     ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
 fi
