@@ -24,6 +24,14 @@ do
     ln -s $YXWEB_PATH/$PROJECT $PROJECT
     cd $YXWEB_PATH
     git clone git@github.yandex-team.ru:$REPO/$PROJECT
+
+    [ $? == 0 ] || exit 1
+
+    # Создаём симлинк video -> video2 (костыль для статики video2)
+    if [[ $PROJECT == video2 ]]; then
+        ln -s video2 video
+    fi
+
     echo -e "\033[32m"
     echo Дальнейшие действия:
     echo "cd ~/$1/$PROJECT && make"
