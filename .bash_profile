@@ -139,9 +139,26 @@ jailunmount()
 alias gitssh='sed -ie "s/git:\/\/\([^\/]*\)\/\(.*\)/git@\1:\2/g" .git/config'
 
 # Tmux stuff
-alias tm="tmux -2 -S /tmp/tm-`whoami`"
+
 # Save ssh agent socket for using in tmux sessions
-if [[ $SSH_AUTH_SOCK && $SSH_AUTH_SOCK != $HOME/.ssh/ssh_auth_sock ]]
-then
+if [[ $SSH_AUTH_SOCK && $SSH_AUTH_SOCK != $HOME/.ssh/ssh_auth_sock ]]; then
     ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
 fi
+
+# wrapper for tmux, using socket assigned to user
+function tm { tmux -2 -S /tmp/tm-`whoami` "$@"; }
+
+# Tmux session alias for pair-programming
+# Syntax:
+#    Server:
+#        tm-pair <feature>
+#    Client:
+#        tm-pair <user> <feature>
+function tm-pair
+{
+    if [ ${2} ]; then
+        tmux -2 -S /tmp/tm-${1} attach -t ${2}
+    else
+        tmux -2 -S /tmp/tm-`whoami` new -s ${1}
+    fi
+}
