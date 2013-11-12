@@ -10,7 +10,7 @@ export LANG=ru_RU.UTF-8
 export PS1="`whoami`@`hostname | sed 's/\..*//'`:\w > "
 export BLOCKSIZE=K;
 export EDITOR=vim;
-export PAGER=more;
+export PAGER=less;
 export CLICOLOR=yes; # git colors
 export TERM=screen-256color
 
