@@ -162,3 +162,10 @@ function tm-pair
         tmux -2 -S /tmp/tm-`whoami` new -s ${1}
     fi
 }
+
+# Universal make
+if [[ `which gmake` != '' ]]; then
+    alias make='gmake'
+else
+    alias gmake='make'
+fi
