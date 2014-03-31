@@ -22,6 +22,9 @@ alias ltr='ls -ltr'
 
 alias vim='vim -O'
 
+alias wcnew='~/dotfiles/bin/wcnew'
+alias wcshow='~/dotfiles/bin/wcshow'
+
 alias apache-restart='sudo /usr/local/etc/rc.d/apache.sh restart'
 alias apache-stop='sudo /usr/local/etc/rc.d/apache.sh stop'
 alias apache-start='sudo /usr/local/etc/rc.d/apache.sh start'
