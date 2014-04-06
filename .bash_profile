@@ -1,7 +1,13 @@
-# add ~/bin to PATH
-if [ -d "$HOME/bin" ]; then
-    PATH="$HOME/bin:$PATH"
-fi
+export PATH=./node_modules/.bin:$PATH
+export PATH=~/node_modules/.bin:$PATH
+export PATH=/usr/local/share/npm/bin:$PATH
+export PATH=~/bin:$PATH
+export PATH=~/dotfiles/bin:$PATH
+export PATH=/usr/local/php5/bin:$PATH
+export PATH=~/.rvm/bin:$PATH
+export PATH=/Berkanavt/bin:$PATH
+export PATH=/Berkanavt/bin/scripts:$PATH
+export PATH=~/android-sdk-macosx/platform-tools:$PATH
 
 source ~/dotfiles/git-completion.bash
 
