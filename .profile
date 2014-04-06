@@ -22,6 +22,18 @@ unset file
 
 source ~/dotfiles/git-completion.bash
 
+if [[ -z `git config --global user.name` ]]; then
+    echo -n "Please, enter user name for git: "
+    read GIT_AUTHOR_NAME
+    git config --global user.name "$GIT_AUTHOR_NAME"
+fi
+
+if [[ -z `git config --global user.email` ]]; then
+    echo -n "Please, enter email name for git: "
+    read GIT_AUTHOR_EMAIL
+    git config --global user.email "$GIT_AUTHOR_EMAIL"
+fi
+
 if [ -f /usr/local/etc/bash_completion ]; then
     . /usr/local/etc/bash_completion
 fi
