@@ -10,6 +10,7 @@ export PATH=/Berkanavt/bin/scripts:$PATH
 export PATH=~/android-sdk-macosx/platform-tools:$PATH
 
 source ~/dotfiles/git-completion.bash
+source ~/dotfiles/wcshow-completion.bash
 
 # export
 export LANG=ru_RU.UTF-8
