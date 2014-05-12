@@ -72,7 +72,7 @@ NeoBundleLazy 'othree/html5.vim', { 'autoload': { 'filetypes': ['html', 'css'] }
 NeoBundle 'gregsexton/MatchTag'
 " NeoBundle 'skammer/vim-css-color'
 NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'lukaszb/vim-web-indent'
+" NeoBundle 'lukaszb/vim-web-indent'
 " NeoBundle 'walm/jshint.vim'
 
 " NeoBundle 'miripiruni/CSScomb-for-Vim'
@@ -328,7 +328,7 @@ imap <leader>s <esc>:w<cr>
 nnoremap Q <c-w>s:bp<cr><c-w>j:bd<cr>
 " nnoremap Q :bd<cr>
 
-nmap <leader>j :JSHint<cr>
+" nmap <leader>j :JSHint<cr>
 
 " Open files
 " Do not set autochdir (working dir should be root)
@@ -340,28 +340,21 @@ cmap <leader>e <c-r>=expand("%:h")<cr>/
 " Disable AutoComplPop.
 let g:acp_enableAtStartup = 0
 
-" Define dictionary.
-let g:neocomplete#sources#dictionary#dictionaries = {
-    \ 'default' : '',
-    \ 'vimshell' : $HOME.'/.vimshell_hist',
-    \ 'scheme' : $HOME.'/.gosh_completions'
-    \ }
-
-" Enable omni completion.
-autocmd FileType css setlocal omnifunc=csscomplete#CompleteCSS
-autocmd FileType html,markdown setlocal omnifunc=htmlcomplete#CompleteTags
-autocmd FileType javascript setlocal omnifunc=javascriptcomplete#CompleteJS
-autocmd FileType python setlocal omnifunc=pythoncomplete#Complete
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+" " Define dictionary.
+" let g:neocomplete#sources#dictionary#dictionaries = {
+"     \ 'default' : '',
+"     \ 'vimshell' : $HOME.'/.vimshell_hist',
+"     \ 'scheme' : $HOME.'/.gosh_completions'
+"     \ }
 
 if has('lua')
   " Use neocomplete.
-  let g:neocomplete#enable_at_startup = 1
+  " let g:neocomplete#enable_at_startup = 1
   " Use smartcase.
-  let g:neocomplete#enable_smart_case = 1
+  " let g:neocomplete#enable_smart_case = 1
   " Set minimum syntax keyword length.
-  let g:neocomplete#sources#syntax#min_keyword_length = 3
-  let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
+  " let g:neocomplete#sources#syntax#min_keyword_length = 3
+  " let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
 
   " Define keyword.
   if !exists('g:neocomplete#keyword_patterns')
@@ -391,16 +384,6 @@ if has('lua')
   " Close popup by <Space>.
   "inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
 
-  " For cursor moving in insert mode(Not recommended)
-  "inoremap <expr><Left>  neocomplete#close_popup() . "\<Left>"
-  "inoremap <expr><Right> neocomplete#close_popup() . "\<Right>"
-  "inoremap <expr><Up>    neocomplete#close_popup() . "\<Up>"
-  "inoremap <expr><Down>  neocomplete#close_popup() . "\<Down>"
-  " Or set this.
-  "let g:neocomplete#enable_cursor_hold_i = 1
-  " Or set this.
-  "let g:neocomplete#enable_insert_char_pre = 1
-
   " AutoComplPop like behavior.
   "let g:neocomplete#enable_auto_select = 1
 
@@ -410,33 +393,6 @@ if has('lua')
   "let g:neocomplete#disable_auto_complete = 1
   "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
 
-  " Enable heavy omni completion.
-  if !exists('g:neocomplete#sources#omni#input_patterns')
-    let g:neocomplete#sources#omni#input_patterns = {}
-  endif
-  if !exists('g:neocomplete#force_omni_input_patterns')
-    let g:neocomplete#force_omni_input_patterns = {}
-  endif
-  "let g:neocomplete#sources#omni#input_patterns.php =
-  "\ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-  "let g:neocomplete#sources#omni#input_patterns.c =
-  "\ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?'
-  "let g:neocomplete#sources#omni#input_patterns.cpp =
-  "\ '[^.[:digit:] *\t]\%(\.\|->\)\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-
-  " For perlomni.vim setting.
-  " https://github.com/c9s/perlomni.vim
-  let g:neocomplete#sources#omni#input_patterns.perl =
-        \ '[^. \t]->\%(\h\w*\)\?\|\h\w*::\%(\h\w*\)\?'
-
-  " For smart TAB completion.
-  "inoremap <expr><TAB>  pumvisible() ? "\<C-n>" :
-  "        \ <SID>check_back_space() ? "\<TAB>" :
-  "        \ neocomplete#start_manual_complete()
-  "  function! s:check_back_space() "{{{
-  "    let col = col('.') - 1
-  "    return !col || getline('.')[col - 1]  =~ '\s'
-  "  endfunction"}}}
 else
   " Use neocomplcache.
   let g:neocomplcache_enable_at_startup = 1
@@ -445,12 +401,6 @@ else
   " Set minimum syntax keyword length.
   let g:neocomplcache_min_syntax_length = 3
   let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-  " Enable heavy features.
-  " Use camel case completion.
-  "let g:neocomplcache_enable_camel_case_completion = 1
-  " Use underbar completion.
-  "let g:neocomplcache_enable_underbar_completion = 1
 
   " Define keyword.
   if !exists('g:neocomplcache_keyword_patterns')
@@ -480,16 +430,6 @@ else
   " Close popup by <Space>.
   "inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
 
-  " For cursor moving in insert mode(Not recommended)
-  "inoremap <expr><Left>  neocomplcache#close_popup() . "\<Left>"
-  "inoremap <expr><Right> neocomplcache#close_popup() . "\<Right>"
-  "inoremap <expr><Up>    neocomplcache#close_popup() . "\<Up>"
-  "inoremap <expr><Down>  neocomplcache#close_popup() . "\<Down>"
-  " Or set this.
-  "let g:neocomplcache_enable_cursor_hold_i = 1
-  " Or set this.
-  "let g:neocomplcache_enable_insert_char_pre = 1
-
   " AutoComplPop like behavior.
   "let g:neocomplcache_enable_auto_select = 1
 
@@ -499,17 +439,6 @@ else
   "let g:neocomplcache_disable_auto_complete = 1
   "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
 
-  " Enable heavy omni completion.
-  if !exists('g:neocomplcache_omni_patterns')
-    let g:neocomplcache_omni_patterns = {}
-  endif
-  let g:neocomplcache_omni_patterns.php = '[^. \t]->\h\w*\|\h\w*::'
-  let g:neocomplcache_omni_patterns.c = '[^.[:digit:] *\t]\%(\.\|->\)'
-  let g:neocomplcache_omni_patterns.cpp = '[^.[:digit:] *\t]\%(\.\|->\)\|\h\w*::'
-
-  " For perlomni.vim setting.
-  " https://github.com/c9s/perlomni.vim
-  let g:neocomplcache_omni_patterns.perl = '\h\w*->\h\w*\|\h\w*::'
 endif
 
 
