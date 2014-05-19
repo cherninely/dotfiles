@@ -272,7 +272,7 @@ call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#custom#source('file_rec,file_rec/async,grep', 'ignore_pattern', join(['\.git/', 'tmp/', 'bundle/', 'node_modules/', 'libs/', 'log/'], '\|'))
 call unite#custom#source('file_rec,file_rec/async', 'max_candidates', 10000)
 
-" let g:unite_source_buffer_time_format = ''
+let g:unite_source_buffer_time_format = ''
 " let g:unite_enable_start_insert = 1
 " let g:unite_split_rule = "botright"
 " let g:unite_force_overwrite_statusline = 0
@@ -395,12 +395,12 @@ if has('lua')
 
 else
   " Use neocomplcache.
-  let g:neocomplcache_enable_at_startup = 1
+  " let g:neocomplcache_enable_at_startup = 1
   " Use smartcase.
-  let g:neocomplcache_enable_smart_case = 1
+  " let g:neocomplcache_enable_smart_case = 1
   " Set minimum syntax keyword length.
-  let g:neocomplcache_min_syntax_length = 3
-  let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
+  " let g:neocomplcache_min_syntax_length = 3
+  " let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
 
   " Define keyword.
   if !exists('g:neocomplcache_keyword_patterns')

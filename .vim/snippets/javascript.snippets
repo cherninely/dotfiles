@@ -43,6 +43,8 @@ snippet switch
     }
 snippet cl
     console.log(${1});
+snippet ctb
+    console.table(${1});
 snippet cw
     console.warning(${1});${2}
 snippet ce
@@ -130,7 +132,7 @@ snippet @ret
     @return {${1:type}} ${2:description}
 snippet blocks
     blocks['${1}']${2}
-snippet bblocks
+snippet bbl
     BEM.blocks['${1}']${2}
 snippet block
     block: '${1}',${2}
@@ -140,12 +142,6 @@ snippet mod
     mod: { ${1}: '${2}' },${3}
 snippet base
     this.__base.apply(this, arguments);
-snippet fb
-    findBlock
-snippet findBlocki
-    findBlockInside('${1}')${2}
-snippet findBlocko
-    findBlockOutside('${1}')${2}
 snippet ace
     afterCurrentEvent(${1})${2}
 snippet osm
@@ -309,3 +305,16 @@ options head
     /**
      * ${1}
      */
+
+snippet fb
+options word
+    findBlock
+
+snippet findBlocki
+options word
+    findBlockInside('${1}')${2}
+
+snippet findBlocko
+options word
+    findBlockOutside('${1}')${2}
+
