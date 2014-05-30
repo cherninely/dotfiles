@@ -72,6 +72,7 @@ wclog()
 {
     tail -f /var/tmp/$USER-d-*
 }
+alias wlog=wclog
 
 # обновить данные джейла с zelo
 dataup()
