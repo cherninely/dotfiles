@@ -21,6 +21,7 @@ done
 unset file
 
 source ~/dotfiles/git-completion.bash
+source ~/dotfiles/wcshow-completion.bash
 
 if [[ -z `git config --global user.name` ]]; then
     echo -n "Please, enter user name for git: "

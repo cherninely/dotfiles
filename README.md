@@ -1,10 +1,7 @@
-dotfiles
-========
+## Installation
 
-Конфиги для разработчика интерфейсов.
-
-Использование:
+### Using Git and the bootstrap script
 
 ```bash
-git clone git://github.yandex-team.ru/search-interfaces/dotfiles ~/dotfiles && ~/dotfiles/bootstrap.sh
+git clone git://github.yandex-team.ru:vorian/dotfiles.git ~/dotfiles && ~/dotfiles/bootstrap.sh
 ```
