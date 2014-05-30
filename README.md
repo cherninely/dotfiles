@@ -5,4 +5,6 @@ dotfiles
 
 Использование:
 
-    wget -O - 'https://github.yandex-team.ru/search-interfaces/dotfiles/raw/master/install.sh' --no-check-certificate | bash
+```bash
+git clone git://github.yandex-team.ru/search-interfaces/dotfiles ~/dotfiles && ~/dotfiles/bootstrap.sh
+```
