@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/usr/bin/env bash
 
 if [[ $# < 2 ]]
 then
@@ -16,6 +16,7 @@ do
     if [[ $PROJECT =~ video || $PROJECT =~ images ]]
     then
         REPO=mm-interfaces
+        URL_PATH=${PROJECT%?}
     else
         REPO=serp
     fi
@@ -35,5 +36,15 @@ do
     echo -e "\033[32m"
     echo Дальнейшие действия:
     echo "cd ~/$1/$PROJECT && make"
+
+    if [[ -n $URL_PATH ]]
+    then
+        if [[ $PROJECT =~ 3 ]]
+        then
+            BETA=.beta
+        fi
+        echo open `whoami`-d-$1$BETA.`hostname`/$URL_PATH
+    fi
+
     echo -e "\033[0m"
 done
