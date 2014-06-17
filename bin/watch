@@ -15,7 +15,11 @@ do
     ATIME=''
     for file in "${FILES[@]:0:$#-1}"
     do
-        ATIME="$ATIME `stat -f %m $file`"
+        if [[ $OSTYPE =~ linux ]]; then
+            ATIME="$ATIME `stat -c %Y $file`"
+        else
+            ATIME="$ATIME `stat -f %m $file`"
+        fi
     done
     if [[ $ATIME != $LTIME ]]
     then
