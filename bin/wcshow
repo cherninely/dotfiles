@@ -103,9 +103,9 @@ do
             cd $project/ 2> /dev/null
             branch1=`get_git_branch`
             status1="`get_git_status``get_git_diff_remote $branch1 2> /dev/null`"
-            if [ -d common/islands ]
+            if [ -d common/sakhalin ]
             then
-                cd common/islands/ 2>/dev/null
+                cd common/sakhalin/ 2>/dev/null
                 branch2=`get_git_branch`
                 status2="`get_git_status``get_git_diff_remote $branch2 2> /dev/null`"
             fi
