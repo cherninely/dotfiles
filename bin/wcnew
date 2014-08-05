@@ -15,16 +15,19 @@ for PROJECT in ${2//+/ }
 do
     if [[ $PROJECT =~ video || $PROJECT =~ images ]]
     then
-        REPO=mm-interfaces
+        ORG=mm-interfaces
         URL_PATH=${PROJECT%?}
+        REPO=${PROJECT}
     else
-        REPO=serp
+        ORG=serp
+        REPO=${PROJECT//_/-}
     fi
+
 
     cd ~/$1
     ln -s $YXWEB_PATH/$PROJECT $PROJECT
     cd $YXWEB_PATH
-    git clone git@github.yandex-team.ru:$REPO/$PROJECT
+    git clone git@github.yandex-team.ru:$ORG/$REPO $PROJECT
 
     [ $? == 0 ] || exit 1
 
