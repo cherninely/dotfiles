@@ -1,0 +1,49 @@
+#!/usr/bin/env python
+"""
+Init the contrib repo
+Usage:
+cd <contrib-directory> && contrib-init [new-branch-from-master-name]
+
+Examples:
+cd ~/wc1/web3/libs/z-afisha
+Init repo with the master branch: contrib-init
+Init repo with your own branch: contrib-init SERP-487
+"""
+import os
+import sys
+import subprocess
+
+
+def main():
+    working_dir = os.getcwd()
+    path_parts = filter(None, working_dir.split('/'))
+    if path_parts[-2] not in ('libs', 'contribs'):
+        raise EnvironmentError('The working dir must be a contrib dir')
+
+    if os.path.exists(working_dir + '/.git'):
+        raise EnvironmentError('This directory is already a Git repository')
+
+    repo = 'git@github.yandex-team.ru:serp-contribs/{0}.git'.format(path_parts[-1])
+    git('init')
+    git('remote add origin {0}'.format(repo))
+    git('fetch')
+    git('reset --hard origin/master')
+
+    if sys.argv:
+        git('checkout -b {0}'.format(sys.argv[1]))
+
+
+def git(action):
+    program = ['git']
+    params = action.split(' ')
+    code = subprocess.call(program + list(params))
+    if code != 0:
+        raise RuntimeError('Git error')
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except BaseException as e:
+        print 'Error:', str(e)
+
