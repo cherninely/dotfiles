@@ -35,14 +35,7 @@ def main():
     # checkout to bower.json ref
     git('stash')
     try:
-        if re.match('^[0-9a-f]{7,40}$', contrib_info['ref']):
-            # SHA1 hash case
-            git('reset --hard {0}'.format(contrib_info['ref']))
-            print 'Warning: You on the local master branch'
-        else:
-            # Branch name case
-            git('reset --hard origin/{0}'.format(contrib_info['ref']))
-            git('checkout -b {0} origin/{0}'.format(contrib_info['ref']))
+        checkout_branch(contrib_info)
     except BaseException as e:
         print 'Warning: Can not checkout to ref, make it manually'
         print 'Reason:', str(e)
@@ -83,6 +76,39 @@ def git(action):
     code = subprocess.call(program + params)
     if code != 0 and not re.match('stash.+?apply', action):
         raise RuntimeError('Git error')
+
+
+def checkout_branch(contrib_info):
+    if re.match('^[0-9a-f]{7,40}$', contrib_info['ref']):
+        # SHA-1 hash case
+        branch_info = get_remote_branch_of_commit(contrib_info['ref'])
+        git('reset --hard {0}'.format(contrib_info['ref']))  # prepare fs
+        if branch_info['branch'] != 'master':
+            action = 'checkout -b {0} {1}'.format(branch_info['branch'], branch_info['full_name'])
+            git(action)  # checking out to the new branch
+    else:
+        # Branch name case
+        git('reset --hard origin/{0}'.format(contrib_info['ref']))  # prepare fs
+        git('checkout -b {0} origin/{0}'.format(contrib_info['ref']))  # checking out to the new branch
+
+
+def get_remote_branch_of_commit(ref):
+    p = subprocess.Popen(('git', 'branch', '-r', '--contains', ref),
+                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, err = p.communicate()
+    if err:
+        raise EnvironmentError('Git error: ' + err)
+
+    match = re.findall('^\s*(?P<remote>[\w\.-]+)/(?P<branch>[\w\.-]+)\s*$', output)
+    if not match:
+        raise RuntimeError('Unexpected remote branch name format')
+
+    groups = match[0]
+    return {
+        'remote': groups[0],
+        'branch': groups[1],
+        'full_name': output.strip(),
+    }
 
 
 if __name__ == '__main__':
