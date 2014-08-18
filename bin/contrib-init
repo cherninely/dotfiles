@@ -30,7 +30,7 @@ def main():
 
     # create local master branch
     git('add .')
-    git('reset origin/master')
+    git('reset {0}'.format(contrib_info['ref']))
 
     # checkout to bower.json ref
     git('stash')
@@ -53,18 +53,42 @@ def get_contrib_info(working_dir, path_parts):
     if contrib_bower_info is None:
         raise RuntimeError('Can not extract info from bower.json')
 
+    # github.yandex-team.ru
     match = re.findall('^(?P<repo>[\w\.-]+)/(?P<name>[\w\.-]+)#(?P<ref>[\w\./-]+)(?:#\s*(?P<change_time>.+)\s*)?$',
                        contrib_bower_info)
+    if match:
+        groups = match[0]
+        origin_url = 'git@github.yandex-team.ru:{0}/{1}.git'.format(groups[0], groups[1])
+        return {
+            'hosting': 'github.yandex-team.ru',
+            'repo': groups[0],
+            'name': groups[1],
+            'ref': groups[2],
+            'change_time': groups[3],
+            'origin_url': origin_url
+        }
+
+    # external hosting like github.com
+    match = re.findall(
+        ('^(?:(?:git|https)://)?'
+         '(?P<hosting>[\w\.]+)/'
+         '(?P<repo>[\w\.-]+)/'
+         '(?P<name>[\w\.-]+)'
+         '#(?P<ref>[\w\./-]+)'
+         '(?:#\s*(?P<change_time>.+)\s*)?$'),
+        contrib_bower_info
+    )
     if not match:
         raise RuntimeError('Unexpected bower data format')
 
     groups = match[0]
-    origin_url = 'git@github.yandex-team.ru:{0}/{1}.git'.format(groups[0], groups[1])
+    origin_url = 'git@{0}:{1}/{2}.git'.format(groups[0], groups[1], groups[2])
     return {
-        'repo': groups[0],
-        'name': groups[1],
-        'ref': groups[2],
-        'change_time': groups[3],
+        'hosting': groups[0],
+        'repo': groups[1],
+        'name': groups[2],
+        'ref': groups[3],
+        'change_time': groups[4],
         'origin_url': origin_url
     }
 
@@ -99,9 +123,9 @@ def get_remote_branch_of_commit(ref):
     if err:
         raise EnvironmentError('Git error: ' + err)
 
-    match = re.findall('^\s*(?P<remote>[\w\.-]+)/(?P<branch>[\w\.-]+)\s*$', output)
+    match = re.findall('^\s*(?P<remote>[\w\.-]+)/(?P<branch>[\w\./-]+)\s*$', output)
     if not match:
-        raise RuntimeError('Unexpected remote branch name format')
+        raise RuntimeError('Unexpected remote branch name format: ' + output)
 
     groups = match[0]
     return {
