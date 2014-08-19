@@ -1,0 +1,142 @@
+#!/usr/bin/env python
+"""
+Init the contrib repo
+Usage:
+cd <contrib-directory> && contrib-init
+
+Example:
+cd ~/wc1/web3/libs/z-afisha && contrib-init
+"""
+import json
+import os
+import re
+import subprocess
+
+
+def main():
+    working_dir = os.getcwd()
+    path_parts = working_dir[1:].split('/')
+    if path_parts[-2] not in ('libs', 'contribs'):
+        raise EnvironmentError('The working dir must be a contrib dir')
+
+    if os.path.exists(working_dir + '/.git'):
+        raise EnvironmentError('This directory is already a Git repository')
+
+    contrib_info = get_contrib_info(working_dir, path_parts)
+
+    git('init')
+    git('remote add origin {0}'.format(contrib_info['origin_url']))
+    git('fetch')
+
+    # create local master branch
+    git('add .')
+    git('reset {0}'.format(contrib_info['ref']))
+
+    # checkout to bower.json ref
+    git('stash')
+    try:
+        checkout_branch(contrib_info)
+    except BaseException as e:
+        print 'Warning: Can not checkout to ref, make it manually'
+        print 'Reason:', str(e)
+    git('stash apply')
+
+
+def get_contrib_info(working_dir, path_parts):
+    bower_file = os.path.abspath(working_dir + '/../../bower.json')
+    if not os.path.exists(bower_file):
+        raise EnvironmentError('bower.json not found in path {0}'.format(bower_file))
+    bower_data = json.loads(open(bower_file, 'r').read())
+
+    contrib_name = path_parts[-1]
+    contrib_bower_info = bower_data.get('dependencies', {}).get(contrib_name)
+    if contrib_bower_info is None:
+        raise RuntimeError('Can not extract info from bower.json')
+
+    # github.yandex-team.ru
+    match = re.findall('^(?P<repo>[\w\.-]+)/(?P<name>[\w\.-]+)#(?P<ref>[\w\./-]+)(?:#\s*(?P<change_time>.+)\s*)?$',
+                       contrib_bower_info)
+    if match:
+        groups = match[0]
+        origin_url = 'git@github.yandex-team.ru:{0}/{1}.git'.format(groups[0], groups[1])
+        return {
+            'hosting': 'github.yandex-team.ru',
+            'repo': groups[0],
+            'name': groups[1],
+            'ref': groups[2],
+            'change_time': groups[3],
+            'origin_url': origin_url
+        }
+
+    # external hosting like github.com
+    match = re.findall(
+        ('^(?:(?:git|https)://)?'
+         '(?P<hosting>[\w\.]+)/'
+         '(?P<repo>[\w\.-]+)/'
+         '(?P<name>[\w\.-]+)'
+         '#(?P<ref>[\w\./-]+)'
+         '(?:#\s*(?P<change_time>.+)\s*)?$'),
+        contrib_bower_info
+    )
+    if not match:
+        raise RuntimeError('Unexpected bower data format')
+
+    groups = match[0]
+    origin_url = 'git@{0}:{1}/{2}.git'.format(groups[0], groups[1], groups[2])
+    return {
+        'hosting': groups[0],
+        'repo': groups[1],
+        'name': groups[2],
+        'ref': groups[3],
+        'change_time': groups[4],
+        'origin_url': origin_url
+    }
+
+
+def git(action):
+    print 'Git exec: git', action
+    program = ['git']
+    params = action.split(' ')
+    code = subprocess.call(program + params)
+    if code != 0 and not re.match('stash.+?apply', action):
+        raise RuntimeError('Git error')
+
+
+def checkout_branch(contrib_info):
+    if re.match('^[0-9a-f]{7,40}$', contrib_info['ref']):
+        # SHA-1 hash case
+        branch_info = get_remote_branch_of_commit(contrib_info['ref'])
+        git('reset --hard {0}'.format(contrib_info['ref']))  # prepare fs
+        if branch_info['branch'] != 'master':
+            action = 'checkout -b {0} {1}'.format(branch_info['branch'], branch_info['full_name'])
+            git(action)  # checking out to the new branch
+    else:
+        # Branch name case
+        git('reset --hard origin/{0}'.format(contrib_info['ref']))  # prepare fs
+        git('checkout -b {0} origin/{0}'.format(contrib_info['ref']))  # checking out to the new branch
+
+
+def get_remote_branch_of_commit(ref):
+    p = subprocess.Popen(('git', 'branch', '-r', '--contains', ref),
+                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, err = p.communicate()
+    if err:
+        raise EnvironmentError('Git error: ' + err)
+
+    match = re.findall('^\s*(?P<remote>[\w\.-]+)/(?P<branch>[\w\./-]+)\s*$', output)
+    if not match:
+        raise RuntimeError('Unexpected remote branch name format: ' + output)
+
+    groups = match[0]
+    return {
+        'remote': groups[0],
+        'branch': groups[1],
+        'full_name': output.strip(),
+    }
+
+
+if __name__ == '__main__':
+    try:
+        main()
+    except BaseException as e:
+        print 'Error:', str(e)
