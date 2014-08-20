@@ -30,7 +30,7 @@ def main():
 
     # create local master branch
     git('add .')
-    git('reset {0}'.format(contrib_info['ref']))
+    git('reset origin/master')
 
     # checkout to bower.json ref
     git('stash')
