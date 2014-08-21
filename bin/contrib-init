@@ -39,7 +39,11 @@ def main():
     except BaseException as e:
         print 'Warning: Can not checkout to ref, make it manually'
         print 'Reason:', str(e)
-    git('stash apply')
+    try:
+        git('stash apply')
+    except RuntimeError as e:
+        print 'Warning: Stash is not applied'
+        git('status')
 
 
 def get_contrib_info(working_dir, path_parts):
@@ -98,7 +102,7 @@ def git(action):
     program = ['git']
     params = action.split(' ')
     code = subprocess.call(program + params)
-    if code != 0 and not re.match('stash.+?apply', action):
+    if code != 0:
         raise RuntimeError('Git error')
 
 
@@ -106,14 +110,19 @@ def checkout_branch(contrib_info):
     if re.match('^[0-9a-f]{7,40}$', contrib_info['ref']):
         # SHA-1 hash case
         branch_info = get_remote_branch_of_commit(contrib_info['ref'])
-        git('reset --hard {0}'.format(contrib_info['ref']))  # prepare fs
         if branch_info['branch'] != 'master':
+            clean_fs()
             action = 'checkout -b {0} {1}'.format(branch_info['branch'], branch_info['full_name'])
             git(action)  # checking out to the new branch
     else:
         # Branch name case
-        git('reset --hard origin/{0}'.format(contrib_info['ref']))  # prepare fs
+        clean_fs()
         git('checkout -b {0} origin/{0}'.format(contrib_info['ref']))  # checking out to the new branch
+
+
+def clean_fs():
+    git('reset --hard')
+    git('clean -fd -e .bower.json')
 
 
 def get_remote_branch_of_commit(ref):
