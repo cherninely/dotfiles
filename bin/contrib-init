@@ -67,22 +67,26 @@ def main():
     git('reset origin/master')
 
     # checkout to bower.json ref
-    git('stash')
+    need_stash_apply = git_stash()
     try:
         checkout_branch(contrib_info)
     except BaseException as e:
-        ColorPrinter.print_warning('Warning: Can not checkout to ref, make it manually')
-        ColorPrinter.print_white('Reason: ' + str(e))
         all_right = False
+        ColorPrinter.print_warning('Warning: Can not checkout to ref, make it manually')
+        ColorPrinter.print_white('Reason:\n' + str(e))
 
-    try:
-        git('stash apply')
-    except RuntimeError:
-        ColorPrinter.print_warning('Warning: Stash is not applied')
-        git('status')
+    if need_stash_apply:
+        try:
+            git('stash apply')
+        except RuntimeError:
+            all_right = False
+            ColorPrinter.print_warning('Warning: Stash is not applied')
+            git('status')
 
     if all_right:
         ColorPrinter.print_ok('Flawless victory')
+    else:
+        ColorPrinter.print_warning('Process ends with some issues')
 
 
 def get_contrib_info(working_dir, path_parts):
@@ -143,6 +147,21 @@ def git(action):
     code = subprocess.call(program + params)
     if code != 0:
         raise RuntimeError('Git error')
+
+
+def git_stash():
+    p = subprocess.Popen(('git', 'stash'),
+                         stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    output, err = p.communicate()
+    if err:
+        raise RuntimeError('Git error: ' + err)
+
+    need_apply = not output.startswith('No local changes')
+    if need_apply:
+        ColorPrinter.print_ok('Your changes stashed')
+    else:
+        ColorPrinter.print_white('No changes to stash')
+    return need_apply
 
 
 def checkout_branch(contrib_info):
