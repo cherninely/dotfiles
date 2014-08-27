@@ -192,13 +192,23 @@ def get_remote_branch_of_commit(ref):
     elif not output:
         raise RuntimeError('Unexpected branch info')
 
+    # if this commit in master then checkout master
+    master_match = re.findall('^\s*((?P<remote>.+?)/master)\s*$', output, re.M)
+    if master_match:
+        groups = master_match[0]
+        return {
+            'remote': groups[1],
+            'branch': 'master',
+            'full_name': groups[0],
+        }
+
     # if commit contains in many branches we took the first of them
     branch_string = output.split('\n')[0].strip()
-    match = re.findall('^(?P<remote>.+?)/(?P<branch>.+)$', branch_string)
-    if not match:
+    branch_match = re.findall('^(?P<remote>.+?)/(?P<branch>.+)$', branch_string)
+    if not branch_match:
         raise RuntimeError('Unexpected remote branch name format: ' + output)
 
-    groups = match[0]
+    groups = branch_match[0]
     return {
         'remote': groups[0],
         'branch': groups[1],
