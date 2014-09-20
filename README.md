@@ -6,5 +6,5 @@ dotfiles
 Использование:
 
 ```bash
-git clone git://github.yandex-team.ru/search-interfaces/dotfiles ~/dotfiles && ~/dotfiles/bootstrap.sh
+git clone git://github.yandex-team.ru/search-interfaces/dotfiles ~/dotfiles && ~/dotfiles/install.sh
 ```
