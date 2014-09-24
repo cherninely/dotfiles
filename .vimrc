@@ -106,7 +106,6 @@ set hidden                  " hide buffers when they are abandoned
 set autoread                " auto reload changed files
 
 " Display options
-set term=builtin_ansi
 set title                   " show file name in window title
 set novisualbell            " mute error bell
 set list
