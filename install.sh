@@ -4,7 +4,7 @@ cd "$(dirname "$0")"
 git pull
 for f in `find . -name '\.*' -exec basename {} \; | grep -v 'git\|\.$'`
 do
-    ln -fs $PWD/$f ~/$f
+    ln -fs $PWD/$f ~
 done
 
 GIT_AUTHOR_NAME=`git config --global user.name`
