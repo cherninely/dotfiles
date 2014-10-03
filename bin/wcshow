@@ -9,7 +9,7 @@ blue="\E[0;34m"
 green="\E[0;32m"
 red="\E[0;31m"
 off="\E[0;00m"
-format="${blue}%-14s${off} ${green}%-18s${off} %s${red}%s${off} - %s${red}%s${off}\n"
+format="${blue}%-14s${off} ${green}%-18s${off} %s${red}%s${off} - %s${red}%s${off} - %s${red}%s${off}\n"
 
 for param in $1 $2 $3 $4
 do
@@ -103,13 +103,19 @@ do
             cd $project/ 2> /dev/null
             branch1=`get_git_branch`
             status1="`get_git_status``get_git_diff_remote $branch1 2> /dev/null`"
-            if [ -d common/sakhalin ]
+            if [ -d islands ]
             then
-                cd common/sakhalin/ 2>/dev/null
+                cd islands/ 2>/dev/null
                 branch2=`get_git_branch`
                 status2="`get_git_status``get_git_diff_remote $branch2 2> /dev/null`"
             fi
-            printf "$format" "$dir" "$project" "$branch1" "$status1" "$branch2" "$status2"
+            if [ -d common/sakhalin ]
+            then
+                cd common/sakhalin/ 2>/dev/null
+                branch3=`get_git_branch`
+                status3="`get_git_status``get_git_diff_remote $branch3 2> /dev/null`"
+            fi
+            printf "$format" "$dir" "$project" "$branch1" "$status1" "$branch2" "$status2" "$branch3" "$status3"
             #echo -e "\E[0;36m ${dir}\E[0;39m: ${project}: ${branches}"
             cd ${USER_HOME}$dir 2> /dev/null
         fi
