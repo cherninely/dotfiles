@@ -49,7 +49,7 @@ done;
 
 PROJECTS=${PROJECTS//+/ }
 
-USER_HOME="/home/$USER_LOGIN/"
+USER_HOME=$HOME
 
 function get_git_status()
 {
