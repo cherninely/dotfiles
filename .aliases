@@ -52,7 +52,7 @@ alias apache-restart='sudo /usr/local/etc/rc.d/apache.sh restart'
 alias apache-stop='sudo /usr/local/etc/rc.d/apache.sh stop'
 alias apache-start='sudo /usr/local/etc/rc.d/apache.sh start'
 
-alias mine='sudo chown -R $USER:www .'
+alias mine='sudo chown -R $USER .'
 
 # SVN
 alias st='svn st'
@@ -74,48 +74,30 @@ wclog()
 }
 alias wlog=wclog
 
-# обновить данные джейла с zelo
-dataup()
-{
-    sudo rsync -av --exclude '*.000' zelo::arkanavt/data.runtime/ /hol/arkanavt/data.runtime
-    sudo rsync -av --exclude '*.000' zelo::arkanavt/passport/ /hol/arkanavt/passport
-}
-
 all()
 {
-    if [ `basename $PWD` == 'touch' ]
-    then
-        e pages-touch/search/all/_all.ru.priv.js
-    elif [ `basename $PWD` == 'mischandlers' ]
-    then
-        e pages-desktop/error/_error.priv.js
-    elif [ `basename ${PWD%[0-9]}` == 'web' ]
+    if [ `basename $PWD` == 'web3' ]
     then
         es pages-desktop/search/all/_all.priv.js
-    elif [[ $PWD =~ 'touch' ]]
+    elif [[ `basename $PWD` == 'web-touch-phone' ]]
+    then
+        es pages-touch-phone/search/all/_all.priv.js
+    elif [[ $PWD =~ 'touch_phone' ]]
     then
         e pages-touch/common/_common.priv.js
+    elif [[ $PWD =~ 'touch_pad' ]]
+    then
+        e pages-touch-pad/common/_common.priv.js
     else
         e pages-desktop/common/_common.priv.js
     fi
-}
-
-yxw()
-{
-    if [ -z `pwd | grep hol/arkanavt` ]
-    then
-        cd `pwd | grep -o '/home/[a-z]*/[a-z0-9]*'`
-    else
-        cd /hol/arkanavt
-    fi
-    cd report/templates/YxWeb
 }
 
 # подмаунтить jail
 # используется http://osxfuse.github.com/
 jailmount()
 {
-    JAIL=${1:-"leon42.yandex.ru"}
+    JAIL=${1:-"leon42.serp.yandex.ru"}
     echo -e "\033[33m===> MOUNT JAIL: \033[31m$JAIL \033[0m"
     mkdir -p /mount/$JAIL
     jailunmount $JAIL
@@ -125,7 +107,7 @@ jailmount()
 # размаунтить джейл
 jailunmount()
 {
-    JAIL=${1:-"leon42.yandex.ru"}
+    JAIL=${1:-"leon42.serp.yandex.ru"}
     umount /mount/$1 >/dev/null
 }
 
@@ -133,16 +115,15 @@ jailunmount()
 alias tm="tmux -2 -S /tmp/tm-`whoami`"
 
 # Tmux session alias for pair-programming
-# Syntax:
-#    Server:
-#        tm-pair <feature>
-#    Client:
-#        tm-pair <user> <feature>
 function tm-pair
 {
     if [ ${2} ]; then
         tmux -2 -S /tmp/tm-${1} attach -t ${2}
-    else
+    elif [ ${1} ]; then
         tmux -2 -S /tmp/tm-`whoami` new -s ${1}
+    else
+        echo 'Usage:'
+        echo 'tm-pair feature_name # Create session'
+        echo 'tm-pair user_name feature_name # Attach to session'
     fi
 }
