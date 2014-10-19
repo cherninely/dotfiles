@@ -12,7 +12,7 @@ git clone git://github.yandex-team.ru/search-interfaces/dotfiles ~/dotfiles && ~
 ### FAQ
 
 Здесь должен был быть FAQ, но, поскольку вопросы пока никто не задавал, здесь пусто.
-Просьба записывать свои вопросы (а также замечания к этому руководству) [здесь](https://github.yandex-team.ru/search-interfaces/dotfiles/issues/7). Ещё можно написать на почту vorian@yandex-team.ru или на рассылку search-interfaces@yandex-team.ru.
+Просьба записывать свои вопросы (а также замечания к этому руководству) [здесь](/../../issues/7). Ещё можно написать на почту vorian@yandex-team.ru или на рассылку search-interfaces@yandex-team.ru.
 
 ### Основные фичи
 
@@ -21,6 +21,10 @@ git clone git://github.yandex-team.ru/search-interfaces/dotfiles ~/dotfiles && ~
 Рекомендуется освоить основные шоткаты в bash, такие как `<c-a>`, `<c-e>`, `<c-w>`, `<c-r>` etc (здесь и далее "`<c-a>`" следует читать как "Ctrl+a"). Они неплохо описаны, например, в [этом посте](http://habrahabr.ru/post/99843/).
 
 Точка входа – `.profile`, часть конфигов находится в нём, остальное сгруппировано по функциональности в файлах `.aliases`, `.exports`, `.extra` etc. Эти файлы сорсятся изнутри `.profile`.
+
+#### Git
+
+Для работы с git подключен [файл автодополнений](./git-completion.bash), [пачка алиасов git](./.gitconfig#L33-L59) и [bash](./.aliases#L28-L42).
 
 #### VIM
 
