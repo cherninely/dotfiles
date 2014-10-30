@@ -2,7 +2,9 @@
 """
 Init the contrib repo
 Usage:
-cd <contrib-directory> && contrib-init
+cd <contrib-directory> && contrib-init [--git-hooks]
+
+--git-hooks Parameter creates a lint to the .githooks dir in the root of project
 
 Example:
 cd ~/wc1/web3/libs/z-afisha && contrib-init
@@ -11,6 +13,7 @@ import json
 import os
 import re
 import subprocess
+import sys
 
 
 class ColorPrinter(object):
@@ -83,6 +86,14 @@ def main():
             ColorPrinter.print_warning('Warning: Stash is not applied')
             git('status')
 
+    if '--git-hooks' in sys.argv:
+        try:
+            set_git_hooks()
+        except BaseException as e:
+            all_right = False
+            ColorPrinter.print_warning("Warning: can't set git hooks")
+            ColorPrinter.print_white('Reason:\n' + str(e))
+
     if all_right:
         ColorPrinter.print_ok('Flawless victory')
     else:
@@ -122,7 +133,7 @@ def get_contrib_info(working_dir, path_parts):
          '(?P<repo>[\w\.-]+)/'
          '(?P<name>[\w\.-]+)'
          '#(?P<ref>[\w\./-]+)'
-         '(?:#\s*(?P<change_time>.+)\s*)?$'),
+         '(?:#\s*(?P<change_time>.+)?\s*)?$'),
         contrib_bower_info
     )
     if not match:
@@ -214,6 +225,14 @@ def get_remote_branch_of_commit(ref):
         'branch': groups[1],
         'full_name': branch_string,
     }
+
+
+def set_git_hooks():
+    hooks_dir = '../../.githooks'
+    if os.path.isdir(hooks_dir):
+        os.symlink(hooks_dir, '.githooks')
+    else:
+        raise EnvironmentError('Directory does not exist: ' + hooks_dir)
 
 
 if __name__ == '__main__':
