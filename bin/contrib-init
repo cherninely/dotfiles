@@ -228,11 +228,19 @@ def get_remote_branch_of_commit(ref):
 
 
 def set_git_hooks():
-    hooks_dir = '../../.githooks'
-    if os.path.isdir(hooks_dir):
-        os.symlink(hooks_dir, '.githooks')
+    project_dir = '../../'
+    hooks_bin = project_dir + 'node_modules/.bin/git-hooks'
+    additional_hooks = project_dir + '.githooks'
+    if os.path.isfile(hooks_bin) and os.access(hooks_bin, os.X_OK):
+        ColorPrinter.print_white('Setup Git hooks')
+        if os.path.isdir('.git/hooks.old'):
+            subprocess.call([hooks_bin, '--uninstall'])
+        subprocess.call([hooks_bin, '--install'])
+
+        if os.path.isdir(additional_hooks) and not os.path.exists('.githooks'):
+            os.symlink(additional_hooks, '.githooks')
     else:
-        raise EnvironmentError('Directory does not exist: ' + hooks_dir)
+        raise EnvironmentError('git-hooks not found or isn\'t executable')
 
 
 if __name__ == '__main__':
