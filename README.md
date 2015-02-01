@@ -18,7 +18,7 @@ git clone git://github.yandex-team.ru/search-interfaces/dotfiles ~/dotfiles && ~
 
 #### Bash
 
-Рекомендуется освоить основные шоткаты в bash, такие как `<c-a>`, `<c-e>`, `<c-w>`, `<c-r>` etc (здесь и далее "`<c-a>`" следует читать как "Ctrl+a"). Они неплохо описаны, например, в [этом посте](http://habrahabr.ru/post/99843/).
+Рекомендуется освоить основные шоткаты в bash, такие как `<c-a>`, `<c-e>`, `<c-w>`, `<c-r>` etc (здесь и далее "`<c-a>`" следует читать как "Ctrl+a"). Дополнительно можно почитать [тут](http://en.wikipedia.org/wiki/Bash_(Unix_shell)#Keyboard_shortcuts) или [тут](http://habrahabr.ru/post/99843/).
 
 Точка входа – `.profile`, часть конфигов находится в нём, остальное сгруппировано по функциональности в файлах `.aliases`, `.exports`, `.extra` etc. Эти файлы сорсятся изнутри `.profile`.
 
