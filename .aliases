@@ -101,10 +101,11 @@ all()
 jailmount()
 {
     JAIL=${1:-"leon42.serp.yandex.ru"}
+    FOLDER=${2:-"/home/$USER"}
     echo -e "\033[33m===> MOUNT JAIL: \033[31m$JAIL \033[0m"
     mkdir -p /mount/$JAIL
     jailunmount $JAIL
-    sshfs $USER@$JAIL:/ /mount/$JAIL -oauto_cache,reconnect,volname=$1
+    sshfs $USER@$JAIL:$FOLDER /mount/$JAIL -oauto_cache,reconnect,volname=$1
 }
 
 # размаунтить джейл
