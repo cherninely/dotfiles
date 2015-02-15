@@ -15,6 +15,8 @@ alias ll='ls -laFo'
 alias l='ls -l'
 alias la='ls -a'
 alias ltr='ls -ltr'
+alias ..='cd ..'
+alias ...='cd ../..'
 
 alias grep='grep --color=auto'
 
@@ -40,6 +42,7 @@ alias gp='git pull --rebase'
 alias gr='git remote -v'
 alias gs='git st'
 alias gt='git tag'
+alias gst='git status -sb'
 
 [ -f "`which ack`" ] || alias ack=ack-grep
 
