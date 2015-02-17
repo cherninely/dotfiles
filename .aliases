@@ -117,6 +117,7 @@ jailunmount()
 
 # Tmux
 alias tm="tmux -2 -S /tmp/tm-`whoami`"
+alias tms="tm a -t"
 
 # Tmux session alias for pair-programming
 function tm-pair
