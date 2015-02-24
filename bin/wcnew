@@ -12,8 +12,10 @@ then
     exit
 fi
 
+WC_NAME=$1
 YXWEB_PATH=report/templates/YxWeb
-mkdir -p ~/$1/$YXWEB_PATH
+mkdir -p ~/$WC_NAME/$YXWEB_PATH
+
 
 for PROJECT in ${2//+/ }
 do
@@ -27,7 +29,7 @@ do
         REPO=${PROJECT//_/-}
     fi
 
-    cd ~/$1
+    cd ~/$WC_NAME
     ln -s $YXWEB_PATH/$PROJECT $PROJECT
     cd $YXWEB_PATH
     git clone git@github.yandex-team.ru:$ORG/$REPO $PROJECT
@@ -48,18 +50,18 @@ do
 
     if [[ $3 == '-m' || $3 == '--make' ]]; then
         echo "Проект: $PROJECT";
-        cd ~/$1/$PROJECT
+        cd ~/$WC_NAME/$PROJECT
         if [[ $PROJECT == web4 ]]; then
             make build # Чтобы не выполнять долгие тесты
         else
             make
         fi
-        cd ~/$1/$PROJECT # go back again
+        cd ~/$WC_NAME/$PROJECT # go back again
     else
 
         echo -e "\033[32m"
         echo Дальнейшие действия:
-        echo "cd ~/$1/$PROJECT && make"
+        echo "cd ~/$WC_NAME/$PROJECT && make"
 
     fi
 
@@ -67,7 +69,7 @@ do
         if [[ $PROJECT =~ 3 ]]; then
             BETA=.beta
         fi
-        echo open `whoami`-d-$1$BETA.`hostname`/$URL_PATH
+        echo open `whoami`-d-$WC_NAME$BETA.`hostname`/$URL_PATH
     fi
 
     echo -e "\033[0m"
