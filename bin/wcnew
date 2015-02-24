@@ -36,9 +36,12 @@ do
         ln -s video2 video
     fi
 
-    echo -e "\033[32m"
-    echo Дальнейшие действия:
-    echo "cd ~/$1/$PROJECT && make"
+    # Создаём симлинки web4 -> web3, web_touch_phone (костыль для статики ?)
+    if [[ $PROJECT == web4 ]]; then
+        ln -s web4 web3 && \
+        ln -s web4 web_touch_phone && \
+        echo 'Симлинки созданы';
+    fi
 
     if [[ -n $URL_PATH ]]
     then
