@@ -24,7 +24,6 @@ do
         REPO=${PROJECT//_/-}
     fi
 
-
     cd ~/$1
     ln -s $YXWEB_PATH/$PROJECT $PROJECT
     cd $YXWEB_PATH
@@ -46,11 +45,13 @@ do
 
     if [[ $3 == -m ]]; then
         echo "Проект: $PROJECT";
+        cd ~/$1/$PROJECT
         if [[ $PROJECT == web4 ]]; then
-            cd ~/$1/$PROJECT && make build
+            make build # Чтобы не выполнять долгие тесты
         else
-            cd ~/$1/$PROJECT && make
+            make
         fi
+        cd ~/$1/$PROJECT # go back again
     else
 
         echo -e "\033[32m"
