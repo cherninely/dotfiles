@@ -3,9 +3,12 @@
 if [[ $# < 2 ]]
 then
     echo 'Usage:'
-    echo 'wcnew wc1 images3'
-    echo 'wcnew wc1 images3+video3+web3'
-    echo 'wcnew wc1 images_touch_phone -m # развернуть и собрать'
+    echo '. wcnew wc1 images3'
+    echo '. wcnew wc1 images3+video3+web3'
+    echo '. wcnew wc1 images_touch_phone -m # развернуть и собрать'
+    echo ''
+    echo 'Такая конструкция («. wcnew») приводит к запуску не в дочернем, а в текущем шелле,'
+    echo 'что обеспечивает сохранение выбранной в скрипте директории.'
     exit
 fi
 
@@ -43,7 +46,7 @@ do
         echo 'Симлинки созданы';
     fi
 
-    if [[ $3 == -m ]]; then
+    if [[ $3 == '-m' || $3 == '--make' ]]; then
         echo "Проект: $PROJECT";
         cd ~/$1/$PROJECT
         if [[ $PROJECT == web4 ]]; then
