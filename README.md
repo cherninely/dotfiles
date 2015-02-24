@@ -144,3 +144,10 @@ Bash-команды
 #### Bin
 
 В папке `bin` есть несколько полезных для работы скриптов. Например, `watch` отслеживает изменения файлов (удобно при отладке), а `wcnew` быстро создаёт рабочую копию.
+
+```
+Usage:
+wcnew wc1 images3
+wcnew wc1 images3+video3+web3
+wcnew wc1 images_touch_phone -m # развернуть и собрать (must be default)
+```
