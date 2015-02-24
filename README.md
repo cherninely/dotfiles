@@ -147,9 +147,12 @@ Bash-команды
 
 ```
 Usage:
-wcnew wc1 images3
-wcnew wc1 images3+video3+web3
-wcnew wc1 images_touch_phone -m # развернуть и собрать (must be default)
+. wcnew wc1 images3
+. wcnew wc1 images3+video3+web3
+. wcnew wc1 images_touch_phone -m # развернуть и собрать (must be default)
+
+Такая конструкция: «. wcnew» приводит к запуску не в дочернем, а в текущем шелле, что
+приводит к сохранению выбранной в скрипте директории.
 ```
 
 А `wclog` выводит логи репорта nonstop (и сюда же выводятся console.log() из *.priv.js, соответственно).
