@@ -3,7 +3,7 @@
 # Пользователь по умолчанию
 USER_LOGIN=$USER
 # Проекты по умолчанию
-PROJECTS="images2+images3+video2+video3+web3+web_touch_phone+images_touch_phone+video_touch_phone"
+PROJECTS="images2+images3+video2+video3+web4+web3+web_touch_phone+images_touch_phone+video_touch_phone+video_touch_pad"
 SHOW_STATUS=""
 blue="\E[0;34m"
 green="\E[0;32m"
