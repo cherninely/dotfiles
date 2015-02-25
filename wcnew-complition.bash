@@ -25,4 +25,4 @@ function _wcnew() {
 
 }
 
-complete -F _wcnew_complition.bash wcnew
+complete -F wcnew-complition.bash wcnew
