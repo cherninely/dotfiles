@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
-if [[ $# < 2 ]]
-then
+if [[ $# < 2 ]]; then
     echo 'Usage:'
     echo '. wcnew wc1 images3'
     echo '. wcnew wc1 images3+video3+web3'
@@ -12,15 +11,25 @@ then
     exit
 fi
 
+#
+# filter, rearrange and read opts
+eval set -- "`getopt -o "m,b:" --long "make,branch:" -- "$@"`"
+while [[ $1 != --  ]]; do case $1 in
+    -m|--make) IS_MAKE=1;;
+#   -i|--islands-branch) ISLANDS_CLONE_BRANCH=$2; shift 1;;
+#   -s|--sakhalin-branch) SAKHALIN_CLONE_BRANCH=$2; shift 1;;
+    *) echo "Unknown param"
+esac; shift 1; done
+
+shift 1; # remove divider (--)
+
 WC_NAME=$1
 YXWEB_PATH=report/templates/YxWeb
+
 mkdir -p ~/$WC_NAME/$YXWEB_PATH
 
-
-for PROJECT in ${2//+/ }
-do
-    if [[ $PROJECT =~ video || $PROJECT =~ images ]]
-    then
+for PROJECT in ${2//+/ }; do
+    if [[ $PROJECT =~ video || $PROJECT =~ images ]]; then
         ORG=mm-interfaces
         URL_PATH=${PROJECT%?}
         REPO=${PROJECT}
@@ -48,7 +57,7 @@ do
         echo 'Симлинки созданы';
     fi
 
-    if [[ $3 == '-m' || $3 == '--make' ]]; then
+    if [[ $IS_MAKE == 1 ]]; then
         echo "Проект: $PROJECT";
         cd ~/$WC_NAME/$PROJECT
         if [[ $PROJECT == web4 ]]; then
@@ -56,7 +65,11 @@ do
         else
             make
         fi
-        cd ~/$WC_NAME/$PROJECT # go back again
+
+        echo -e "\033[32m"
+        echo Дальнейшие действия:
+        echo "cd ~/$WC_NAME/$PROJECT"
+
     else
 
         echo -e "\033[32m"
@@ -65,11 +78,10 @@ do
 
     fi
 
+    cd ~/$WC_NAME/$PROJECT # go back again
+
     if [[ -n $URL_PATH ]]; then
-        if [[ $PROJECT =~ 3 ]]; then
-            BETA=.beta
-        fi
-        echo open `whoami`-d-$WC_NAME$BETA.`hostname`/$URL_PATH
+        echo open `whoami`-d-$WC_NAME.`hostname`/$URL_PATH
     fi
 
     echo -e "\033[0m"
