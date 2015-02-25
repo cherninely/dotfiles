@@ -1,4 +1,4 @@
-function _wcnew() {
+function _wcnew_complition() {
 
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
@@ -25,4 +25,4 @@ function _wcnew() {
 
 }
 
-complete -F wcnew-complition.bash wcnew
+complete -F _wcnew_complition wcnew
