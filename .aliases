@@ -43,7 +43,6 @@ alias gr='git remote -v'
 alias gs='git st'
 alias gt='git tag'
 alias gst='git status -sb'
-alias gsp="cd islands/ && echo 'IMAGES-ISLANDS' && gst && echo 'SAKHALIN' && cd ../sakhalin/ && gst && cd .."
 
 [ -f "`which ack`" ] || alias ack=ack-grep
 
