@@ -3,7 +3,7 @@ function _wcnew_complition() {
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
     PROJECTS_LIST='video3 video_touch_phone video_touch_pad images3 images_touch_phone images_touch_pad images_smart video2 images2 web4 granny'
-    OPTS_LIST='--make'
+    OPTS_LIST='--make --tmux'
     cd ~
 
     if [[ ${COMP_CWORD} == 1  ]] ; then # при вводе подкоманды первого уровня: существующие WC
