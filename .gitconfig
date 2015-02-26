@@ -60,6 +60,9 @@
 
 [diff]
     noprefix = true
+    
+[tag]
+    sort = version:refname
 
 [url "git@github.yandex-team.ru:"]
     pushInsteadOf = "ght:"
