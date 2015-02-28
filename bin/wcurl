@@ -1,0 +1,25 @@
+#!/usr/bin/env bash
+
+PWD=`pwd`
+PATH_ARRAY=(${PWD//\// })
+
+USER=${PATH_ARRAY[1]}
+WC_NAME=${PATH_ARRAY[2]}
+
+if [[ ${PATH_ARRAY[3]} == "report" ]]; then
+    PROJECT=${PATH_ARRAY[6]}
+else
+    PROJECT=${PATH_ARRAY[3]}
+fi
+
+case $PROJECT in
+    video3) WC_PATH="video";;
+    video_touch_phone) WC_PATH="video/touch";;
+    video_touch_pad) WC_PATH="video/pad";;
+    images3) WC_PATH="images";;
+    images_touch_phone) WC_PATH="images/touch";;
+    images_touch_pad) WC_PATH="images/pad";;
+    *) WC_PATH=$PROJECT
+esac;
+
+echo "http://$USER-d-$WC_NAME.`hostname`/$WC_PATH/?noredirect=1"
