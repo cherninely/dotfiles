@@ -31,7 +31,6 @@ mkdir -p ~/$WC_NAME/$YXWEB_PATH
 for PROJECT in ${2//+/ }; do
     if [[ $PROJECT =~ video || $PROJECT =~ images ]]; then
         ORG=mm-interfaces
-        URL_PATH=${PROJECT%?}
         REPO=${PROJECT}
     else
         ORG=serp
@@ -80,8 +79,8 @@ for PROJECT in ${2//+/ }; do
 
     cd ~/$WC_NAME/$PROJECT # go back again
 
-    if [[ -n $URL_PATH ]]; then
-        echo open `whoami`-d-$WC_NAME.`hostname`/$URL_PATH
+    if [[ $ORG == "mm-interfaces" ]]; then
+        wcurl
     fi
 
     echo -e "\033[0m"
