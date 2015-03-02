@@ -13,7 +13,7 @@ fi
 
 #
 # filter, rearrange and read opts
-eval set -- "`getopt -o "m,b:" --long "make,branch:" -- "$@"`"
+eval set -- "`getopt -o "m,i:,s:" --long "make,islands-branch:,sakhalin-branch:" -- "$@"`"
 while [[ $1 != --  ]]; do case $1 in
     -m|--make) IS_MAKE=1;;
 #   -i|--islands-branch) ISLANDS_CLONE_BRANCH=$2; shift 1;;
