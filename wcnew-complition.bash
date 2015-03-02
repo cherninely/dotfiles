@@ -7,7 +7,7 @@ function _wcnew_complition() {
     cd ~
 
     if [[ ${COMP_CWORD} == 1  ]] ; then # при вводе подкоманды первого уровня: существующие WC
-        COMPREPLY=( $(compgen -d -- ${cur})  )
+        COMPREPLY=( $(compgen -d -- ${cur} | grep '^[^\.]')  )
         return 0
     fi
 
