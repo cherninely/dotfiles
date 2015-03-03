@@ -1,5 +1,11 @@
 #!/usr/bin/env bash
 
+if [[ $1 ]]; then
+    TEXT=$1
+else
+    TEXT="tesla"
+fi
+
 PWD=`pwd`
 PATH_ARRAY=(${PWD//\// })
 
@@ -13,13 +19,13 @@ else
 fi
 
 case $PROJECT in
-    video3) WC_PATH="video/";;
-    video_touch_phone) WC_PATH="video/touch/?noredirect=1";;
-    video_touch_pad) WC_PATH="video/pad/?noredirect=1";;
-    images3) WC_PATH="images/";;
-    images_touch_phone) WC_PATH="images/touch/?noredirect=1";;
-    images_touch_pad) WC_PATH="images/pad/?noredirect=1";;
+    video3) WC_PATH="video/search?";;
+    video_touch_phone) WC_PATH="video/touch/search?noredirect=1&";;
+    video_touch_pad) WC_PATH="video/pad/search?noredirect=1&";;
+    images3) WC_PATH="images/search?";;
+    images_touch_phone) WC_PATH="images/touch/search?noredirect=1&";;
+    images_touch_pad) WC_PATH="images/pad/search?noredirect=1&";;
     *) WC_PATH=$PROJECT
 esac;
 
-echo "http://$USER-d-$WC_NAME.`hostname`/$WC_PATH"
+echo "http://$USER-d-$WC_NAME.`hostname`/${WC_PATH}text=$TEXT"
