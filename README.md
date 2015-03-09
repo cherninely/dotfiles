@@ -155,6 +155,15 @@ Usage:
 что обеспечивает сохранение выбранной в скрипте директории.
 ```
 
+##### Запуск в OS X
+
+Подготовка
+```sh
+sudo mv /usr/bin/getopt /usr/bin/getopt.bak
+brew install gnu-getopt
+ln -s /usr/local/Cellar/gnu-getopt/1.1.6/bin/getopt /usr/local/bin/getopt
+```
+
 А `wclog` выводит логи репорта nonstop (и сюда же выводятся console.log() из *.priv.js, соответственно).
 
 `wcurl` выводит url текущей рабочей копии.
