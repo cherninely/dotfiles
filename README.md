@@ -230,3 +230,4 @@ all 134        # То же самое, но прыгнуть на строчку
 all 4560 video # video = video/desktop
 all 4560 images/touch-phone	
 ```
+`git sblame <string>` выводит список всех коммитов, где была модифицирована указанная строка
