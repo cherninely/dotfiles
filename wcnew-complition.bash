@@ -16,7 +16,7 @@ function _wcnew_complition() {
         return 0
     fi
 
-    if [[ ${COMP_CWORD} == 3  ]] ; then # Подсказки по опциям
+    if [ ${COMP_CWORD} -ge 3  ] ; then # Подсказки по опциям
         COMPREPLY=( $(compgen -W "$OPTS_LIST" -- "$cur") )
         return 0
     fi
