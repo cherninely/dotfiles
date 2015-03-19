@@ -5,6 +5,7 @@ if [[ $# < 2 ]]; then
     echo '. wcnew wc1 images3'
     echo '. wcnew wc1 images3+video3+web3'
     echo '. wcnew wc1 images_touch_phone -m # развернуть и собрать'
+    echo 'wcnew wc1 images_touch_phone -mt # развернуть, собрать и запустить tmux-сессию с именем рабочей копии'
     echo ''
     echo 'Такая конструкция («. wcnew») приводит к запуску не в дочернем, а в текущем шелле,'
     echo 'что обеспечивает сохранение выбранной в скрипте директории.'
@@ -13,9 +14,10 @@ fi
 
 #
 # filter, rearrange and read opts
-eval set -- "`getopt -o "m,i:,s:" --long "make,islands-branch:,sakhalin-branch:" -- "$@"`"
+eval set -- "`getopt -o "m,t,i:,s:" --long "make,tmux,islands-branch:,sakhalin-branch:" -- "$@"`"
 while [[ $1 != --  ]]; do case $1 in
     -m|--make) IS_MAKE=1;;
+    -t|--tmux) IS_TMUX=1;;
 #   -i|--islands-branch) ISLANDS_CLONE_BRANCH=$2; shift 1;;
 #   -s|--sakhalin-branch) SAKHALIN_CLONE_BRANCH=$2; shift 1;;
     *) echo "Unknown param"
@@ -31,9 +33,11 @@ mkdir -p ~/$WC_NAME/$YXWEB_PATH
 for PROJECT in ${2//+/ }; do
     if [[ $PROJECT =~ video || $PROJECT =~ images ]]; then
         ORG=mm-interfaces
+        ORG_ALIAS=mm
         REPO=${PROJECT}
     else
         ORG=serp
+        ORG_ALIAS=serp
         REPO=${PROJECT//_/-}
     fi
 
@@ -86,3 +90,9 @@ for PROJECT in ${2//+/ }; do
     echo -e "\033[0m"
 
 done
+
+# Создаем mtux-сессию для последнего проекта из цикла
+if [[ $IS_TMUX == 1 ]]; then
+    cd ~/$WC_NAME/$PROJECT
+    tmux -2 -S /tmp/tm-`whoami` new-session -s $WC_NAME "tmux source-file ~/dotfiles/.tmux-default-session-$ORG_ALIAS"
+fi

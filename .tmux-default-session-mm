@@ -1,0 +1,5 @@
+neww -n dev
+send-keys 'wcurl' C-m
+split-window -h -l50
+send-keys 'make rebus' C-m
+selectp -t 0
