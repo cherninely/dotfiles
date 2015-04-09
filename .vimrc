@@ -62,7 +62,7 @@ NeoBundle 'gregsexton/MatchTag'
 NeoBundle 'hail2u/vim-css3-syntax'
 NeoBundle 'ignovak/vim-web-indent'
 " NeoBundle 'walm/jshint.vim'
-
+NeoBundle 'wavded/vim-stylus'
 " NeoBundle 'miripiruni/CSScomb-for-Vim'
 
 NeoBundle 'ignovak/vim-translator'
