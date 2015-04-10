@@ -26,12 +26,17 @@ esac; shift 1; done
 shift 1; # remove divider (--)
 
 WC_NAME=$1
+PROJECTS=$2
 YXWEB_PATH=report/templates/YxWeb
 
 mkdir -p ~/$WC_NAME/$YXWEB_PATH
 
-for PROJECT in ${2//+/ }; do
-    if [[ $PROJECT =~ video || $PROJECT =~ images ]]; then
+function open_or_print {
+    which open && open $1 || $($1)
+}
+
+for PROJECT in ${PROJECTS//+/ }; do
+    if [[ $PROJECT =~ video || $PROJECT =~ images || $PROJECT == sansara ]]; then
         ORG=mm-interfaces
         ORG_ALIAS=mm
         REPO=${PROJECT}
@@ -65,6 +70,8 @@ for PROJECT in ${2//+/ }; do
         cd ~/$WC_NAME/$PROJECT
         if [[ $PROJECT == web4 ]]; then
             make build # Чтобы не выполнять долгие тесты
+        elif [[ $PROJECT == sansara ]]; then
+            make install # просто make запускает сервер и браузер
         else
             make
         fi
@@ -84,14 +91,23 @@ for PROJECT in ${2//+/ }; do
     cd ~/$WC_NAME/$PROJECT # go back again
 
     if [[ $ORG == "mm-interfaces" ]]; then
-        wcurl
+        
+        if [[ $PROJECTS =~ sansara ]]; then
+            if [[ $PROJECT == sansara ]]; then
+                make start
+                sleep 1
+                open_or_print "http://sansara.ru:8888/images/search?text=Lamborghini"
+            fi
+        else
+            open_or_print "$(wcurl)"
+        fi
     fi
 
     echo -e "\033[0m"
 
 done
 
-# Создаем mtux-сессию для последнего проекта из цикла
+# Создаем tmux-сессию для последнего проекта из цикла
 if [[ $IS_TMUX == 1 ]]; then
     cd ~/$WC_NAME/$PROJECT
     tmux -2 -S /tmp/tm-`whoami` new-session -s $WC_NAME "tmux source-file ~/dotfiles/.tmux-default-session-$ORG_ALIAS"
