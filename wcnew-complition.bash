@@ -12,7 +12,16 @@ function _wcnew_complition() {
     fi
 
     if [[ ${COMP_CWORD} == 2  ]] ; then # при вводе подкоманды 2-го уровня: известные проекты
-        COMPREPLY=( $(compgen -W "$PROJECTS_LIST" -- "$cur") )
+        COMPREPLY=( $(\
+            compgen -W "$PROJECTS_LIST" -- "$(echo "$cur" | sed -E 's/^.+\+//')" \
+            | while IFS= read -r line; do \
+                if [[ `echo "$cur" | grep "+"` ]]; then
+                    echo "$(echo "$cur" | sed -E 's/\+.+$/+/')$line"
+                else
+                    echo "$line"
+                fi
+            done \
+        ) )
         return 0
     fi
 
