@@ -32,7 +32,7 @@ YXWEB_PATH=report/templates/YxWeb
 mkdir -p ~/$WC_NAME/$YXWEB_PATH
 
 function open_or_print {
-    which open && open $1 || $($1)
+    [[ $(uname) = Darwin && $(which open) ]] && open $1 || echo $1
 }
 
 for PROJECT in ${PROJECTS//+/ }; do
