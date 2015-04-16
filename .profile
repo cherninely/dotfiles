@@ -23,7 +23,6 @@ source ~/dotfiles/git-completion.bash
 source ~/dotfiles/wcshow-completion.bash
 source ~/dotfiles/wcnew-complition.bash
 source ~/dotfiles/tms-complition.bash
-source ~/dotfiles/tanker-complition.bash
 
 if [[ -z `git config --global user.name` ]]; then
     echo -n "Please, enter user name for git config: "
