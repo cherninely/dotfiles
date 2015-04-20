@@ -25,7 +25,6 @@ while [[ $1 != --  ]]; do case $1 in
 #   -b|--branch) CLONE_BRANCH=$2; shift 1;;
     *) echo "Unknown param"
 esac; shift 1; done
-
 shift 1; # remove divider (--)
 
 readonly WC_NAME=$1
@@ -162,7 +161,7 @@ for PROJECT in ${PROJECTS//\\n/ }; do
     fi
 
     if [[ $ORG == "mm-interfaces" ]]; then
-        
+
         if [[ $PROJECTS =~ sansara ]]; then
             if [[ $PROJECT == sansara ]]; then
                 make start
