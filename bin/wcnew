@@ -14,12 +14,11 @@ fi
 
 #
 # filter, rearrange and read opts
-eval set -- "`getopt -o "m,t,i:,s:" --long "make,tmux,islands-branch:,sakhalin-branch:" -- "$@"`"
+eval set -- "`getopt -o "m,t,b:" --long "make,tmux,branch" -- "$@"`"
 while [[ $1 != --  ]]; do case $1 in
     -m|--make) IS_MAKE=1;;
     -t|--tmux) IS_TMUX=1;;
-#   -i|--islands-branch) ISLANDS_CLONE_BRANCH=$2; shift 1;;
-#   -s|--sakhalin-branch) SAKHALIN_CLONE_BRANCH=$2; shift 1;;
+#   -b|--branch) CLONE_BRANCH=$2; shift 1;;
     *) echo "Unknown param"
 esac; shift 1; done
 
