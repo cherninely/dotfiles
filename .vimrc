@@ -187,6 +187,16 @@ set diffopt=filler
 set diffopt+=vertical
 set diffopt+=iwhite
 
+" Switch splits
+nnoremap <C-h> <C-W>h
+nnoremap <C-j> <C-W>j
+nnoremap <C-k> <C-W>k
+nnoremap <C-l> <C-W>l
+
+" Navigate through wrapped lines
+noremap j gj
+noremap k gk
+
 augroup vimrc
   autocmd!
 
@@ -282,6 +292,8 @@ let NERDTreeShowHidden=1
 let NERDTreeAutoDeleteBuffer=0
 nmap <silent> <leader>t :NERDTreeToggle<CR>
 nmap <silent> <leader>f :NERDTreeFind<CR>
+nnoremap <Bs> :<C-u>NERDTreeToggle<CR>
+let NERDTreeMinimalUI=1
 
 " fugitive
 nmap <silent> <leader>b :.Gblame<cr>
