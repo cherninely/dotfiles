@@ -18,12 +18,12 @@ fi
 
 #
 # filter, rearrange and read opts
-eval set -- "`getopt -o "m,t,b:" --long "make,tmux,branch" -- "$@"`"
+eval set -- "`getopt -o "m,t,b:" --long "make,tmux,branch:" -- "$@"`"
 while [[ $1 != --  ]]; do case $1 in
     -m|--make) IS_MAKE=1;;
     -t|--tmux) IS_TMUX=1;;
-#   -b|--branch) CLONE_BRANCH=$2; shift 1;;
-    *) echo "Unknown param"
+    -b|--branch) CLONE_BRANCH=$2; shift 1;;
+    *) echo "Unknown param"; exit 1;;
 esac; shift 1; done
 shift 1; # remove divider (--)
 
@@ -31,7 +31,7 @@ readonly WC_NAME=$1
 readonly RAW_PROJECTS=$2
 readonly YXWEB_PATH=report/templates/YxWeb
 NEXT_ACTIONS_HINT=$(echo -e "\033[32m\n Дальнейшие действия:")
-
+readonly CLONE_BRANCH_OPT="$([[ $(echo $CLONE_BRANCH) ]] && echo "--branch $CLONE_BRANCH")"
 
 # ####################
 # COMMON FUNCTIONS
@@ -110,7 +110,9 @@ for PROJECT in ${PROJECTS//\\n/ }; do
     cd ~/$WC_NAME
     if [[ "$given_fiji_projects" ]]; then
 
-        git clone git@github.yandex-team.ru:$ORG/$REPO .
+        GIT_CLONE="git clone $CLONE_BRANCH_OPT git@github.yandex-team.ru:$ORG/$REPO ."
+        echo $GIT_CLONE
+        $GIT_CLONE
         [ $? == 0 ] || exit 1
 
         # Закэшировать цель(-и) сборки
