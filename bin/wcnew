@@ -59,20 +59,20 @@ function open_or_print {
 # delimeter="\n"
 # @example images3 video_touch_phone
 fiji_projects="$(cat ~/dotfiles/fiji-projects | sort)"
-echo -e debug "fiji_projects:\n" "$fiji_projects"
+# echo -e debug "fiji_projects:\n" "$fiji_projects"
 
 # список проектов переданных вторым параметром
 # Заменить разделитель "+" на "\n"
 given_projects="$(echo $RAW_PROJECTS | sed -r 's/\+/\n/g' | sort)"
-echo -e debug "given_projects:\n" "$given_projects"
+# echo -e debug "given_projects:\n" "$given_projects"
 
 # только не fiji-проекты
 given_no_fiji_projects="$(comm -13 <(echo "$fiji_projects") <(echo "$given_projects") | trim_multiline)"
-echo -e debug "given_no_fiji_projects:\n" "$given_no_fiji_projects"
+# echo -e debug "given_no_fiji_projects:\n" "$given_no_fiji_projects"
 
 # Если ли в списке проектов для развёртывания fiji-проекты
 given_fiji_projects="$(comm -12 <(echo "$fiji_projects") <(echo "$given_projects") | trim_multiline)"
-echo -e debug "given_fiji_projects:\n" "$given_fiji_projects"
+# echo -e debug "given_fiji_projects:\n" "$given_fiji_projects"
 
 function get_fiji_projects_new_format()
 {

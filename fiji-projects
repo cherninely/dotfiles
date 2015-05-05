@@ -8,15 +8,6 @@ images
 video
 images/desktop
 images/touch-phone
-images/touch-pad:
-images/%
 video/desktop
 video/touch-phone
-video/touch-pad:
-video/%
-images/desktop/%
-images/touch-phone/%
-images/touch-pad/%
-video/desktop/%
-video/touch-phone/%
-video/touch-pad/%
+video/touch-pad
