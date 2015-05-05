@@ -117,7 +117,7 @@ for PROJECT in ${PROJECTS//\\n/ }; do
 
         # Закэшировать цель(-и) сборки
         # менять формат записи проектов на новый
-        [[ "$fiji_projects_new_format" ]] && echo "$fiji_projects_new_format" > .project
+        [[ "$fiji_projects_new_format" ]] && echo "$fiji_projects_new_format" | sed 's/fiji/all/g' > .project
 
         PROJECT_DIR="~/$WC_NAME"
 
