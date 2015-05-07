@@ -1,3 +1,6 @@
+alias gb-bad='git bisect bad && make'
+alias gb-good='git bisect good && make'
+
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
 alias localip="ipconfig getifaddr en1"
@@ -8,8 +11,6 @@ alias c="tr -d '\n' | pbcopy"
 
 # URL-encode strings
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
-
-
 
 alias ll='ls -laFo'
 alias l='ls -l'
