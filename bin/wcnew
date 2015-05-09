@@ -58,7 +58,7 @@ function open_or_print {
 # список fiji-проектов
 # delimeter="\n"
 # @example images3 video_touch_phone
-fiji_projects="$(cat ~/dotfiles/fiji-projects | sort)"
+fiji_projects="$(cat ~/dotfiles/extra/fiji-projects | sort)"
 # echo -e debug "fiji_projects:\n" "$fiji_projects"
 
 # список проектов переданных вторым параметром
@@ -91,11 +91,12 @@ PROJECTS="$given_no_fiji_projects"
 if [[ "$given_fiji_projects" ]]; then PROJECTS="fiji\n$PROJECTS"; fi
 
 # ####################
-# MAIN LOOP
+# MAIN FUNCTIONS
 # ####################
 
-for PROJECT in ${PROJECTS//\\n/ }; do
-    echo -e debug "PROJECT:\n" "$PROJECT"
+function setup_repo_variables()
+{
+
     if [[ $PROJECT == fiji || $PROJECT == sansara ]]; then
         ORG=mm-interfaces
         ORG_ALIAS=mm
@@ -106,8 +107,11 @@ for PROJECT in ${PROJECTS//\\n/ }; do
         REPO=${PROJECT//_/-}
     fi
 
-    mkdir ~/$WC_NAME
-    cd ~/$WC_NAME
+}
+
+function clone_repo()
+{
+
     if [[ "$given_fiji_projects" ]]; then
 
         GIT_CLONE="git clone $CLONE_BRANCH_OPT git@github.yandex-team.ru:$ORG/$REPO ."
@@ -133,6 +137,10 @@ for PROJECT in ${PROJECTS//\\n/ }; do
 
     fi
 
+}
+
+function create_symlinks()
+{
 
     # Создаём симлинк video -> video2 (костыль для статики video2)
     [[ $PROJECT == video2 ]] && ln -s video2 video && echo 'Симлинки статики созданы'
@@ -140,10 +148,10 @@ for PROJECT in ${PROJECTS//\\n/ }; do
     # Создаём симлинки web4 -> web3, web_touch_phone (костыль для статики)
     [[ $PROJECT == web4 ]] && ln -s web4 web3 && ln -s web4 web_touch_phone && echo 'Симлинки статики созданы'
 
+}
 
-    NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT\ncd $PROJECT_DIR"
-
-    if [[ $IS_MAKE ]]; then
+function build_project()
+{
 
         echo "Проект: $PROJECT";
         cd $PROJECT_DIR
@@ -156,11 +164,10 @@ for PROJECT in ${PROJECTS//\\n/ }; do
             make
         fi
 
-    else
+}
 
-        NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT && make"
-
-    fi
+function open_or_print_project_link()
+{
 
     if [[ $ORG == "mm-interfaces" ]]; then
 
@@ -175,7 +182,42 @@ for PROJECT in ${PROJECTS//\\n/ }; do
         fi
     fi
 
+}
+
+# ####################
+# MAIN LOOP
+# ####################
+
+for PROJECT in ${PROJECTS//\\n/ }; do
+
+    echo -e debug "PROJECT:\n" "$PROJECT"
+
+    setup_repo_variables
+
+    mkdir ~/$WC_NAME
+    cd ~/$WC_NAME
+
+    clone_repo
+
+    create_symlinks
+
+    NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT\ncd $PROJECT_DIR"
+
+    if [[ $IS_MAKE ]]; then
+        build_project
+    else
+        NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT && make"
+    fi
+
+    open_or_print_project_link
+
 done
+
+
+# ####################
+# HINTS
+# ####################
+
 
 # Если развёрнута sansara, то собрать её в последнюю очередь,
 # Чтобы были доступны уже собранные проекты

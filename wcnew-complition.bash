@@ -2,7 +2,7 @@ function _wcnew_complition() {
 
     COMPREPLY=()
     cur="${COMP_WORDS[COMP_CWORD]}"
-    PROJECTS_LIST="$(cat ~/dotfiles/fiji-projects | xargs) video2 images2 web4 granny"
+    PROJECTS_LIST="$(cat ~/dotfiles/extra/fiji-projects | xargs) video2 images2 web4 granny"
     OPTS_LIST='--make --tmux --branch'
     cd ~
 
