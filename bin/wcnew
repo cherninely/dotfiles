@@ -1,5 +1,9 @@
 #!/usr/bin/env bash
 
+# ####################
+# INIT
+# ####################
+
 if [[ $# < 2 ]]; then
     echo 'Usage:'
     echo '. wcnew wc1 images3'
@@ -14,83 +18,159 @@ fi
 
 #
 # filter, rearrange and read opts
-eval set -- "`getopt -o "m,t,b:" --long "make,tmux,branch" -- "$@"`"
+eval set -- "`getopt -o "m,t,b:" --long "make,tmux,branch:" -- "$@"`"
 while [[ $1 != --  ]]; do case $1 in
     -m|--make) IS_MAKE=1;;
     -t|--tmux) IS_TMUX=1;;
-#   -b|--branch) CLONE_BRANCH=$2; shift 1;;
-    *) echo "Unknown param"
+    -b|--branch) CLONE_BRANCH=$2; shift 1;;
+    *) echo "Unknown param"; exit 1;;
 esac; shift 1; done
-
 shift 1; # remove divider (--)
 
-WC_NAME=$1
-PROJECTS=$2
-YXWEB_PATH=report/templates/YxWeb
+readonly WC_NAME=$1
+readonly RAW_PROJECTS=$2
+readonly YXWEB_PATH=report/templates/YxWeb
+NEXT_ACTIONS_HINT=$(echo -e "\033[32m\n Дальнейшие действия:")
+readonly CLONE_BRANCH_OPT="$([[ $(echo $CLONE_BRANCH) ]] && echo "--branch $CLONE_BRANCH")"
 
-mkdir -p ~/$WC_NAME/$YXWEB_PATH
+# ####################
+# COMMON FUNCTIONS
+# ####################
+
+function trim_multiline()
+{
+    sed -r 's/^\s+|\s+$//g'
+}
 
 function open_or_print {
     [[ $(uname) = Darwin && $(which open) ]] && open $1 || echo $1
 }
 
-for PROJECT in ${PROJECTS//+/ }; do
-    if [[ $PROJECT =~ video || $PROJECT =~ images || $PROJECT == sansara ]]; then
+
+# ####################
+#
+# FIJI PREPROCESSING
+#
+# FIJI is the Union Repos of MM
+#
+# ####################
+
+# список fiji-проектов
+# delimeter="\n"
+# @example images3 video_touch_phone
+fiji_projects="$(cat ~/dotfiles/extra/fiji-projects | sort)"
+# echo -e debug "fiji_projects:\n" "$fiji_projects"
+
+# список проектов переданных вторым параметром
+# Заменить разделитель "+" на "\n"
+given_projects="$(echo $RAW_PROJECTS | sed -r 's/\+/\n/g' | sort)"
+# echo -e debug "given_projects:\n" "$given_projects"
+
+# только не fiji-проекты
+given_no_fiji_projects="$(comm -13 <(echo "$fiji_projects") <(echo "$given_projects") | trim_multiline)"
+# echo -e debug "given_no_fiji_projects:\n" "$given_no_fiji_projects"
+
+# Если ли в списке проектов для развёртывания fiji-проекты
+given_fiji_projects="$(comm -12 <(echo "$fiji_projects") <(echo "$given_projects") | trim_multiline)"
+# echo -e debug "given_fiji_projects:\n" "$given_fiji_projects"
+
+function get_fiji_projects_new_format()
+{
+    for project in ${given_fiji_projects//\\n/ }; do
+        project="${project/3/_desktop}" #images3 -> images_deskpad
+        project="${project/_//}" # video_touch_phone -> video/touch_phone
+        project="${project//_/-}" # images_deskpad -> video/deskpad
+        echo "$project"
+    done
+}
+fiji_projects_new_format="$(get_fiji_projects_new_format)"
+echo -e debug "fiji_projects_new_format:\n" "$fiji_projects_new_format"
+
+# fiji-проекты (images3, video_touch_phone, и др.) удаляются из списка и заменяются на fiji
+PROJECTS="$given_no_fiji_projects"
+if [[ "$given_fiji_projects" ]]; then PROJECTS="fiji\n$PROJECTS"; fi
+
+# ####################
+# MAIN FUNCTIONS
+# ####################
+
+function setup_repo_variables()
+{
+
+    if [[ $PROJECT == fiji || $PROJECT == sansara ]]; then
         ORG=mm-interfaces
         ORG_ALIAS=mm
-        REPO=${PROJECT}
+        REPO="$PROJECT"
     else
         ORG=serp
         ORG_ALIAS=serp
         REPO=${PROJECT//_/-}
     fi
 
-    cd ~/$WC_NAME
-    ln -s $YXWEB_PATH/$PROJECT $PROJECT
-    cd $YXWEB_PATH
-    git clone git@github.yandex-team.ru:$ORG/$REPO $PROJECT
+}
 
-    [ $? == 0 ] || exit 1
+function clone_repo()
+{
+
+    if [[ "$given_fiji_projects" ]]; then
+
+        GIT_CLONE="git clone $CLONE_BRANCH_OPT git@github.yandex-team.ru:$ORG/$REPO ."
+        echo $GIT_CLONE
+        $GIT_CLONE
+        [ $? == 0 ] || exit 1
+
+        # Закэшировать цель(-и) сборки
+        # менять формат записи проектов на новый
+        [[ "$fiji_projects_new_format" ]] && echo "$fiji_projects_new_format" | sed 's/fiji/all/g' > .project
+
+        PROJECT_DIR="~/$WC_NAME"
+
+    else
+
+        mkdir -p ~/$WC_NAME/$YXWEB_PATH
+        ln -s $YXWEB_PATH/$PROJECT $PROJECT
+        cd $YXWEB_PATH
+        git clone git@github.yandex-team.ru:$ORG/$REPO $PROJECT
+        [ $? == 0 ] || exit 1
+
+        PROJECT_DIR="~/$WC_NAME/$PROJECT"
+
+    fi
+
+}
+
+function create_symlinks()
+{
 
     # Создаём симлинк video -> video2 (костыль для статики video2)
-    if [[ $PROJECT == video2 ]]; then
-        ln -s video2 video
-    fi
+    [[ $PROJECT == video2 ]] && ln -s video2 video && echo 'Симлинки статики созданы'
 
-    # Создаём симлинки web4 -> web3, web_touch_phone (костыль для статики ?)
-    if [[ $PROJECT == web4 ]]; then
-        ln -s web4 web3 && \
-        ln -s web4 web_touch_phone && \
-        echo 'Симлинки созданы';
-    fi
+    # Создаём симлинки web4 -> web3, web_touch_phone (костыль для статики)
+    [[ $PROJECT == web4 ]] && ln -s web4 web3 && ln -s web4 web_touch_phone && echo 'Симлинки статики созданы'
 
-    if [[ $IS_MAKE == 1 ]]; then
+}
+
+function build_project()
+{
+
         echo "Проект: $PROJECT";
-        cd ~/$WC_NAME/$PROJECT
+        cd $PROJECT_DIR
+
         if [[ $PROJECT == web4 ]]; then
             make build # Чтобы не выполнять долгие тесты
         elif [[ $PROJECT == sansara ]]; then
-            make install # просто make запускает сервер и браузер
+            IS_SANSARA=true
         else
             make
         fi
 
-        echo -e "\033[32m"
-        echo Дальнейшие действия:
-        echo "cd ~/$WC_NAME/$PROJECT"
+}
 
-    else
-
-        echo -e "\033[32m"
-        echo Дальнейшие действия:
-        echo "cd ~/$WC_NAME/$PROJECT && make"
-
-    fi
-
-    cd ~/$WC_NAME/$PROJECT # go back again
+function open_or_print_project_link()
+{
 
     if [[ $ORG == "mm-interfaces" ]]; then
-        
+
         if [[ $PROJECTS =~ sansara ]]; then
             if [[ $PROJECT == sansara ]]; then
                 make start
@@ -102,12 +182,52 @@ for PROJECT in ${PROJECTS//+/ }; do
         fi
     fi
 
-    echo -e "\033[0m"
+}
+
+# ####################
+# MAIN LOOP
+# ####################
+
+for PROJECT in ${PROJECTS//\\n/ }; do
+
+    echo -e debug "PROJECT:\n" "$PROJECT"
+
+    setup_repo_variables
+
+    mkdir ~/$WC_NAME
+    cd ~/$WC_NAME
+
+    clone_repo
+
+    create_symlinks
+
+    NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT\ncd $PROJECT_DIR"
+
+    if [[ $IS_MAKE ]]; then
+        build_project
+    else
+        NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT && make"
+    fi
+
+    open_or_print_project_link
 
 done
 
+
+# ####################
+# HINTS
+# ####################
+
+
+# Если развёрнута sansara, то собрать её в последнюю очередь,
+# Чтобы были доступны уже собранные проекты
+[[ $IS_MAKE && $IS_SANSARA ]] && cd ~/$WC_NAME/sansara && sudo make install # а просто make запускает сервер и браузер
+
+# Вывести подсказки по дальнейшим действиям
+echo -e "$NEXT_ACTIONS_HINT\033[0m"
+
 # Создаем tmux-сессию для последнего проекта из цикла
 if [[ $IS_TMUX == 1 ]]; then
-    cd ~/$WC_NAME/$PROJECT
+    cd $PROJECT_DIR
     tmux -2 -S /tmp/tm-`whoami` new-session -s $WC_NAME "tmux source-file ~/dotfiles/.tmux-default-session-$ORG_ALIAS"
 fi
