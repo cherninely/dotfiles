@@ -149,11 +149,12 @@ Bash-команды
 
 
 ```sh
-wcnew tmp images3; cd ~/!^ # Старый формат
-wcnew tmp video_touch_phone -m; cd ~/!^  # Со сборкой (--make)
-wcnew tmp images/deskpad -m; cd ~/!^  # новый формат
-wcnew tmp fiji -m; cd ~/!^  # развёртывание и сборка целиком
-wcnew wc1 images3+video3+web3; cd ~/!^ # Несколько проектов
+wcnew tmp images3               # Старый формат
+wcnew tmp video_touch_phone -m  # Со сборкой (--make)
+wcnew tmp images/deskpad -m     # новый формат
+wcnew tmp fiji -m               # развёртывание и сборка целиком
+wcnew wc1 images3+video3+web3   # Несколько проектов
+wcnew tmp web4 -m               # СЕРП (-m = make build)
 ```
 
 Переход в рабочую директорию:
