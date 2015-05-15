@@ -147,20 +147,18 @@ Bash-команды
 
 ##### Wcnew
 
+
 ```
-wcnew wc1 images/desktop
-wcnew wc1 images_touch_phone -m # развернуть и собрать (must be default)
+wcnew tmp images3; cd ~/!^ # Старый формат
+wcnew tmp video_touch_phone -m; cd ~/!^  # Со сборкой (--make)
+wcnew tmp images/deskpad -m; cd ~/!^  # новый формат
+wcnew tmp fiji -m; cd ~/!^  # развёртывание и сборка целиком
+wcnew wc1 images3+video3+web3; cd ~/!^ # Несколько проектов
+```
 
-wcnew tmp images3 # Старый формат
-wcnew tmp video_touch_phone -m # Со сборкой (--make)
-wcnew tmp images/deskpad -m # новый формат
-wcnew tmp fiji -m # развёртывание и сборка целиком
-wcnew wc1 images3+video3+web3 # Несколько проектов
-
-
-
-Такая конструкция («. wcnew») приводит к запуску не в дочернем, а в текущем шелле,
-что обеспечивает сохранение выбранной в скрипте директории.
+Переход в рабочую директорию:
+```
+cd ~/!^ # !^ — первый аргумент предыдущей команды
 ```
 
 ##### Запуск в OS X
