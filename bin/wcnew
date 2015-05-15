@@ -6,13 +6,15 @@
 
 if [[ $# < 2 ]]; then
     echo 'Usage:'
-    echo '. wcnew wc1 images3'
-    echo '. wcnew wc1 images3+video3+web3'
-    echo '. wcnew wc1 images_touch_phone -m # развернуть и собрать'
-    echo 'wcnew wc1 images_touch_phone -mt # развернуть, собрать и запустить tmux-сессию с именем рабочей копии'
+    echo 'wcnew tmp images3               # Старый формат'
+    echo 'wcnew tmp video_touch_phone -m  # Со сборкой (--make)'
+    echo 'wcnew tmp images/deskpad -m     # новый формат'
+    echo 'wcnew tmp fiji -m               # развёртывание и сборка целиком'
+    echo 'wcnew wc1 images3+video3+web3   # Несколько проектов'
+    echo 'wcnew tmp web4 -m               # СЕРП (-m = make build)'
     echo ''
-    echo 'Такая конструкция («. wcnew») приводит к запуску не в дочернем, а в текущем шелле,'
-    echo 'что обеспечивает сохранение выбранной в скрипте директории.'
+    echo 'Go to working directory:'
+    echo 'cd ~/!^ # !^ — первый аргумент предыдущей команды'
     exit
 fi
 
