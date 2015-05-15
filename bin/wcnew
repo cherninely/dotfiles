@@ -112,6 +112,7 @@ function setup_repo_variables()
 function clone_repo()
 {
 
+    # MM fiji
     if [[ "$given_fiji_projects" ]]; then
 
         GIT_CLONE="git clone $CLONE_BRANCH_OPT git@github.yandex-team.ru:$ORG/$REPO ."
@@ -125,6 +126,7 @@ function clone_repo()
 
         PROJECT_DIR="~/$WC_NAME"
 
+    # СЕРП
     else
 
         mkdir -p ~/$WC_NAME/$YXWEB_PATH
@@ -136,6 +138,8 @@ function clone_repo()
         PROJECT_DIR="~/$WC_NAME/$PROJECT"
 
     fi
+
+    # TODO: СЕРП & MM развёртывание любых репозиториев типа images-touch-viewer
 
 }
 
@@ -154,10 +158,10 @@ function build_project()
 {
 
         echo "Проект: $PROJECT";
-        cd $PROJECT_DIR
+        cd $PROJECT
 
         if [[ $PROJECT == web4 ]]; then
-            make build # Чтобы не выполнять долгие тесты
+            sudo make build # Чтобы не выполнять долгие тесты
         elif [[ $PROJECT == sansara ]]; then
             IS_SANSARA=true
         else
