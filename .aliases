@@ -137,5 +137,5 @@ function wcname()
 
 function wcpath()
 {
-    echo "~/$(wcname)"
+    echo "$HOME/$(wcname)"
 }
