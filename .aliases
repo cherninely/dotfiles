@@ -130,3 +130,12 @@ function tm-pair
         echo 'tm-pair user_name feature_name # Attach to session'
     fi
 }
+function wcname()
+{
+    echo "$(pwd | sed "s|$(echo $HOME)/||")/" | cut -f 1 -d /
+}
+
+function wcpath()
+{
+    echo "~/$(wcname)"
+}
