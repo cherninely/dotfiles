@@ -81,20 +81,16 @@ alias wlog=wclog
 
 all()
 {
-    if [ `basename $PWD` == 'web3' ]
-    then
-        es pages-desktop/search/all/_all.priv.js
-    elif [[ `basename $PWD` == 'web-touch-phone' ]]
-    then
-        es pages-touch-phone/search/all/_all.priv.js
-    elif [[ $PWD =~ 'touch_phone' ]]
-    then
-        e pages-touch/common/_common.priv.js
-    elif [[ $PWD =~ 'touch_pad' ]]
-    then
-        e pages-touch-pad/common/_common.priv.js
+    if [ `basename $PWD` == 'web3' ]; then
+        es pages-desktop/search/all/_all.priv.js +$1
+    elif [[ `basename $PWD` == 'web-touch-phone' ]]; then
+        es pages-touch-phone/search/all/_all.priv.js +$1
+    elif [[ $PWD =~ 'touch_phone' ]]; then
+        e pages-touch/common/_common.priv.js +$1
+    elif [[ $PWD =~ 'touch_pad' ]]; then
+        e pages-touch-pad/common/_common.priv.js +$1
     else
-        e pages-desktop/common/_common.priv.js
+        e $([[ `echo "$2"`  ]] || cat .project | head -n 1)/pages/common/_common.priv.js +$1
     fi
 }
 
