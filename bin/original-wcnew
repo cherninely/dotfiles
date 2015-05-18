@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+# alias wcnew # is a wrapper for do `cd` at end of WC creating
 
 # ####################
 # INIT
@@ -12,9 +13,6 @@ if [[ $# < 2 ]]; then
     echo 'wcnew tmp fiji -m               # развёртывание и сборка целиком'
     echo 'wcnew wc1 images3+video3+web3   # Несколько проектов'
     echo 'wcnew tmp web4 -m               # СЕРП (-m = make build)'
-    echo ''
-    echo 'Go to working directory:'
-    echo 'cd ~/!^ # !^ — первый аргумент предыдущей команды'
     exit
 fi
 
@@ -32,7 +30,7 @@ shift 1; # remove divider (--)
 readonly WC_NAME=$1
 readonly RAW_PROJECTS=$2
 readonly YXWEB_PATH=report/templates/YxWeb
-NEXT_ACTIONS_HINT=$(echo -e "\033[32m\n Дальнейшие действия:")
+NEXT_ACTIONS_HINT="$(echo -e "\033[32mДальнейшие действия:\n")"
 readonly CLONE_BRANCH_OPT="$([[ $(echo $CLONE_BRANCH) ]] && echo "--branch $CLONE_BRANCH")"
 
 # ####################
@@ -207,15 +205,13 @@ for PROJECT in ${PROJECTS//\\n/ }; do
 
     create_symlinks
 
-    NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT\ncd $PROJECT_DIR"
-
     if [[ $IS_MAKE ]]; then
         build_project
     else
-        NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT && make"
+        NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT\nmake"
     fi
 
-    open_or_print_project_link
+    NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT\n📋  Ссылка:\n$(open_or_print_project_link)\n"
 
 done
 
@@ -230,7 +226,8 @@ done
 [[ $IS_MAKE && $IS_SANSARA ]] && cd ~/$WC_NAME/sansara && sudo make install # а просто make запускает сервер и браузер
 
 # Вывести подсказки по дальнейшим действиям
-echo -e "$NEXT_ACTIONS_HINT\033[0m"
+cd ~/$WC_NAME
+echo -e "✅  $NEXT_ACTIONS_HINT\033[0m"
 
 # Создаем tmux-сессию для последнего проекта из цикла
 if [[ $IS_TMUX == 1 ]]; then
