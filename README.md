@@ -161,7 +161,8 @@ wcnew tmp video_touch_phone -m  # Со сборкой (--make)
 wcnew tmp images/deskpad -m     # новый формат
 wcnew tmp fiji -m               # развёртывание и сборка целиком
 wcnew wc1 images3+video3+web3   # Несколько проектов
-wcnew tmp web4 -m               # СЕРП (-m = make build)
+wcnew tmp web4 --make           # СЕРП (-m = make build)
+wcnew wc2 images --branch feature --make # Продолжение работы на новой машинке https://yadi.sk/i/rgw1akC_gjJ8W
 ```
 
 ###### All
