@@ -152,18 +152,33 @@ Bash-команды
 * `wcpath` — путь к рабочей копии (предполагается расположение в ~), как глубоку внутри бы вы не находились
 * `all` — названный по историческим присинам алиас для условно: `**/*_common.priv.js`
 
+`wcnew` работает, в каком бы месте файловой системы вы не находились,
+
+`wcurl`, `wcname`, `wcpath`, `all` работают на любой глубине в директории рабочей копии 
+
+
 ###### Wcnew
 
-
+**Примеры использования**:
 ```sh
 wcnew tmp images3               # Старый формат
 wcnew tmp video_touch_phone -m  # Со сборкой (--make)
-wcnew tmp images/deskpad -m     # новый формат
-wcnew tmp fiji -m               # развёртывание и сборка целиком
-wcnew wc1 images3+video3+web3   # Несколько проектов
+wcnew tmp images/deskpad -m     # Новый формат
+wcnew tmp fiji -m               # Развёртывание и сборка целиком
+wcnew wc1 images3/+video3       # Несколько проектов
 wcnew tmp web4 --make           # СЕРП (-m = make build)
 wcnew wc2 images --branch feature --make # Продолжение работы на новой машинке https://yadi.sk/i/rgw1akC_gjJ8W
 ```
+
+**API**:
+```sh
+--branch  -b  Переключиться на git-ветку (выполняется до сборки, см опцию -m)
+--make    -m  Собрать после клонирования
+--tmux    -t  Открыть tmux с рабочей копией
+
+```
+
+[Про создание рабочих копий (wiki)](https://beta.wiki.yandex-team.ru/search-interfaces/multimedia/workcopy/)
 
 ###### All
 
