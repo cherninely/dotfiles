@@ -47,7 +47,7 @@ alias gst='git status -sb'
 alias grd='git rb origin/dev'
 
 [ -f "`which ack`" ] || alias ack=ack-grep
-
+alias gmt="git mergetool && find -type f -name '*.orig' -delete"
 [ -f "`which gmake`" ] && alias make=gmake
 
 hub_path=`which hub`
