@@ -5,27 +5,55 @@
 # INIT
 # ####################
 
+function help()
+{
+
+    echo "$GREEN"
+
+    echo -e "wcnew wc-dir project[+preject[+...]] [-bmt]"
+
+    echo -e "\n\
+    --branch  -b  Переключиться на git-ветку (выполняется до сборки, см опцию -m)\n\
+    --make    -m  Собрать после клонирования\n\
+    --tmux    -t  Открыть tmux с рабочей копией
+    "
+
+    echo -e "Examples:\n\
+    wcnew tmp images3               # Старый формат\n\
+    wcnew tmp video_touch_phone -m  # Со сборкой (--make)\n\
+    wcnew tmp images/deskpad -m     # Новый формат\n\
+    wcnew tmp fiji -m               # Развёртывание и сборка целиком\n\
+    wcnew wc1 images3/+video3       # Несколько проектов\n\
+    wcnew tmp web4 --make           # СЕРП (-m = make build)\n\
+    wcnew wc2 images --branch feature --make # Продолжение работы на новой машинке https://yadi.sk/i/rgw1akC_gjJ8W\
+    "
+
+    echo "$RESET"
+
+    exit 1
+
+}
+
 if [[ $# < 2 ]]; then
-    echo 'Usage:'
-    echo 'wcnew tmp images3               # Старый формат'
-    echo 'wcnew tmp video_touch_phone -m  # Со сборкой (--make)'
-    echo 'wcnew tmp images/deskpad -m     # новый формат'
-    echo 'wcnew tmp fiji -m               # развёртывание и сборка целиком'
-    echo 'wcnew wc1 images3+video3+web3   # Несколько проектов'
-    echo 'wcnew tmp web4 -m               # СЕРП (-m = make build)'
-    exit
+    echo "${MAGENTA}${BOLD}Unknown call format${RESET}"
+    help
 fi
 
 #
 # filter, rearrange and read opts
 eval set -- "`getopt -o "m,t,b:" --long "make,tmux,branch:" -- "$@"`"
 while [[ $1 != --  ]]; do case $1 in
+    -h|--help) IS_HELP=1;;
     -m|--make) IS_MAKE=1;;
     -t|--tmux) IS_TMUX=1;;
     -b|--branch) CLONE_BRANCH=$2; shift 1;;
     *) echo "Unknown param"; exit 1;;
 esac; shift 1; done
 shift 1; # remove divider (--)
+
+if [[$IS_HELP]]; then
+    help
+fi
 
 readonly WC_NAME=$1
 readonly RAW_PROJECTS=$2

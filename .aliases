@@ -82,7 +82,8 @@ alias wlog=wclog
 
 wcnew()
 {
-    original-wcnew "$@"
+    original-wcnew "$@" &&\
+    file "$HOME/$1" &&\
     cd "$HOME/$1"
 }
 
