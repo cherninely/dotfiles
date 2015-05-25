@@ -56,6 +56,8 @@
     # search commits by message
     search = "!f() { git log --all --grep=$1; }; f"
     
+    # Find Merge — найти мерж-коммит, с которым был влит коммит. Пример как `git fm 0c23f92`
+    # Тред в рассылке: https://ml.yandex-team.ru/thread/2370000000877081412/
     fm = "!sh -c 'git show `git rev-list --ancestry-path $0..dev --merges | tail -f`'"
 
 [diff]
