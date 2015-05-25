@@ -30,7 +30,7 @@ mv neobundle.vim-master .vim/bundle/neobundle.vim
 rm master
 
 # OS X specific
-if [[$(uname) = Darwin]]; then
+if [[ $(uname) = Darwin ]]; then
 
     echo Подготовка wcnew для OS X ...
     sudo mv /usr/bin/getopt /usr/bin/getopt.bak
