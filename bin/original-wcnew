@@ -51,7 +51,7 @@ while [[ $1 != --  ]]; do case $1 in
 esac; shift 1; done
 shift 1; # remove divider (--)
 
-if [[$IS_HELP]]; then
+if [[ $IS_HELP ]]; then
     help
 fi
 
