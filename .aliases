@@ -48,7 +48,7 @@ alias grd='git rb origin/dev'
 
 [ -f "`which ack`" ] || alias ack=ack-grep
 alias gmt="git mergetool && find -type f -name '*.orig' -delete"
-alias gse="vim $(git status --porcelain | sed -ne 's/^ M //p')" # git status: edit all changed files
+alias gse='vim $(git status --porcelain | sed -ne "s/^ M //p")' # git status: edit all changed files
 [ -f "`which gmake`" ] && alias make=gmake
 
 hub_path=`which hub`
