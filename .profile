@@ -1,16 +1,3 @@
-# FreeBSD stuff
-#
-# Setting TERM is normally done through /etc/ttys.  Do only override
-# if you're sure that you'll never log in via telnet or xterm or a
-# serial line.
-# Use cons25l1 for iso-* fonts
-# TERM=cons25;  export TERM
-
-# set ENV to a file invoked each time sh is started for interactive use.
-export ENV=$HOME/.shrc
-
-if [ -x /usr/games/fortune ] ; then /usr/games/fortune freebsd-tips ; fi
-
 # Load the shell dotfiles, and then some:
 # * ~/.path can be used to extend `$PATH`.
 # * ~/.extra can be used for other settings you don’t want to commit.
