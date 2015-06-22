@@ -79,6 +79,8 @@ alias apache-start='sudo /usr/local/etc/rc.d/apache.sh start'
 
 alias mine='sudo chown -R $USER .'
 
+alias 42='ssh leon42.serp.yandex.ru'
+
 # SVN
 alias st='svn st'
 alias sup='svn update'
