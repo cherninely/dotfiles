@@ -3,8 +3,8 @@ alias gb-bad='git bisect bad && make'
 alias gb-good='git bisect good && make'
 
 # ( optimize all — oo — o2 ) css|svg
-alias o2svg='gd dev --name-only --diff-filter=ACMR | grep ".svg" | while read line; do svgo $line; done'
-alias o2css='gd dev --name-only --diff-filter=ACMR | grep ".css" | while read line; do csscomb $line; done'
+alias o2svg='gd origin/dev --name-only --diff-filter=ACMR | grep ".svg" | while read line; do svgo $line; done'
+alias o2css='gd origin/dev --name-only --diff-filter=ACMR | grep ".css" | while read line; do csscomb $line; done'
 
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
