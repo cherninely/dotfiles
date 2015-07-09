@@ -159,7 +159,7 @@ Bash-команды
 
 ###### Wcnew
 
-**Примеры использования**:
+Примеры использования:
 ```sh
 wcnew tmp images3               # Старый формат
 wcnew tmp video_touch_phone -m  # Со сборкой (--make)
@@ -170,7 +170,7 @@ wcnew tmp web4 --make           # СЕРП (-m = make build)
 wcnew wc2 images --branch feature --make # Продолжение работы на новой машинке https://yadi.sk/i/rgw1akC_gjJ8W
 ```
 
-**API**:
+Опции:
 ```sh
 --branch  -b  Переключиться на git-ветку (выполняется до сборки, см опцию -m)
 --make    -m  Собрать после клонирования
