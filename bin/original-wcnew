@@ -60,6 +60,8 @@ readonly RAW_PROJECTS=$2
 readonly YXWEB_PATH=report/templates/YxWeb
 NEXT_ACTIONS_HINT="$(echo -e "\033[32mДальнейшие действия:\n")"
 readonly CLONE_BRANCH_OPT="$([[ $(echo $CLONE_BRANCH) ]] && echo "--branch $CLONE_BRANCH")"
+readonly IS_OSX=$([[ $(uname) = Darwin ]] && echo True)
+readonly SED="$($IS_OSX && echo 'sed -E' || echo 'sed -r')"
 
 # ####################
 # COMMON FUNCTIONS
@@ -67,7 +69,7 @@ readonly CLONE_BRANCH_OPT="$([[ $(echo $CLONE_BRANCH) ]] && echo "--branch $CLON
 
 function trim_multiline()
 {
-    sed -r 's/^\s+|\s+$//g'
+    $SED 's/^\s+|\s+$//g'
 }
 
 function open_or_print {
@@ -91,7 +93,7 @@ fiji_projects="$(cat ~/dotfiles/extra/fiji-projects | sort)"
 
 # список проектов переданных вторым параметром
 # Заменить разделитель "+" на "\n"
-given_projects="$(echo $RAW_PROJECTS | sed -r 's/\+/\n/g' | sort)"
+given_projects="$(echo $RAW_PROJECTS | $SED 's/\+/\n/g' | sort)"
 # echo -e debug "given_projects:\n" "$given_projects"
 
 # только не fiji-проекты
