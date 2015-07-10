@@ -9,6 +9,13 @@ dotfiles
 git clone git://github.yandex-team.ru/search-interfaces/dotfiles ~/dotfiles && ~/dotfiles/install.sh
 ```
 
+### Для ZSH early adopters
+
+Как перейти на ZSH (опционально с oh-my-zsh)
+
+1. аккуратно смержиться с веткой ZSH (в любой непонятной ситуации зовите @invntrm)
+2. Выполнить простой [скрипт «миграции»](migrate-zsh.sh): `./migrate-zsh.sh`
+
 ### FAQ
 
 Здесь должен был быть FAQ, но, поскольку вопросы пока никто не задавал, здесь пусто.
