@@ -13,14 +13,16 @@ source ~/dotfiles/tms-complition.bash
 [ -e `which npm` ] && . <(npm completion)
 
 if [[ -z `git config --global user.name` ]]; then
-    echo -n "Please, enter user name for git config: "
+    echo -n "Please, enter user name for git config [Arcady Volozh (volozh)]: "
     read GIT_AUTHOR_NAME
     git config --global user.name "$GIT_AUTHOR_NAME"
 fi
 
 if [[ -z `git config --global user.email` ]]; then
-    echo -n "Please, enter email for git config: "
+    echo -n "Please, enter internal email login for git config [volozh]: "
     read GIT_AUTHOR_EMAIL
+    EMAIL_DOMAIN="yandex-team.ru"
+    GIT_AUTHOR_EMAIL="$(echo $GIT_AUTHOR_EMAIL | sed "s/@$EMAIL_DOMAIN//")@$EMAIL_DOMAIN"
     git config --global user.email "$GIT_AUTHOR_EMAIL"
 fi
 
