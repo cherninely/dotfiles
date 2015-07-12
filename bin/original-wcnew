@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# alias wcnew # is a wrapper for do `cd` at end of WC creating
+# alias wcnew # is a wrapper for doing `cd` at end of WC creating
 
 # ####################
 # INIT
@@ -34,24 +34,24 @@ function help()
 
 }
 
-if [[ $# < 2 ]]; then
-    echo "${MAGENTA}${BOLD}Unknown call format${RESET}"
-    help
-fi
-
 #
 # filter, rearrange and read opts
-eval set -- "`getopt -o "m,t,b:" --long "make,tmux,branch:" -- "$@"`"
+eval set -- "`getopt -o "h,m,t,b:" --long "help,make,tmux,branch:" -- "$@"`"
 while [[ $1 != --  ]]; do case $1 in
     -h|--help) IS_HELP=1;;
     -m|--make) IS_MAKE=1;;
     -t|--tmux) IS_TMUX=1;;
     -b|--branch) CLONE_BRANCH=$2; shift 1;;
-    *) echo "Unknown param"; exit 1;;
+    *) echo "Unknown param"; IS_HELP=1;;
 esac; shift 1; done
 shift 1; # remove divider (--)
 
 if [[ $IS_HELP ]]; then
+    help
+fi
+
+if [[ $# < 2 ]]; then
+    echo "${MAGENTA}${BOLD}Unknown call format${RESET}"
     help
 fi
 
