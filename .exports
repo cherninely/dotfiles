@@ -8,6 +8,7 @@ export PATH=~/.rvm/bin:$PATH
 export PATH=/Berkanavt/bin:$PATH
 export PATH=/Berkanavt/bin/scripts:$PATH
 export PATH=~/android-sdk-macosx/platform-tools:$PATH
+export PATH=.bin:$PATH # @sbmaxx: Чтобы бинарники из ./.bin запускать
 
 export NODE_PATH=./node_modules:$NODE_PATH
 
