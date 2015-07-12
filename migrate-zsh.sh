@@ -25,3 +25,6 @@ sudo chsh -s $(which zsh) $(whoami)
 echo ${ORANGE}${BOLD}
 echo Всё, перезагружайтесь
 echo ${RESET}
+
+echo Если шелл таки не переключится, то добавьте себя в /etc/passwd и /etc/group (sudo vim ...)
+echo Возможно, это костыльно, но другого способа разрешения этой проблемы не найдено (пока)
