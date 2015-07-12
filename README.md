@@ -15,6 +15,7 @@ git clone git://github.yandex-team.ru/search-interfaces/dotfiles ~/dotfiles && ~
 
 1. аккуратно смержиться с веткой ZSH (в любой непонятной ситуации зовите @invntrm)
 2. Выполнить простой [скрипт «миграции»](migrate-zsh.sh): `./migrate-zsh.sh`
+3. Не торопитесь сразу добавлять в .zshrc свои плагины и настройки
 
 ### FAQ
 
