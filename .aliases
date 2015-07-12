@@ -51,6 +51,11 @@ alias gt='git tag'
 alias gst='git status -sb'
 alias grd='git rb origin/dev'
 
+function git-get-default-branch() {
+    git branch | grep -oE 'master|develop|dev'
+}
+
+
 [ -f "`which ack`" ] || alias ack=ack-grep
 alias gmt="git mergetool && find -type f -name '*.orig' -delete"
 alias gse='vim $(git status --porcelain | sed -ne "s/^ M //p")' # git status: edit all changed files
