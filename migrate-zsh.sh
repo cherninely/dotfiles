@@ -17,7 +17,7 @@ echo прежний конфиг сохранён в ~/.zshrc.bak
 
 #
 echo переключить шелл
-sudo chsh -s $(which zsh)
+sudo chsh -s $(which zsh) $(whoami)
 
 echo ${ORANGE}${BOLD}
 echo Всё, перезагружайтесь
