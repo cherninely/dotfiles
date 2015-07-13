@@ -1,11 +1,8 @@
 #!/bin/bash
 
-if [[ "$(git status 2>/dev/null)" ]]; then
-
+if [[ "$(git st 2>/dev/null)" ]]; then
     branch="`git rev-parse --abbrev-ref HEAD`"
-
-    # Detect is current branch not a dev
-    if [[ $branch != $(git-get-default-branch) ]]; then
+    if [[ $branch != dev ]]; then
         git push origin +$branch;
     else
         echo '👊  you in the dev!';
