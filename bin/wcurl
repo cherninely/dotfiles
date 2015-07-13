@@ -29,4 +29,8 @@ case $PROJECT_PLATFORM in
     *) URL_PATH=$PROJECT_PLATFORM
 esac;
 
-echo "http://$USER-d-$WC_NAME.`hostname`/${URL_PATH}text=$TEXT"
+if [ $IS_OSX ]; then
+    echo "http://local.yandex.ru/${URL_PATH}text=$TEXT&wc=$WC_NAME"
+else
+    echo "http://$USER-d-$WC_NAME.`hostname`/${URL_PATH}text=$TEXT"
+fi

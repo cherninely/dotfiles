@@ -89,8 +89,18 @@ alias wlog=wclog
 wcnew()
 {
     original-wcnew "$@" &&\
-    file "$HOME/$1" &&\
-    cd "$HOME/$1"
+    [ -d "$HOME/$1" ] &&\
+    cd "$(echo $WC_BIN || echo ~)/$1"
+}
+
+function wcname()
+{
+    echo "$(pwd | sed "s|$(echo $WC_BIN || echo ~)/||")/" | cut -f 1 -d /
+}
+
+function wcpath()
+{
+    echo "$(echo $WC_BIN || echo ~)/$(wcname)"
 }
 
 all()
@@ -145,12 +155,44 @@ function tm-pair
     fi
 }
 
-function wcname()
+function bash-locate()
 {
-    echo "$(pwd | sed "s|$(echo $HOME)/||")/" | cut -f 1 -d /
+    # Turn on extended shell debugging
+    shopt -s extdebug
+
+    # Dump the function's name, line number and fully qualified source file
+    declare -F $1
+
+    # Turn off extended shell debugging
+    shopt -u extdebug
 }
 
-function wcpath()
-{
-    echo "$HOME/$(wcname)"
+# git diff in gap dev..feature
+function gdd() {
+
+    IS_NAME_ONLY=$1 # 1 or -p, -n, --name-only, --porcelain
+    IS_NAME_ONLY_STR="$([ $IS_NAME_ONLY ] && echo '--name-only')"
+    FEATURE_BRANCH=$(git-show-br)
+    COMMON_BRANCH=$(git-get-common-parent)
+
+    gd --diff-filter=ACMR $IS_NAME_ONLY_STR $COMMON_BRANCH
+
 }
+
+# git grep in gap dev..feature
+function ggd() {
+
+    FEATURE_BRANCH=$(git-show-br)
+    COMMON_BRANCH=$(git-get-common-parent)
+
+    gdd -p | while read file
+    do
+        gd $COMMON_BRANCH $file | grep "$1" > /dev/null 2>/dev/null \
+        && echo $file && gd $COMMON_BRANCH $file | grep "$1" 2> /dev/null
+    done
+
+}
+
+# INVNTRM SPECIFIC — find TODOs (all added 2DOs - o2do)
+alias o2do='echo "TODOs:"; ggd TODO; echo "debug code:"; ggd "console."'
+
