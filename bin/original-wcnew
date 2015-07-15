@@ -193,8 +193,8 @@ function create_symlinks()
 function build_project()
 {
 
-        echo "Проект: $PROJECT";
-        cd $PROJECT
+        cd $PROJECT_DIR
+        echo -e "\ni'm here: $(pwd -P), make «${PROJECT}»...\n"
 
         if [[ $PROJECT == web4 ]]; then
             sudo make build # Чтобы не выполнять долгие тесты
