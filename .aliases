@@ -96,7 +96,7 @@ function wcnew()
 
     original-wcnew "$@"
 
-    WC_BASE_PATH="$(echo $WC_BIN || echo $HOME)/$1"
+    WC_BASE_PATH="$(wcbin)/$1"
 
     echo cd $WC_BASE_PATH ...
     [ -d $WC_BASE_PATH ] && cd $WC_BASE_PATH || IS_ERROR=1
@@ -105,14 +105,19 @@ function wcnew()
 
 }
 
+function wcbin()
+{
+    ([ $WC_BIN ] && echo $WC_BIN || echo $HOME) | sed 's|/$||'
+}
+
 function wcname()
 {
-    echo "$(pwd -P | sed "s|$([ $WC_BIN ] && echo $WC_BIN || echo $HOME)/||")/" | cut -f 1 -d /
+    echo "$(pwd -P | sed "s|$(wcbin)/||")/" | cut -f 1 -d /
 }
 
 function wcpath()
 {
-    echo "$([ $WC_BIN ] && echo $WC_BIN || echo $HOME)/$(wcname)"
+    echo "$(wcbin)/$(wcname)"
 }
 
 all()
