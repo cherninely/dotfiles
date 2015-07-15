@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-source ~/dotfiles/.aliases
+source $HOME/dotfiles/.aliases
 
 if [[ $1 ]]; then
     TEXT=$1

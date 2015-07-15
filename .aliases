@@ -91,21 +91,32 @@ wclog()
 
 alias wlog=wclog
 
-wcnew()
+function wcnew()
 {
-    original-wcnew "$@" &&\
-    [ -d "$HOME/$1" ] &&\
-    cd "$(echo $WC_BIN || echo ~)/$1"
+
+    original-wcnew "$@" || IS_ERROR=1
+
+    if [ ! $IS_ERROR ]; then
+
+        WC_BASE_PATH="$(echo $WC_BIN || echo $HOME)/$1"
+
+        echo cd $WC_BASE_PATH ...
+        [ -d $WC_BASE_PATH ] && cd $WC_BASE_PATH || IS_ERROR=1
+
+    fi
+
+    [ $IS_ERROR ] && echo 'Something went wrong :('
+
 }
 
 function wcname()
 {
-    echo "$(pwd | sed "s|$(echo $WC_BIN || echo ~)/||")/" | cut -f 1 -d /
+    echo "$(pwd -P | sed "s|$([ $WC_BIN ] && echo $WC_BIN || echo $HOME)/||")/" | cut -f 1 -d /
 }
 
 function wcpath()
 {
-    echo "$(echo $WC_BIN || echo ~)/$(wcname)"
+    echo "$([ $WC_BIN ] && echo $WC_BIN || echo $HOME)/$(wcname)"
 }
 
 all()

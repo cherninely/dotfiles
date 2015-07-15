@@ -56,9 +56,10 @@ if [[ $# < 2 ]]; then
 fi
 
 readonly WC_NAME=$1
-[ $WC_BIN ] || WC_BIN='~'
+echo -e "\nuse WC_BIN: $( [ $WC_BIN ] && echo $WC_BIN || echo "$HOME (default)" )"
+[ $WC_BIN ] || WC_BIN="$HOME"
 readonly WC_BASE_PATH=$WC_BIN/$WC_NAME
-echo WC_BASE_PATH $WC_BASE_PATH
+echo -e "\nuse WC_BASE_PATH: $WC_BASE_PATH"
 readonly RAW_PROJECTS=$2
 readonly YXWEB_PATH=report/templates/YxWeb
 NEXT_ACTIONS_HINT="$(echo -e "\033[32mДальнейшие действия:\n")"
@@ -92,7 +93,7 @@ function open_or_print() {
 # список fiji-проектов
 # delimeter="\n"
 # @example images3 video_touch_phone
-fiji_projects="$(cat ~/dotfiles/extra/fiji-projects | sort)"
+fiji_projects="$(cat $HOME/dotfiles/extra/fiji-projects | sort)"
 # echo -e debug "fiji_projects:\n" "$fiji_projects"
 
 # список проектов переданных вторым параметром
@@ -118,7 +119,7 @@ function get_fiji_projects_new_format()
     done
 }
 fiji_projects_new_format="$(get_fiji_projects_new_format)"
-echo -e debug "fiji_projects_new_format:\n" "$fiji_projects_new_format"
+# echo -e debug "fiji_projects_new_format:\n" "$fiji_projects_new_format"
 
 # fiji-проекты (images3, video_touch_phone, и др.) удаляются из списка и заменяются на fiji
 PROJECTS="$given_no_fiji_projects"
@@ -181,10 +182,10 @@ function create_symlinks()
 {
 
     # Создаём симлинк video -> video2 (костыль для статики video2)
-    [[ $PROJECT == video2 ]] && ln -s video2 video && echo 'Симлинки статики созданы'
+    [[ $PROJECT == video2 ]] && ln -s video2 video && echo -e "\nСимлинки статики созданы"
 
     # Создаём симлинки web4 -> web3, web_touch_phone (костыль для статики)
-    [[ $PROJECT == web4 ]] && ln -s web4 web3 && ln -s web4 web_touch_phone && echo 'Симлинки статики созданы'
+    [[ $PROJECT == web4 ]] && ln -s web4 web3 && ln -s web4 web_touch_phone && echo -e "\nСимлинки статики созданы"
 
 }
 
@@ -217,23 +218,29 @@ function open_or_print_project_link()
 
 for PROJECT in ${PROJECTS//\\n/ }; do
 
-    echo -e debug "PROJECT:\n" "$PROJECT"
+    echo -e "\nprocess PROJECT: $PROJECT..."
 
+    echo -e "\nsetup_repo_variables..."
     setup_repo_variables
 
     mkdir -p $WC_BASE_PATH; cd $WC_BASE_PATH
 
+    echo -e "\nclone_repo..."
     clone_repo
 
+    echo -e "\ncreate_symlinks..."
     create_symlinks
 
+    echo -e "\nprepare tips..."
     if [[ $IS_MAKE ]]; then
         build_project
     else
-        NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT\nmake"
+        NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT\n     make"
     fi
 
-    NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT\n📋  Ссылка:\n$(open_or_print_project_link)\n"
+    NEXT_ACTIONS_HINT="$NEXT_ACTIONS_HINT\n\n📋  Ссылка:\n     $(open_or_print_project_link)\n"
+
+    echo -e "\nproject «${PROJECT}» is ready!"
 
 done
 
@@ -245,10 +252,10 @@ done
 
 # Вывести подсказки по дальнейшим действиям
 cd $WC_BASE_PATH
-echo -e "✅  $NEXT_ACTIONS_HINT\033[0m"
+echo -e "\n✅  $NEXT_ACTIONS_HINT\033[0m"
 
 # Создаем tmux-сессию для последнего проекта из цикла
 if [[ $IS_TMUX == 1 ]]; then
     cd $PROJECT_DIR
-    tmux -2 -S /tmp/tm-`whoami` new-session -s $WC_NAME "tmux source-file ~/dotfiles/.tmux-default-session-$ORG_ALIAS"
+    tmux -2 -S /tmp/tm-`whoami` new-session -s $WC_NAME "tmux source-file $HOME/dotfiles/.tmux-default-session-$ORG_ALIAS"
 fi
