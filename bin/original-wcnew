@@ -55,17 +55,18 @@ if [[ $# < 2 ]]; then
     help
 fi
 
+readonly SED="$($IS_OSX && echo 'sed -E' || echo 'sed -r')"
 readonly WC_NAME=$1
 echo -e "\nuse WC_BIN: $( [ $WC_BIN ] && echo $WC_BIN || echo "$HOME (default)" )"
 [ $WC_BIN ] || WC_BIN="$HOME"
-readonly WC_BASE_PATH=$WC_BIN/$WC_NAME
+WC_BIN="$(echo $WC_BIN | $SED 's|/$||')"
+readonly WC_BASE_PATH="$(echo $WC_BIN/$WC_NAME | $SED 's|/+|/|')"
 echo -e "\nuse WC_BASE_PATH: $WC_BASE_PATH"
 readonly RAW_PROJECTS=$2
 readonly YXWEB_PATH=report/templates/YxWeb
 NEXT_ACTIONS_HINT="$(echo -e "\033[32mДальнейшие действия:\n")"
 readonly CLONE_BRANCH_OPT="$([[ $(echo $CLONE_BRANCH) ]] && echo "--branch $CLONE_BRANCH")"
 readonly IS_OSX=$([[ $(uname) = Darwin ]] && echo True)
-readonly SED="$($IS_OSX && echo 'sed -E' || echo 'sed -r')"
 
 # ####################
 # COMMON FUNCTIONS

@@ -94,16 +94,12 @@ alias wlog=wclog
 function wcnew()
 {
 
-    original-wcnew "$@" || IS_ERROR=1
+    original-wcnew "$@"
 
-    if [ ! $IS_ERROR ]; then
+    WC_BASE_PATH="$(echo $WC_BIN || echo $HOME)/$1"
 
-        WC_BASE_PATH="$(echo $WC_BIN || echo $HOME)/$1"
-
-        echo cd $WC_BASE_PATH ...
-        [ -d $WC_BASE_PATH ] && cd $WC_BASE_PATH || IS_ERROR=1
-
-    fi
+    echo cd $WC_BASE_PATH ...
+    [ -d $WC_BASE_PATH ] && cd $WC_BASE_PATH || IS_ERROR=1
 
     [ $IS_ERROR ] && echo 'Something went wrong :('
 
@@ -121,9 +117,9 @@ function wcpath()
 
 all()
 {
-    if [ `basename $PWD` == 'web3' ]; then
+    if [ $(basename $PWD) == 'web3' ]; then
         es pages-desktop/search/all/_all.priv.js +$1
-    elif [[ `basename $PWD` == 'web-touch-phone' ]]; then
+    elif [[ $(basename $PWD) == 'web-touch-phone' ]]; then
         es pages-touch-phone/search/all/_all.priv.js +$1
     elif [[ $PWD =~ 'touch_phone' ]]; then
         e pages-touch/common/_common.priv.js +$1
@@ -170,45 +166,3 @@ function tm-pair
         echo 'tm-pair user_name feature_name # Attach to session'
     fi
 }
-
-function bash-locate()
-{
-    # Turn on extended shell debugging
-    shopt -s extdebug
-
-    # Dump the function's name, line number and fully qualified source file
-    declare -F $1
-
-    # Turn off extended shell debugging
-    shopt -u extdebug
-}
-
-# git diff in gap dev..feature
-function gdd() {
-
-    IS_NAME_ONLY=$1 # 1 or -p, -n, --name-only, --porcelain
-    IS_NAME_ONLY_STR="$([ $IS_NAME_ONLY ] && echo '--name-only')"
-    FEATURE_BRANCH=$(git-show-br)
-    COMMON_BRANCH=$(git-get-common-parent)
-
-    gd --diff-filter=ACMR $IS_NAME_ONLY_STR $COMMON_BRANCH
-
-}
-
-# git grep in gap dev..feature
-function ggd() {
-
-    FEATURE_BRANCH=$(git-show-br)
-    COMMON_BRANCH=$(git-get-common-parent)
-
-    gdd -p | while read file
-    do
-        gd $COMMON_BRANCH $file | grep "$1" > /dev/null 2>/dev/null \
-        && echo $file && gd $COMMON_BRANCH $file | grep "$1" 2> /dev/null
-    done
-
-}
-
-# INVNTRM SPECIFIC — find TODOs (all added 2DOs - o2do)
-alias o2do='echo "TODOs:"; ggd TODO; echo "debug code:"; ggd "console."'
-
