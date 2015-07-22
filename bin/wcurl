@@ -30,7 +30,7 @@ case $PROJECT_PLATFORM in
 esac;
 
 if [ $IS_OSX ]; then
-    echo "http://local.yandex.ru/${URL_PATH}text=$TEXT&wc=$WC_NAME"
+    echo "http://$WC_NAME.local.yandex.ru/${URL_PATH}text=$TEXT"
 else
     echo "http://$USER-d-$WC_NAME.`hostname`/${URL_PATH}text=$TEXT"
 fi
