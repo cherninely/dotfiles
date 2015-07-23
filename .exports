@@ -1,3 +1,9 @@
+export readonly IS_OSX=$([[ $(uname) = Darwin  ]] && echo True)
+export readonly IS_BASH=$([ $BASH ] && echo True)
+export readonly IS_ZSH=$([ $ZSH_NAME ] && echo True)
+export readonly IS_OMZ=$([ -e ~/.oh-my-zsh  ] && echo True)
+export readonly IS_OPENSTACK=$([ $(hostname | grep '\.serp\.yandex\.ru') ] && echo True)
+
 export PATH=./node_modules/.bin:$PATH
 export PATH=~/node_modules/.bin:$PATH
 export PATH=/usr/local/share/npm/bin:$PATH
