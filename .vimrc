@@ -511,3 +511,6 @@ endfunction
 " Regexp notes
 " /text1\(text2\)\@= 'text1' followed by 'text2'
 " /\(text1\)\@<=text2  'text2' preceded with 'text1'
+
+" comment selected sector
+vmap / gc
