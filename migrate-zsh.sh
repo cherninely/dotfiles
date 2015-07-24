@@ -38,11 +38,20 @@ if [[ $WANT_THEFUCK = y ]]; then
         brew install thefuck
     else
         sudo apt-get update
-        sudo apt-get reinstall python-pip python-dev
+        sudo apt-get uninstall python-pip python-dev
+        sudo apt-get install python-pip python-dev
         sudo pip install thefuck
     fi
 else
     WANT_THEFUCK=
+fi
+
+echo 'Ставим bem-cat [yn] ?:'; read WANT_BEMCAT;
+if [[ $WANT_BEMCAT = y ]]; then
+    echo 'Ставим!'
+    wget -qO- https://github.yandex-team.ru/bem-kit/bem-levels/raw/master/install.sh | sh
+else
+    WANT_BEMCAT=
 fi
 
 mv ~/.gitconfig ~/.gitconfig.bak
