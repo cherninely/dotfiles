@@ -9,7 +9,7 @@ which wget > /dev/null 2>&1 || sudo apt-get install wget
 which unzip > /dev/null 2>&1 || sudo apt-get install unzip
 
 # установить или не установить OMZ
-echo 'Ставим OMZ (oh-my-zsh) [yn] ?:'; read WANT_OMZ; [[ $WANT_OMZ == y ]] && (echo 'Ура, Ставим:'; wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -qO- | zsh; echo Продолжаем миграцию...) || WANT_OMZ=
+echo 'Ставим OMZ (oh-my-zsh) [yn] ?:'; read WANT_OMZ; [[ $WANT_OMZ = y ]] && (echo 'Ура, Ставим:'; wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -qO- | zsh; echo Продолжаем миграцию...) || WANT_OMZ=
 
 if [ $WANT_OMZ ]; then
 
@@ -24,6 +24,18 @@ if [ $WANT_OMZ ]; then
         cd fasd/* && sudo make install
     fi
 
+fi
+
+echo 'Ставим thefuck (github.com/nvbn/thefuck) [yn] ?:'; read WANT_THEFUCK;
+if [[ $WANT_THEFUCK = y ]]; then
+    echo 'Ставим!'
+    if [ $IS_OSX ]; then
+        brew install thefuck
+    else
+        sudo apt-get update
+        sudo apt-get reinstall python-pip python-dev
+        sudo pip install thefuck
+    fi
 fi
 
 #
