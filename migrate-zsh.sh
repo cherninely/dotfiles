@@ -9,9 +9,12 @@ which wget > /dev/null 2>&1 || sudo apt-get install wget
 which unzip > /dev/null 2>&1 || sudo apt-get install unzip
 
 # установить или не установить OMZ
-echo 'Ставим OMZ (oh-my-zsh) [yn] ?:'; read WANT_OMZ; [[ $WANT_OMZ = y ]] && (echo 'Ура, Ставим:'; wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -qO- | zsh; echo Продолжаем миграцию...) || WANT_OMZ=
+echo 'Ставим OMZ (oh-my-zsh) [yn] ?:'; read WANT_OMZ
 
-if [ $WANT_OMZ ]; then
+if [[ $WANT_OMZ = y ]]; then
+
+    echo 'Ура, Ставим:'
+    wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -qO- | zsh; echo Продолжаем миграцию...
 
     echo 'Установить тему ya-mm...'
     cd ~/.oh-my-zsh/themes && wget https://raw.githubusercontent.com/bem-kit/oh-my-zsh/master/themes/ya-mm.zsh-theme
@@ -24,6 +27,8 @@ if [ $WANT_OMZ ]; then
         cd fasd/* && sudo make install
     fi
 
+else
+    WANT_OMZ=
 fi
 
 echo 'Ставим thefuck (github.com/nvbn/thefuck) [yn] ?:'; read WANT_THEFUCK;
@@ -36,7 +41,17 @@ if [[ $WANT_THEFUCK = y ]]; then
         sudo apt-get reinstall python-pip python-dev
         sudo pip install thefuck
     fi
+else
+    WANT_THEFUCK=
 fi
+
+mv ~/.gitconfig ~/.gitconfig.bak
+ln -s ~/dotfiles/.gitconfig ~/.gitconfig
+mkdir -p ~/.config/git/
+touch ~/.config/git/config
+echo 'Внимание: ~/.gitconfig забэкаплен (~/.gitconfig.bak)) и заменён симлинкой на dotfiles'
+echo 'Запустите diff ~/.gitconfig.bak ~/.gitconfig чтобы проверить отличия'
+echo 'Используйте ~/.config/git/config для ваших настроек git, а так же имени и email'
 
 #
 echo заменить .zshrc на симлинк из dotfiles
