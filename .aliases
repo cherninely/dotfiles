@@ -52,7 +52,7 @@ alias gst='git status -sb'
 alias grd='git rb origin/dev'
 
 function git-get-default-branch() {
-    git branch | grep -oE 'master|develop|dev'
+    git branch -a | grep 'remotes/origin/HEAD' | grep -oE '\w+$'
 }
 
 
