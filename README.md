@@ -96,12 +96,13 @@ decl ->
 
 Новые сниппеты добавить очень легко правкой файлов в `~/.vim/snippets` (для быстрого открытия есть мап `\vs`). Они подхватываются на лету.
 
-##### [NERDTree](https://github.com/scrooloose/nerdtree) – дерево проекта
-Дерево файлов проекта, открытое в отдельном сплите.
+##### [vimfiler](https://github.com/Shougo/vimfiler) – Продвинутый файловый проводник
+По умолчанию используется как дерево файлов проекта, открытое в отдельном сплите.
 
 В текущем `.vimrc` есть два основных мапа:
-- `\f` (`<leader>f`) - NERDTreeFind: открыть nerdtree и найти в нём текущий файл
-- `\t` (`<leader>t`) - NerdtreeToggle: открыть или закрыть nerdtree
+- `\t` (`<leader>t`) - VimFilerExplorer: открыть дерево файлов
+- `\f` (`<leader>f`) - VimFilerExplorer -find: открыть дерево файлов и найти в нём текущий файл
+Про все остальные мапы лучше почитать help по мапам (нужно набрать `g?` в буфере с vimfiler) или общий help (`:h vimfiler`)
 
 ##### [tComment](https://github.com/tomtom/tcomment_vim) – комментирование кода
 Использование:
