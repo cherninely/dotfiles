@@ -42,7 +42,7 @@ export HISTSIZE=32768
 export HISTFILESIZE=$HISTSIZE
 export HISTCONTROL=ignoredups
 # Make some commands not show up in history
-export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help:st:sup:gs"
+export HISTIGNORE="ls:cd:cd -:pwd:exit:date:* --help:st:sup:gs:fg"
 
 # fix sorting against underscores
 export LC_COLLATE=C

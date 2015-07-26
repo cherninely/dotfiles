@@ -502,6 +502,8 @@ function! SQLUpperCase()
     %s:\<analyze\>\|\<and\>\|\<as\>\|\<by\>\|\<desc\>\|\<exists\>\|\<explain\>\|\<from\>\|\<group\>\|\<in\>\|\<insert\>\|\<intersect\>\|\<into\>\|\<join\>\|\<limit\>\|\<not\>\|\<on\>\|\<order\>\|\<select\>\|\<set\>\|\<update\>\|\<where\>:\U&:i
 endfunction
 
+let g:surround_125 = "{\n\r\n}"
+
 " Creating macros
 " :redir @a>
 " :history : -20,
