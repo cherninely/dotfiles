@@ -41,9 +41,10 @@ NeoBundle 'tpope/vim-fugitive'
 NeoBundleLazy 'gregsexton/gitv', {'depends':['tpope/vim-fugitive'],
             \ 'autoload':{'commands':'Gitv'}}
 
+NeoBundle 'Shougo/vimfiler'
+
 NeoBundle 'jpalardy/vim-slime'
 NeoBundle 'Raimondi/delimitMate'
-NeoBundle 'scrooloose/nerdtree'
 NeoBundle 'tomtom/tcomment_vim'
 NeoBundle 'tpope/vim-endwise'
 NeoBundle 'tpope/vim-repeat'
@@ -298,13 +299,18 @@ elseif executable('ack')
     let g:unite_source_grep_search_word_highlight = 1
 endif
 
-" NERDTree
-let NERDTreeShowHidden=1
-let NERDTreeAutoDeleteBuffer=0
-nmap <silent> <leader>t :NERDTreeToggle<CR>
-nmap <silent> <leader>f :NERDTreeFind<CR>
-nnoremap <Bs> :<C-u>NERDTreeToggle<CR>
-let NERDTreeMinimalUI=1
+" vimfiler
+let g:vimfiler_as_default_explorer = 1
+call vimfiler#custom#profile('default', 'context', {
+     \ 'safe' : 0
+     \ })
+" Like Textmate icons.
+let g:vimfiler_tree_leaf_icon = ' '
+let g:vimfiler_tree_opened_icon = '▾'
+let g:vimfiler_tree_closed_icon = '▸'
+nmap <silent> <leader>t :VimFilerExplorer<CR>
+nmap <silent> <leader>f :VimFilerExplorer -find<CR>
+nmap <silent> <Bs> :VimFilerClose explorer<CR>
 
 " fugitive
 nmap <silent> <leader>b :.Gblame<cr>
