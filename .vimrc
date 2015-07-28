@@ -229,7 +229,7 @@ augroup vimrc
 
   autocmd FileType scss set ft=scss.css
   autocmd FileType less set ft=less.css
-  autocmd FileType stylus set ft=stylus.css
+  autocmd FileType stylus set ft=stylus.sass
   autocmd! FileType sass,scss syn cluster sassCssAttributes add=@cssColors
 
   autocmd BufRead,BufNewFile *.json set ft=javascript
