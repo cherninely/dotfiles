@@ -11,6 +11,7 @@ source ~/dotfiles/wcshow-completion.bash
 source ~/dotfiles/wcnew-complition.bash
 source ~/dotfiles/tms-complition.bash
 [ -e `which npm` ] && . <(npm completion)
+source ~/dotfiles/fiji-complition.bash
 
 if [[ -z `git config user.name` ]]; then
     echo -n "Please, enter user name for git config [Name Surname (nickname)]: "
