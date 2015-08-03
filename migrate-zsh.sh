@@ -14,7 +14,7 @@ function ask_question() {
 
 #
 print_message "Проверить окружение"
-if [[ "$(git branch --contains ZSH | grep $(git-get-br))" ]]; then
+if [[ "$(git branch --contains origin/ZSH | grep $(git-get-br))" ]]; then
     print_message "Вы наследуете ветку ZSH, всё ок"
 else
     print_message "Переключитесь/смержитесь с веткой ZSH"
