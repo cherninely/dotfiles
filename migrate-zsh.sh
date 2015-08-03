@@ -13,6 +13,15 @@ function ask_question() {
 }
 
 #
+print_message "Проверить окружение"
+if [[ "$(git branch --contains ZSH | grep $(git-get-br))" ]]; then
+    print_message "Вы наследуете ветку ZSH, всё ок"
+else
+    print_message "Переключитесь/смержитесь с веткой ZSH"
+    exit 1
+fi
+
+#
 print_message "Установить ZSH если не установлен..."
 which zsh > /dev/null || sudo apt-get install zsh
 
