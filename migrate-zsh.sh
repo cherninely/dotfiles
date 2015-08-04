@@ -21,7 +21,7 @@ function ask_question() {
 
 #
 print_message "Проверить окружение ..."
-ORIGIN="$(git remote -v | grep yandex-team.ru | grep -Eo '^\w+' | head -n 1)"
+ORIGIN="$(git remote -v | grep 'github\.yandex-team\.ru:search-interfaces/dotfiles' | grep -Eo '^\w+' | head -n 1)"
 
 # показать ветви, наследующиеся от ZSH | проверить, что текущая среди них
 if [[ "$(git branch --contains $ORIGIN/ZSH | grep $(git rev-parse --abbrev-ref @))" ]]; then
