@@ -47,6 +47,9 @@ if [[ $WANT_OMZ = y ]]; then
     echo 'Ура, Ставим:'
     wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -qO- | zsh; echo Продолжаем миграцию...
 
+    print_message "Исправляем права ~/.oh-my-zsh ..."
+    chmod g-w -R $HOME/.oh-my-zsh
+
     print_message "Установить тему ya-mm ..."
     cd ~/.oh-my-zsh/themes && wget https://raw.githubusercontent.com/bem-kit/oh-my-zsh/master/themes/ya-mm.zsh-theme
 
