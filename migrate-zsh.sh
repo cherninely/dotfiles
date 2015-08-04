@@ -1,8 +1,15 @@
 #!/bin/bash
 
+function error_message() {
+    RED="$(tput setaf 1)"
+    echo "$RED$BOLD"
+    echo "❯ $1"
+    echo ${RESET}
+}
+
 function print_message() {
     echo ${ORANGE}${BOLD}
-    echo -e "\n ❯ $1"
+    echo "❯ $1"
     echo ${RESET}
 }
 
@@ -13,22 +20,22 @@ function ask_question() {
 }
 
 #
-print_message "Проверить окружение"
+print_message "Проверить окружение ..."
 ORIGIN="$(git remote -v | grep yandex-team.ru | grep -Eo '^\w+' | head -n 1)"
 
 # показать ветви, наследующиеся от ZSH | проверить, что текущая среди них
 if [[ "$(git branch --contains $ORIGIN/ZSH | grep $(git rev-parse --abbrev-ref @))" ]]; then
     print_message "Вы наследуете ветку ZSH, всё ок"
 else
-    print_message "Переключитесь/смержитесь с веткой ZSH"
+    error_message "Переключитесь/смержитесь с веткой ZSH и попробуйте ещё раз"
     exit 1
 fi
-
+exit
 #
-print_message "Установить ZSH если не установлен..."
+print_message "Установить ZSH если не установлен ..."
 which zsh > /dev/null || sudo apt-get install zsh
 
-print_message "Установить необходимые утилиты"
+print_message "Установить необходимые утилиты ..."
 which wget > /dev/null 2>&1 || sudo apt-get install wget
 which unzip > /dev/null 2>&1 || sudo apt-get install unzip
 
@@ -40,10 +47,10 @@ if [[ $WANT_OMZ = y ]]; then
     echo 'Ура, Ставим:'
     wget https://raw.github.com/robbyrussell/oh-my-zsh/master/tools/install.sh -qO- | zsh; echo Продолжаем миграцию...
 
-    print_message "Установить тему ya-mm..."
+    print_message "Установить тему ya-mm ..."
     cd ~/.oh-my-zsh/themes && wget https://raw.githubusercontent.com/bem-kit/oh-my-zsh/master/themes/ya-mm.zsh-theme
 
-    print_message "Установить fasd (github.com/clvv/fasd)..."
+    print_message "Установить fasd (github.com/clvv/fasd) ..."
     if [ $IS_OSX ]; then
         brew install fasd
     else
@@ -94,7 +101,7 @@ echo 'Используйте ~/.config/git/config для ваших настро
 echo ${RESET}
 
 #
-print_message "Заменить .zshrc на симлинк из dotfiles..."
+print_message "Заменить .zshrc на симлинк из dotfiles ..."
 
 ([ -e ~/.zshrc ] && mv ~/.zshrc ~/.zshrc.bak); ln -s ~/dotfiles/.zshrc ~
 
@@ -108,7 +115,5 @@ sudo chsh -s $(which zsh) $(whoami)
 echo ${ORANGE}${BOLD}
 echo Всё, перезагружайтесь
 echo
-echo 'Если шелл таки не переключится, то добавьте себя в /etc/passwd и /etc/group (sudo vim ...)'
-echo 'Возможно, это костыльно, но другого способа разрешения этой проблемы не найдено (пока)'
-echo 'Возможно, более правильным будет указание своего шелла на стиаффе'
+echo 'Если шелл таки не переключится, то укажите себе /bin/zsh на стаффе'
 echo ${RESET}
