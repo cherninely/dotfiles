@@ -30,7 +30,7 @@ else
     error_message "Переключитесь/смержитесь с веткой ZSH и попробуйте ещё раз"
     exit 1
 fi
-exit
+
 #
 print_message "Установить ZSH если не установлен ..."
 which zsh > /dev/null || sudo apt-get install zsh
