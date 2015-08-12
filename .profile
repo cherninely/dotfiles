@@ -23,7 +23,7 @@ if [[ -z `git config user.email` ]]; then
     echo -n "Please, enter internal email login for git config [nickname]: "
     read GIT_AUTHOR_EMAIL
     EMAIL_DOMAIN="yandex-team.ru"
-    GIT_AUTHOR_EMAIL="$(echo $GIT_AUTHOR_EMAIL | sed "s/@$EMAIL_DOMAIN//")@$EMAIL_DOMAIN"
+    GIT_AUTHOR_EMAIL="$(git config -f ~/.config/git/config user.name | sed "s/@$EMAIL_DOMAIN//")@$EMAIL_DOMAIN"
     mkdir -p ~/.config/git/
     git config -f ~/.config/git/config user.email "$GIT_AUTHOR_EMAIL"
 fi
