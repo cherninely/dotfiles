@@ -521,4 +521,5 @@ let g:surround_125 = "{\n\r\n}"
 " /\(text1\)\@<=text2  'text2' preceded with 'text1'
 
 " comment selected sector
-vmap / gc
+" Это ломает use-case: 1) начать выделение 2) сделать поиск, чтобы выделить
+" vmap / gc
