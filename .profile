@@ -13,6 +13,12 @@ source ~/dotfiles/tms-complition.bash
 [ -e `which npm` ] && . <(npm completion)
 source ~/dotfiles/fiji-complition.bash
 
+# How to update
+# cd fiji && git co dev && git pull # Перейти в свежий репозиторий
+# rm ~/dotfiles/fiji-complition.bash # на zsh защита от перезаписи
+# fiji completion > ~/dotfiles/fiji-complition.bash
+source ~/dotfiles/fiji-complition.bash
+
 if [[ -z `git config user.name` ]]; then
     echo -n "Please, enter user name for git config [Name Surname (nickname)]: "
     read GIT_AUTHOR_NAME
