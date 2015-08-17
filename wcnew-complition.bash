@@ -4,7 +4,7 @@ function _wcnew_complition() {
     cur="${COMP_WORDS[COMP_CWORD]}"
     prev="${COMP_WORDS[COMP_CWORD-1]}"
     PROJECTS_LIST="$(cat ~/dotfiles/extra/fiji-projects | xargs) video2 images2 web4 granny"
-    OPTS_LIST='--make --tmux --branch'
+    OPTS_LIST='--make --tmux --branch --feature'
     [ $WC_BIN ] && cd $WC_BIN || cd ~
 
     if [[ ${COMP_CWORD} == 1  ]] ; then # при вводе подкоманды первого уровня: существующие WC

@@ -15,7 +15,8 @@ function help()
     echo -e "\n\
     --branch  -b  Переключиться на git-ветку (выполняется до сборки, см опцию -m)\n\
     --make    -m  Собрать после клонирования\n\
-    --tmux    -t  Открыть tmux с рабочей копией
+    --tmux    -t  Открыть tmux с рабочей копией\n\
+    --feature -f  Создать новую ветку
     "
 
     echo -e "Examples:\n\
@@ -36,12 +37,13 @@ function help()
 
 #
 # filter, rearrange and read opts
-eval set -- "`getopt -o "h,m,t,b:" --long "help,make,tmux,branch:" -- "$@"`"
+eval set -- "`getopt -o "h,m,t,b:,f:" --long "help,make,tmux,branch:,feature:" -- "$@"`"
 while [[ $1 != --  ]]; do case $1 in
     -h|--help) IS_HELP=1;;
     -m|--make) IS_MAKE=1;;
     -t|--tmux) IS_TMUX=1;;
     -b|--branch) CLONE_BRANCH=$2; shift 1;;
+    -f|--feature) NEW_BRANCH=$2; shift 1;;
     *) echo "Unknown param"; IS_HELP=1;;
 esac; shift 1; done
 shift 1; # remove divider (--)
@@ -57,14 +59,20 @@ fi
 
 readonly SED="$($IS_OSX && echo 'sed -E' || echo 'sed -r')"
 readonly WC_NAME=$1
+
 echo -e "\nuse WC_BIN: $( [ $WC_BIN ] && echo $WC_BIN || echo "$HOME (default)" )"
+
 [ $WC_BIN ] || WC_BIN="$HOME"
 WC_BIN="$(echo $WC_BIN | $SED 's|/$||')"
 readonly WC_BASE_PATH="$(echo $WC_BIN/$WC_NAME | $SED 's|/+|/|')"
+
 echo -e "\nuse WC_BASE_PATH: $WC_BASE_PATH"
+
 readonly RAW_PROJECTS=$2
 readonly YXWEB_PATH=report/templates/YxWeb
+
 NEXT_ACTIONS_HINT="$(echo -e "\033[32mДальнейшие действия:\n")"
+
 readonly CLONE_BRANCH_OPT="$([[ $(echo $CLONE_BRANCH) ]] && echo "--branch $CLONE_BRANCH")"
 readonly IS_OSX=$([[ $(uname) = Darwin ]] && echo True)
 
@@ -174,6 +182,8 @@ function clone_repo()
         PROJECT_DIR="$WC_BASE_PATH/$PROJECT"
 
     fi
+
+    [ $NEW_BRANCH ] && git co -b $WC_NAME/$NEW_BRANCH
 
     # TODO: СЕРП & MM развёртывание любых репозиториев типа images-touch-viewer
 
