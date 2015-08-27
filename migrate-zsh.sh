@@ -58,7 +58,7 @@ if [[ $WANT_OMZ = y ]]; then
         brew install fasd
     else
         cd
-        wget https://github.com/clvv/fasd/zipball/master -qO- > fasd.zip && unzip fasd.zip -d .fasd
+        wget https://github.com/clvv/fasd/zipball/master -qO- > fasd.zip && unzip fasd.zip -d .fasd && rm fasd.zip
         cd .fasd/* && sudo make install
         cd -
     fi
