@@ -41,6 +41,8 @@ NeoBundle 'tpope/vim-fugitive'
 NeoBundleLazy 'gregsexton/gitv', {'depends':['tpope/vim-fugitive'],
             \ 'autoload':{'commands':'Gitv'}}
 
+NeoBundle 'Shougo/vimshell'
+NeoBundle 'Shougo/neomru.vim'
 NeoBundle 'Shougo/vimfiler'
 
 NeoBundle 'jpalardy/vim-slime'
@@ -268,6 +270,7 @@ colorscheme solarized
 call unite#filters#matcher_default#use(['matcher_fuzzy'])
 call unite#custom#source('file_rec,file_rec/async,grep', 'ignore_pattern', join(['\.git/', 'tmp/', 'bundle/', 'node_modules/', 'libs/', 'log/'], '\|'))
 call unite#custom#source('file_rec,file_rec/async', 'max_candidates', 10000)
+call unite#custom#source('neomru/file', 'matchers', ['matcher_project_files', 'matcher_fuzzy'])
 
 let g:unite_source_buffer_time_format = ''
 " let g:unite_enable_start_insert = 1
@@ -280,7 +283,7 @@ nmap <space> [unite]
 nnoremap [unite] <nop>
 
 nnoremap <silent> [unite]<space> :<C-u>Unite -toggle -auto-resize -buffer-name=mixed file_rec/async buffer file_mru bookmark<cr><c-u>
-nnoremap <silent> [unite]f :<C-u>Unite -toggle -auto-resize -start-insert -buffer-name=files file_rec/async<cr>
+nnoremap <silent> [unite]f :<C-u>Unite -toggle -auto-resize -start-insert -buffer-name=files neomru/file file_rec/async<cr>
 nnoremap <silent> [unite]b :<C-u>Unite -auto-resize -buffer-name=buffers buffer<cr>
 nnoremap <silent> [unite]/ :<C-u>Unite -no-quit -buffer-name=search grep:.<cr>
 nnoremap <silent> [unite]* :<C-u>UniteWithCursorWord -no-quit -buffer-name=search grep:.<cr>
@@ -300,7 +303,6 @@ elseif executable('ack')
 endif
 
 " vimfiler
-let g:vimfiler_as_default_explorer = 1
 call vimfiler#custom#profile('default', 'context', {
      \ 'safe' : 0
      \ })
@@ -308,9 +310,11 @@ call vimfiler#custom#profile('default', 'context', {
 let g:vimfiler_tree_leaf_icon = ' '
 let g:vimfiler_tree_opened_icon = '▾'
 let g:vimfiler_tree_closed_icon = '▸'
-nmap <silent> <leader>t :VimFilerExplorer<CR>
-nmap <silent> <leader>f :VimFilerExplorer -find<CR>
-nmap <silent> <Bs> :VimFilerClose explorer<CR>
+nmap <silent> <Bs> :VimFiler<CR>
+nmap <silent> <leader>f :VimFiler -find<CR>
+
+let g:vimshell_interactive_update_time = 500
+nnoremap <silent><leader>h :VimShell<CR>
 
 " fugitive
 nmap <silent> <leader>b :.Gblame<cr>
@@ -485,6 +489,9 @@ so ~/.vim/snippets/support_functions.vim
 
 
 " Slime-vim
+"
+" TODO: replace with vimshell
+"
 " Typical settings for tmux:
 " socket: "default"
 " pane: ":0.1"
