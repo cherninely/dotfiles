@@ -27,12 +27,26 @@ if [[ -z `git config user.name` ]]; then
 fi
 
 if [[ -z `git config user.email` ]]; then
-    echo -n "Please, enter internal email login for git config [nickname]: "
-    read GIT_AUTHOR_EMAIL
+
     EMAIL_DOMAIN="yandex-team.ru"
-    GIT_AUTHOR_EMAIL="$(git config -f ~/.config/git/config user.name | sed "s/@$EMAIL_DOMAIN//")@$EMAIL_DOMAIN"
-    mkdir -p ~/.config/git/
+    _GIT_AUTHOR_EMAIL="$(git config -f ~/.config/git/config user.name | grep -Eo '\(.+\)' | SED 's/^\(|\)$//g')"
+
+    if [ $_GIT_AUTHOR_EMAIL ]; then
+
+        GIT_AUTHOR_EMAIL="$_GIT_AUTHOR_EMAIL@$EMAIL_DOMAIN"
+        echo "Your email is: $GIT_AUTHOR_EMAIL"
+
+    else
+
+        echo -n "Please, enter internal email login for git config [nickname]: "
+        read GIT_AUTHOR_EMAIL
+        GIT_AUTHOR_EMAIL="$(echo $GIT_AUTHOR_EMAIL | sed "s/@$EMAIL_DOMAIN//")@$EMAIL_DOMAIN"
+        mkdir -p ~/.config/git/
+
+    fi
+
     git config -f ~/.config/git/config user.email "$GIT_AUTHOR_EMAIL"
+
 fi
 
 if [ -f /usr/local/etc/bash_completion ]; then
