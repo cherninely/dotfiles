@@ -90,10 +90,10 @@ git clone git://github.yandex-team.ru/search-interfaces/dotfiles ~/dotfiles && ~
 А можно сразу для нескольких. Например так:
 
 1. `c` на 1-ом файле
-2. `spane` повторно на всех остальных
+2. `space` повторно на всех остальных
 3. `c` — завершить выделение
 
-PR: #37
+_PR: [#37](https://github.yandex-team.ru/search-interfaces/dotfiles/pull/37)_
 
 ##### [Neosnippet](https://github.com/Shougo/neosnippet.vim) – поддержка сниппетов
 Автодополнение и разворачивание сниппетов при наборе кода по нажатию `<Tab>`. Примеры:
