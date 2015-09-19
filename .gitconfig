@@ -57,7 +57,7 @@
     lol = log --graph --decorate --pretty=oneline --abbrev-commit
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
     hist = log --pretty=format:'%C(yellow)%h%C(reset) %ad | %C(75)%s%C(reset) %C(yellow)%d%C(reset) [%an]' --graph --date=short --branches --all
-    standup = log --since '1 day ago' --oneline --author <YOUREMAIL>
+    standup = "!sh -c \"git log --since '1 day ago' --oneline --author $USER\""
     # Show files ignored by git:
     ign = ls-files -o -i --exclude-standard
     
