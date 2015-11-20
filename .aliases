@@ -1,3 +1,15 @@
+# sed alias polyfills for os x and for linux
+# see also: https://beta.wiki.yandex-team.ru/users/invntrm/zsh/#osxvslinux
+
+# Sed with advanced reqex
+alias SED="$([ $IS_OSX ] && echo 'sed -E' || echo 'sed -r')"
+
+# Inplace sed with advanced reqex
+alias SEDI="$([ $IS_OSX ] && echo "sed -E  -i '' -e" || echo "sed -ri")"
+
+# GNU SED ON LINUX AND OS X
+alias GSED="$(which gsed 2>/dev/null 1>&2 && echo 'gsed' || echo 'sed')"
+
 # git bisect helpers
 alias gb-bad='git bisect bad && make'
 alias gb-good='git bisect good && make'
@@ -50,6 +62,7 @@ alias gs='git st'
 alias gt='git tag'
 alias gst='git status -sb'
 alias grd='git rb origin/dev'
+alias diff-diff='git-diff-diff'
 
 [ -f "`which ack`" ] || alias ack=ack-grep
 alias gmt="git mergetool && find -type f -name '*.orig' -delete"
