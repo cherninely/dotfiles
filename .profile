@@ -29,7 +29,7 @@ fi
 if [[ -z `git config user.email` ]]; then
 
     EMAIL_DOMAIN="yandex-team.ru"
-    _GIT_AUTHOR_EMAIL="$(git config -f ~/.config/git/config user.name | grep -Eo '\(.+\)' | SED 's/^\(|\)$//g')"
+    _GIT_AUTHOR_EMAIL="$(git config -f ~/.config/git/config user.name | grep -Eo '\(.+\)' | sed 's/^\(|\)$//g')"
 
     if [ $_GIT_AUTHOR_EMAIL ]; then
 
