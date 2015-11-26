@@ -10,7 +10,7 @@ source ~/dotfiles/git-completion.bash
 source ~/dotfiles/wcshow-completion.bash
 source ~/dotfiles/wcnew-complition.bash
 source ~/dotfiles/tms-complition.bash
-[ -e `which npm` ] && . <(npm completion)
+[ -e `which npm` ] && (. <(npm completion))2>/dev/null
 source ~/dotfiles/fiji-complition.bash
 
 # How to update
