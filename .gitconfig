@@ -52,7 +52,6 @@
     cp = cherry-pick
     lg = log -p
     rb = rebase
-    lod = log --graph --decorate --format='%h %ad %s' --date=short
     lod = log --graph --decorate --format='%C(yellow)%h %Cblue%d %Cred%ad %Creset%s' --date=short
     lol = log --graph --decorate --pretty=oneline --abbrev-commit
     lola = log --graph --decorate --pretty=oneline --abbrev-commit --all
@@ -75,18 +74,16 @@
     sort = version:refname
 
 [url "git@github.yandex-team.ru:"]
-    pushInsteadOf = "ght:"
     pushInsteadOf = "git://github.yandex-team.ru/"
 
 [url "git://github.yandex-team.ru/"]
     insteadOf = "ght:"
 
 [url "git@github.com:"]
-    pushInsteadOf = "gh:"
     pushInsteadOf = "git://github.com/"
 
 [url "git://github.com/"]
     insteadOf = "gh:"
 
 [help]
-	autocorrect = 1
+    autocorrect = 1
