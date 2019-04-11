@@ -95,7 +95,7 @@ NeoBundle 'wavded/vim-stylus'
 NeoBundle 'a-x-/vim-cyr'
 
 
-NeoBundle 'http://www.vim.org/scripts/download_script.php?src_id=4316',
+NeoBundle 'https://www.vim.org/scripts/download_script.php?src_id=4316',
       \ { 'type__filename' : 'python.vim', 'script_type' : 'indent' }
 " NeoBundle 'davidhalter/jedi-vim'
 
