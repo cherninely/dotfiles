@@ -30,14 +30,4 @@ tar xf master
 mv neobundle.vim-master .vim/bundle/neobundle.vim
 rm master
 
-# OS X specific
-if [[ $(uname) = Darwin ]]; then
-
-    echo Подготовка wcnew для OS X ...
-    sudo mv /usr/bin/getopt /usr/bin/getopt.bak
-    brew install gnu-getopt
-    ln -s /usr/local/Cellar/gnu-getopt/*/bin/getopt /usr/local/bin/getopt
-
-fi
-
 echo Done
