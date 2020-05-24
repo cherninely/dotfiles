@@ -48,6 +48,7 @@ alias s1='svn log -l1'
 # Git
 alias ga='git add'
 alias gb='git branch -a'
+alias gbd='git fetch -p && for branch in $(git branch -vv | grep ": gone]" | awk "{print $1}"); do git branch -D $branch; done'
 alias gc='git commit -am'
 alias gca='git commit --amend'
 alias gd='git di'
