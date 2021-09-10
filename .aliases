@@ -64,7 +64,24 @@ alias gs='git st'
 alias gt='git tag'
 alias gst='git status -sb'
 alias grd='git rb origin/dev'
+alias grm='git rb origin/master'
 alias diff-diff='git-diff-diff'
+
+# Git
+alias aa='arc add'
+alias ab='arc branch -a'
+alias ac='arc commit -am'
+alias aca='arc commit --amend'
+alias ad='arc diff'
+alias adc='arc diff --cached'
+alias ads='arc diff --staged'
+alias af='arc fetch --prune'
+alias al='arc log'
+alias ap='arc pull --rebase'
+alias as='arc st'
+alias at='arc tag'
+alias ast='arc status -sb'
+alias art='arc rebase trunk'
 
 [ -f "`which ack`" ] || alias ack=ack-grep
 alias gmt="git mergetool && find -type f -name '*.orig' -delete"

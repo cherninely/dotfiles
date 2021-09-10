@@ -17,7 +17,7 @@
     autosetuprebase = always
 
 [push]
-    default = current
+	default = current
 
 [color]
     diff = yes
@@ -88,10 +88,16 @@
 [help]
     autocorrect = 1
 
-[filter "lfs"]
-    clean = git-lfs clean %f
-    smudge = git-lfs smudge --skip %f
-    process = git-lfs filter-process --skip
-    required = true
 [lfs "https://github.yandex-team.ru/"]
   locksverify = false
+[filter "lfs"]
+	process = git-lfs filter-process
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+[fetch]
+	prune = true
+[rebase]
+	autosquash = true
+[pull]
+	default = current

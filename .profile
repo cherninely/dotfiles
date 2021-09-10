@@ -96,3 +96,5 @@ fi
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function
 
 [[ -s $HOME/.nvm/nvm.sh ]] && . $HOME/.nvm/nvm.sh  # This loads NVM
+export "PATH=$HOME/.bin:$PATH"
+export BASH_SILENCE_DEPRECATION_WARNING=1
