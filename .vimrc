@@ -174,7 +174,7 @@ set fileencodings=utf-8,cp1251,koi8-r,cp866
 set termencoding=utf-8
 set fileformat=unix
 
-" Wildmenu
+" Enhance command-line completion
 set wildmenu                " use wildmenu ...
 set wildcharm=<TAB>
 set wildignore+=*.pyc        " ignore file pattern
@@ -257,13 +257,13 @@ augroup vimrc
 
 augroup END
 
+set background=dark
+colorscheme solarized
+
 set t_Co=256
 let g:solarized_termcolors=256
 let g:solarized_contrast='high'
 let g:solarized_termtrans=1
-
-set background=light
-colorscheme solarized
 
 " Unite
 
