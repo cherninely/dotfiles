@@ -9,13 +9,6 @@ unset file
 source ~/dotfiles/git-completion.bash
 source ~/dotfiles/tms-complition.bash
 [ -e `which npm` ] && (. <(npm completion))2>/dev/null
-source ~/dotfiles/fiji-complition.bash
-
-# How to update
-# cd fiji && git co dev && git pull # Перейти в свежий репозиторий
-# rm ~/dotfiles/fiji-complition.bash # на zsh защита от перезаписи
-# fiji completion > ~/dotfiles/fiji-complition.bash
-source ~/dotfiles/fiji-complition.bash
 
 if [[ -z `git config user.name` ]]; then
     echo -n "Please, enter user name for git config [Name Surname (nickname)]: "
@@ -80,17 +73,6 @@ if [[ $SSH_AUTH_SOCK && $SSH_AUTH_SOCK != $HOME/.ssh/ssh_auth_sock ]]
 then
     ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
 fi
-
-# # command prompt
-# case $TERM in
-#     screen*)
-#         SCREENTITLE='\[\ek\e\\\]\[\ek\W\e\\\]'
-#         ;;
-#     *)
-#         SCREENTITLE=''
-#         ;;
-# esac
-# export PS1="${SCREENTITLE}[\u@\h \W]\$ "
 
 
 [[ -s "$HOME/.rvm/scripts/rvm" ]] && . "$HOME/.rvm/scripts/rvm" # Load RVM function

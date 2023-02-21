@@ -1,4 +1,4 @@
 #!/bin/bash
 
-# Find all commits where current string have beem changed
+# Find all commits where current string have been changed
 for d in islands sakhalin .; do git -C $d log -S "$1" --source --ignore-space-change; done

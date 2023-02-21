@@ -11,12 +11,8 @@ export PATH=~/bin:$PATH
 export PATH=~/dotfiles/bin:$PATH
 export PATH=/usr/local/php5/bin:$PATH
 export PATH=~/.rvm/bin:$PATH
-export PATH=/Berkanavt/bin:$PATH
-export PATH=/Berkanavt/bin/scripts:$PATH
-export PATH=~/android-sdk-macosx/platform-tools:$PATH
 export PATH=.bin:$PATH # @sbmaxx: Чтобы бинарники из ./.bin запускать
 export PATH=bin:$PATH # @sbmaxx: Чтобы бинарники из ./bin запускать
-[ -d ${HOME}.bem-levels ] && export PATH="$PATH:${HOME}.bem-levels" # bem-cat etc.
 
 export NODE_PATH=./node_modules:$NODE_PATH
 

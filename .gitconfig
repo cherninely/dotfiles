@@ -73,12 +73,6 @@
 [tag]
     sort = version:refname
 
-[url "git@github.yandex-team.ru:"]
-    pushInsteadOf = "git://github.yandex-team.ru/"
-
-[url "git://github.yandex-team.ru/"]
-    insteadOf = "ght:"
-
 [url "git@github.com:"]
     pushInsteadOf = "git://github.com/"
 
@@ -88,8 +82,6 @@
 [help]
     autocorrect = 1
 
-[lfs "https://github.yandex-team.ru/"]
-  locksverify = false
 [filter "lfs"]
 	process = git-lfs filter-process
 	required = true

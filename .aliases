@@ -11,12 +11,8 @@ alias SEDI="$([ $IS_OSX ] && echo "sed -E  -i '' -e" || echo "sed -ri")"
 alias GSED="$(which gsed 2>/dev/null 1>&2 && echo 'gsed' || echo 'sed')"
 
 # git bisect helpers
-alias gb-bad='git bisect bad && make'
-alias gb-good='git bisect good && make'
-
-# ( optimize all — oo — o2 ) css|svg
-alias o2svg='gd origin/dev --name-only --diff-filter=ACMR | grep ".svg" | while read line; do svgo $line; done'
-alias o2css='gd origin/dev --name-only --diff-filter=ACMR | grep ".css" | while read line; do csscomb $line; done'
+alias gb-bad='git bisect bad && npm run build'
+alias gb-good='git bisect good && npm run build'
 
 # IP addresses
 alias ip="dig +short myip.opendns.com @resolver1.opendns.com"
@@ -97,92 +93,6 @@ alias apache-stop='sudo /usr/local/etc/rc.d/apache.sh stop'
 alias apache-start='sudo /usr/local/etc/rc.d/apache.sh start'
 
 alias mine='sudo chown -R $USER .'
-
-alias 42='ssh leon42.serp.yandex.ru'
-
-# SVN
-alias st='svn st'
-alias sup='svn update'
-alias sci='svn commit -m'
-sd()
-{
-    svn di $@ | colordiff
-}
-
-alias pg='pg_ctl -D /usr/local/var/postgres -l /usr/local/var/postgres/server.log'
-
-# serp
-
-# посмотреть логи рабочей копии
-wclog()
-{
-    tail -f /var/tmp/$USER-d-*
-}
-
-alias wlog=wclog
-
-function wcnew()
-{
-
-    original-wcnew "$@"
-
-    WC_BASE_PATH="$(wcbin)/$1"
-
-    echo cd $WC_BASE_PATH ...
-    [ -d $WC_BASE_PATH ] && cd $WC_BASE_PATH || IS_ERROR=1
-
-    [ $IS_ERROR ] && echo 'Something went wrong :('
-
-}
-
-function wcbin()
-{
-    ([ $WC_BIN ] && echo $WC_BIN || echo $HOME) | sed 's|/$||'
-}
-
-function wcname()
-{
-    echo "$(pwd -P | sed "s|$(wcbin)/||")/" | cut -f 1 -d /
-}
-
-function wcpath()
-{
-    echo "$(wcbin)/$(wcname)"
-}
-
-all()
-{
-    if [ $(basename $PWD) == 'web3' ]; then
-        es pages-desktop/search/all/_all.priv.js +$1
-    elif [[ $(basename $PWD) == 'web-touch-phone' ]]; then
-        es pages-touch-phone/search/all/_all.priv.js +$1
-    elif [[ $PWD =~ 'touch_phone' ]]; then
-        e pages-touch/common/_common.priv.js +$1
-    elif [[ $PWD =~ 'touch_pad' ]]; then
-        e pages-touch-pad/common/_common.priv.js +$1
-    else
-        e $([[ `echo "$2"`  ]] || cat .project | head -n 1)/pages/common/_common.priv.js +$1
-    fi
-}
-
-# подмаунтить jail
-# используется http://osxfuse.github.com/
-jailmount()
-{
-    JAIL=${1:-"leon42.serp.yandex.ru"}
-    FOLDER=${2:-"/home/$USER"}
-    echo -e "\033[33m===> MOUNT JAIL: \033[31m$JAIL \033[0m"
-    mkdir -p /mount/$JAIL
-    jailunmount $JAIL
-    sshfs $USER@$JAIL:$FOLDER /mount/$JAIL -oauto_cache,reconnect,volname=$1
-}
-
-# размаунтить джейл
-jailunmount()
-{
-    JAIL=${1:-"leon42.serp.yandex.ru"}
-    umount /mount/$1 >/dev/null
-}
 
 # Tmux
 alias tm="tmux -2 -S /tmp/tm-`whoami`"
