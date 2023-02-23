@@ -40,13 +40,13 @@ brew install gnupg
 
 # Install more recent versions of some macOS tools.
 brew install vim --with-override-system-vi
+#brew install neovim
 brew install grep
 brew install screen
 brew install gmp
 
 # Install other useful binaries.
-brew install ack
-#brew install exiv2
+brew install the_silver_searcher
 brew install git
 brew install git-lfs
 brew install gs

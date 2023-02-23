@@ -136,6 +136,8 @@ set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set ttyfast                 " Optimize for fast terminal connections
 set shortmess=atI           " Don’t show the intro message when starting Vim
 set nostartofline
+set number
+set relativenumber
 
 set wrap
 

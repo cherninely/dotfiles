@@ -34,36 +34,6 @@ fi;
 
 [ -e `which npm` ] && (. <(npm completion))2>/dev/null
 
-if [[ -z `git config user.name` ]]; then
-    echo -n "Please, enter user name for git config [Name Surname (nickname)]: "
-    read GIT_AUTHOR_NAME
-    mkdir -p ~/.config/git/
-    git config -f ~/.config/git/config user.name "$GIT_AUTHOR_NAME"
-fi
-
-if [[ -z `git config user.email` ]]; then
-
-    EMAIL_DOMAIN="yandex-team.ru"
-    _GIT_AUTHOR_EMAIL="$(git config -f ~/.config/git/config user.name | grep -Eo '\(.+\)' | sed 's/(//; s/)//')"
-
-    if [ $_GIT_AUTHOR_EMAIL ]; then
-
-        GIT_AUTHOR_EMAIL="$_GIT_AUTHOR_EMAIL@$EMAIL_DOMAIN"
-        echo "Your email is: $GIT_AUTHOR_EMAIL"
-
-    else
-
-        echo -n "Please, enter internal email login for git config [nickname]: "
-        read GIT_AUTHOR_EMAIL
-        GIT_AUTHOR_EMAIL="$(echo $GIT_AUTHOR_EMAIL | sed "s/@$EMAIL_DOMAIN//")@$EMAIL_DOMAIN"
-        mkdir -p ~/.config/git/
-
-    fi
-
-    git config -f ~/.config/git/config user.email "$GIT_AUTHOR_EMAIL"
-
-fi
-
 # Save ssh agent socket for using in tmux sessions
 if [[ $SSH_AUTH_SOCK && $SSH_AUTH_SOCK != $HOME/.ssh/ssh_auth_sock ]]
 then
