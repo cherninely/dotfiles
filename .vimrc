@@ -1,115 +1,69 @@
 scriptencoding utf-8
 
+" don't bother with vi compatibility
 set nocompatible
 
-" NEOBUNDLE {{{ ===============================================================
+" enable syntax highlighting
+syntax enable
 
-filetype off             " Turn off filetype plugins before bundles init
-
-if has('vim_starting')
-  set runtimepath+=~/.vim/bundle/neobundle.vim/
+" Install vim-plug if not found
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 endif
 
-let g:neobundle#types#git#clone_depth = 1
+" Run PlugInstall if there are missing plugins
+autocmd VimEnter * if len(filter(values(g:plugs), '!isdirectory(v:val.dir)'))
+  \| PlugInstall --sync | source $MYVIMRC
+\| endif
 
-call neobundle#begin(expand('~/.vim/bundle/'))
-NeoBundleFetch 'Shougo/neobundle.vim'
+call plug#begin()
+" The default plugin directory will be as follows:
+"   - Vim (Linux/macOS): '~/.vim/plugged'
+"   - Vim (Windows): '~/vimfiles/plugged'
+"   - Neovim (Linux/macOS/Windows): stdpath('data') . '/plugged'
+" You can specify a custom plugin directory by passing it as the argument
+"   - e.g. `call plug#begin('~/.vim/plugged')`
+"   - Avoid using standard Vim directory names like 'plugin'
 
-" BUNDLES (plugins administrated by NeoBundle) {{{
+" Make sure you use single quotes
 
-" Vimproc to asynchronously run commands (NeoBundle, Unite)
-NeoBundle 'Shougo/vimproc', {
-            \ 'build' : {
-            \     'mac' : 'make -f make_mac.mak',
-            \     'unix' : 'make -f make_unix.mak',
-            \    },
-            \ }
+Plug 'Shougo/unite.vim'
+Plug 'airblade/vim-gitgutter'
+Plug 'jam1garner/vim-code-monokai'
+Plug 'austintaylor/vim-indentobject'
+Plug 'christoomey/vim-tmux-navigator'
+Plug 'ctrlpvim/ctrlp.vim'
+Plug 'leafgarland/typescript-vim'
+Plug 'pangloss/vim-javascript'
+Plug 'rking/ag.vim'
+Plug 'garbas/vim-snipmate'
+Plug 'MarcWeber/vim-addon-mw-utils'
+Plug 'tomtom/tlib_vim'
+Plug 'nathanaelkane/vim-indent-guides'
+Plug 'preservim/nerdtree'
+Plug 'ryanoasis/vim-devicons'
+Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
+Plug 'scrooloose/nerdtree-project-plugin'
+Plug 'PhilRunninger/nerdtree-visual-selection'
+Plug 'scrooloose/syntastic'
+Plug 'tpope/vim-commentary'
+Plug 'tpope/vim-repeat'
+Plug 'tpope/vim-surround'
+Plug 'tpope/vim-unimpaired'
+Plug 'tpope/vim-endwise'
+Plug 'vim-scripts/Align'
+Plug 'vim-scripts/greplace.vim'
+Plug 'vim-scripts/matchit.zip'
+Plug 'Raimondi/delimitMate'
+Plug 'gregsexton/MatchTag'
+Plug 'vim-airline/vim-airline'
+Plug 'ConradIrwin/vim-bracketed-paste'
 
-" Unite. The interface to rule almost everything
-NeoBundle 'Shougo/unite.vim'
+" Initialize plugin system
+" - Automatically executes `filetype plugin indent on` and `syntax enable`.
+call plug#end()
 
-if has('lua')
-  NeoBundle 'Shougo/neocomplete'
-else
-  NeoBundle 'Shougo/neocomplcache'
-endif
-NeoBundle 'Shougo/neosnippet'
-" NeoBundle 'Shougo/neosnippet-snippets'
-" NeoBundle 'honza/snipmate-snippets'
-
-NeoBundle 'tpope/vim-fugitive'
-NeoBundleLazy 'gregsexton/gitv', {'depends':['tpope/vim-fugitive'],
-            \ 'autoload':{'commands':'Gitv'}}
-
-NeoBundle 'Shougo/vimshell'
-NeoBundle 'Shougo/neomru.vim'
-NeoBundle 'Shougo/vimfiler'
-
-NeoBundle 'jpalardy/vim-slime'
-NeoBundle 'Raimondi/delimitMate'
-NeoBundle 'tomtom/tcomment_vim'
-NeoBundle 'tpope/vim-endwise'
-NeoBundle 'tpope/vim-repeat'
-NeoBundle 'tpope/vim-surround'
-NeoBundle 'tpope/vim-unimpaired'
-" NeoBundle 'vim-scripts/vcscommand.vim'
-NeoBundle 'vim-scripts/tlib'
-
-NeoBundleLazy 'othree/html5.vim', { 'autoload': { 'filetypes': ['html', 'css'] } }
-
-NeoBundle 'gregsexton/MatchTag'
-" NeoBundle 'skammer/vim-css-color'
-NeoBundle 'hail2u/vim-css3-syntax'
-NeoBundle 'ignovak/vim-web-indent'
-" NeoBundle 'walm/jshint.vim'
-
-" NeoBundle 'miripiruni/CSScomb-for-Vim'
-
-NeoBundle 'ignovak/vim-translator'
-
-NeoBundle 'ConradIrwin/vim-bracketed-paste'
-
-" NeoBundle 'ujihisa/unite-colorscheme'
-
-" NeoBundle 'vim-speeddating'
-
-" HTML/HAML
-" NeoBundle 'hokaccha/vim-html5validator'
-
-" CSS/LESS
-" JavaScript
-" NeoBundle 'pangloss/vim-javascript'
-" NeoBundle 'itspriddle/vim-jquery'
-NeoBundle 'wavded/vim-stylus'
-" JSON
-" NeoBundle 'leshill/vim-json'
-
-" NeoBundle 'tpope/vim-rails'
-" NeoBundle 'tpope/vim-haml'
-" NeoBundle 'kchmck/vim-coffee-script'
-" NeoBundle 'klen/vim-jsmode'
-" NeoBundle 'mattn/gist-vim'
-
-" Misc
-
-NeoBundle 'a-x-/vim-cyr'
-
-
-NeoBundle 'https://www.vim.org/scripts/download_script.php?src_id=4316',
-      \ { 'type__filename' : 'python.vim', 'script_type' : 'indent' }
-" NeoBundle 'davidhalter/jedi-vim'
-
-" END BUNDLES }}}
-
-call neobundle#end()
-
-filetype plugin indent on
-
-NeoBundleCheck
-
-" }}}
-
-syntax on
 
 " General options
 set exrc secure             " Enable per-directory .vimrc files and disable unsafe commands in them
@@ -138,8 +92,12 @@ set shortmess=atI           " Don’t show the intro message when starting Vim
 set nostartofline
 set number
 set relativenumber
-
-set wrap
+set laststatus=2            " always show statusline
+set wrap                    " when on, lines longer than the width of the window will wrap and displaying continues on the next line
+set scrolloff=3             " show context above/below cursorline
+set background=dark
+colorscheme codedark
+set t_Co=256
 
 " Tab options
 set autoindent              " copy indent from previous line
@@ -165,11 +123,11 @@ set matchpairs+=<:>         " Make < and > match as well
 
 " Localization
 set langmenu=none            " Always use english menu
-set keymap=russian-jcukenwin " Alternative keymap
-highlight lCursor guifg=NONE guibg=Cyan
+set keymap=russian-jcukenwin " Alternative keymap highlight lCursor guifg=NONE guibg=Cyan
 set iminsert=0               " English by default
 set imsearch=-1              " Search keymap from insert mode
 set spelllang=en,ru          " Languages
+
 " set spell
 set encoding=utf-8           " Default encoding
 set fileencodings=utf-8,cp1251,koi8-r,cp866
@@ -177,10 +135,8 @@ set termencoding=utf-8
 set fileformat=unix
 
 " Enhance command-line completion
-set wildmenu                " use wildmenu ...
+set wildmenu                 " use wildmenu ...
 set wildcharm=<TAB>
-set wildignore+=*.pyc        " ignore file pattern
-set wildignore+=*.be.*,*.kk.*,*.tt.*,*.uk.*
 
 " Folding
 if has('folding')
@@ -190,9 +146,7 @@ endif
 
 " Edit
 set backspace=indent,eol,start " Allow backspace to remove indents, newlines and old tex"
-" set virtualedit=block
-set pastetoggle=<leader>p
-set iskeyword+=-
+
 set nobackup
 set nowritebackup
 set noswapfile
@@ -202,95 +156,140 @@ set diffopt=filler
 set diffopt+=vertical
 set diffopt+=iwhite
 
-" Switch splits
+" Enable basic mouse behavior such as resizing buffers.
+set mouse=a
+
+if exists('$TMUX')           " Support resizing in tmux
+    set ttymouse=xterm2
+    let &t_SI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=1\x7\<Esc>\\"
+    let &t_EI = "\<Esc>Ptmux;\<Esc>\<Esc>]50;CursorShape=0\x7\<Esc>\\"
+else
+    let &t_SI = "\<Esc>]50;CursorShape=1\x7"
+    let &t_EI = "\<Esc>]50;CursorShape=0\x7"
+endif
+
+" keyboard shortcuts
+let mapleader = ','
 nnoremap <C-h> <C-W>h
 nnoremap <C-j> <C-W>j
 nnoremap <C-k> <C-W>k
 nnoremap <C-l> <C-W>l
-
-" Navigate through wrapped lines
 noremap j gj
 noremap k gk
-
-augroup vimrc
-  autocmd!
-
-  autocmd FileType vim setlocal sw=2
-  autocmd FileType vim setlocal ts=2
-  autocmd FileType vim setlocal sts=2
-  autocmd FileType vim nnoremap <leader>x 0y$:<c-r>"<cr>
-
-  " Auto reload vim settings
-  autocmd BufWritePost *.vim source $MYVIMRC
-  autocmd BufWritePost .vimrc source $MYVIMRC
-
-  " Restore cursor position
-  autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
-              \| exe "normal g'\"" | endif
-
-  " Filetypes
-  autocmd FileType htmldjango set ft=html.htmldjango
-
-  autocmd FileType scss set ft=scss.css
-  autocmd FileType less set ft=less.css
-  autocmd FileType stylus set ft=stylus.sass
-  autocmd! FileType sass,scss syn cluster sassCssAttributes add=@cssColors
-
-  autocmd BufRead,BufNewFile *.json set ft=javascript
-  " autocmd BufRead,BufNewFile *.json set equalprg=python\ -mjson.tool
-  autocmd BufRead,BufNewFile *.js set ft=javascript.javascript-jquery
-
-  autocmd BufRead,BufNewFile *.bemhtml set ft=javascript
-
-  autocmd BufRead,BufNewFile *.plaintex set ft=plaintex.tex
-
-  autocmd BufRead,BufNewFile *.html nmap <leader>o :!open %<cr>
-
-  " Avoid syntax-highlighting for files larger than 10MB
-  autocmd BufReadPre * if getfsize(expand("%")) > 10000*1024 | syntax off | endif
-
-  autocmd BufReadPost fugitive://* set bufhidden=delete
-
-  " NeoComplete, Neosnippet
-  " Auto close preview window
-  autocmd CursorMovedI * if pumvisible() == 0|pclose|endif
-  autocmd InsertLeave * if pumvisible() == 0|pclose|endif
-  autocmd InsertLeave * NeoSnippetClearMarkers
-
-augroup END
-
-set background=dark
-colorscheme solarized
-
-set t_Co=256
-let g:solarized_termcolors=256
-let g:solarized_contrast='high'
-let g:solarized_termtrans=1
-
-" Unite
-
-call unite#filters#matcher_default#use(['matcher_fuzzy'])
-call unite#custom#source('file_rec,file_rec/async,grep', 'ignore_pattern', join(['\.git/', 'tmp/', 'bundle/', 'node_modules/', 'libs/', 'log/'], '\|'))
-call unite#custom#source('file_rec,file_rec/async', 'max_candidates', 10000)
-call unite#custom#source('neomru/file', 'matchers', ['matcher_project_files', 'matcher_fuzzy'])
-
-let g:unite_source_buffer_time_format = ''
-" let g:unite_enable_start_insert = 1
-" let g:unite_split_rule = "botright"
-" let g:unite_force_overwrite_statusline = 0
-" let g:unite_winheight = 10
-" let g:unite_candidate_icon="▷"
-
+noremap <leader>l :Align
+map  <C-l> :tabn<CR>
+map  <C-h> :tabp<CR>
+map  <C-n> :tabnew<CR>
+nnoremap <leader>a :Ag<space>
+nnoremap <leader>b :CtrlPBuffer<CR>
+nnoremap <leader>d :NERDTreeToggle<CR>
+nnoremap <leader>f :NERDTreeFind<CR>
+nnoremap <leader>t :CtrlP<CR>
+nnoremap <leader>T :CtrlPClearCache<CR>:CtrlP<CR>
+nnoremap <leader>g :GitGutterToggle<CR>
+noremap <silent> <leader>V :source ~/.vimrc<CR>:filetype detect<CR>:exe
 nmap <space> [unite]
 nnoremap [unite] <nop>
-
 nnoremap <silent> [unite]<space> :<C-u>Unite -toggle -auto-resize -buffer-name=mixed file_rec/async buffer file_mru bookmark<cr><c-u>
 nnoremap <silent> [unite]f :<C-u>Unite -toggle -auto-resize -start-insert -buffer-name=files neomru/file file_rec/async<cr>
 nnoremap <silent> [unite]b :<C-u>Unite -auto-resize -buffer-name=buffers buffer<cr>
 nnoremap <silent> [unite]/ :<C-u>Unite -no-quit -buffer-name=search grep:.<cr>
 nnoremap <silent> [unite]* :<C-u>UniteWithCursorWord -no-quit -buffer-name=search grep:.<cr>
 nnoremap <silent> [unite]m :<C-u>Unite -auto-resize -buffer-name=mappings mapping<cr>
-" nnoremap <silent> [unite]s :<C-u>Unite -quick-match buffer<cr>
+
+" in case you forgot to sudo
+cnoremap w!! %!sudo tee > /dev/null %
+
+" plugin settings
+let g:ctrlp_match_window = 'order:ttb,max:20'
+let g:NERDSpaceDelims=1
+let g:gitgutter_enabled = 0
+
+let g:nerdtree_vis_confirm_open = 0
+let g:nerdtree_vis_confirm_copy = 0
+let g:nerdtree_vis_confirm_move = 0
+
+
+" use the new SnipMate parser
+let g:snipMate = { 'snippet_version' : 1 }
+
+" Use The Silver Searcher https://github.com/ggreer/the_silver_searcher
+if executable('ag')
+    " Use Ag over Grep
+    set grepprg=ag\ --nogroup\ --nocolor
+
+    " Use ag in CtrlP for listing files. Lightning fast and respects
+    " .gitignore
+    let g:ctrlp_user_command = 'ag %s -l --nocolor -g ""'
+endif
+
+augroup vimrc
+    autocmd!
+
+    autocmd FileType vim setlocal sw=2
+    autocmd FileType vim setlocal ts=2
+    autocmd FileType vim setlocal sts=2
+    autocmd FileType vim nnoremap <leader>x 0y$:<c-r>"<cr>
+
+    " Auto reload vim settings
+    autocmd BufWritePost *.vim source $MYVIMRC
+    autocmd BufWritePost .vimrc source $MYVIMRC
+
+    " Restore cursor position
+    autocmd BufReadPost * if line("'\"") > 0 && line("'\"") <= line("$")
+                \| exe "normal g'\"" | endif
+
+    " Filetypes
+    autocmd FileType scss set ft=scss.css
+    autocmd FileType less set ft=less.css
+    autocmd FileType stylus set ft=stylus.sass
+    autocmd! FileType sass,scss syn cluster sassCssAttributes add=@cssColors
+
+    autocmd BufRead,BufNewFile *.md set filetype=markdown
+    autocmd BufRead,BufNewFile *.md set spell
+
+    autocmd BufRead,BufNewFile *.json set ft=javascript
+    autocmd BufRead,BufNewFile *.json set equalprg=python\ -mjson.tool
+    autocmd BufRead,BufNewFile *.js set ft=javascript.javascript-jquery
+
+    autocmd BufRead,BufNewFile *.bemhtml set ft=javascript
+    autocmd BufRead,BufNewFile *.plaintex set ft=plaintex.tex
+    autocmd BufRead,BufNewFile *.html nmap <leader>o :!open %<cr>
+
+    " Avoid syntax-highlighting for files larger than 10MB
+    autocmd BufReadPre * if getfsize(expand("%")) > 10000*1024 | syntax off | endif
+    autocmd BufReadPost fugitive://* set bufhidden=delete
+
+    " automatically rebalance windows on vim resize
+    autocmd VimResized * :wincmd =
+
+augroup END
+
+" Don't copy the contents of an overwritten selection.
+vnoremap p "_dP"
+
+" delimitMate
+let delimitMate_matchpairs = '(:),[:],{:}'
+let delimitMate_expand_space = 1
+let delimitMate_expand_cr = 1
+
+" Save file by <leader>s
+nmap <leader>s :w<cr>
+imap <leader>s <esc>:w<cr>
+
+" Open files
+" Do not set autochdir (working dir should be root)
+nnoremap <leader>e :e <c-r>=expand("%:h")<cr>/
+cmap <leader>e <c-r>=expand("%:h")<cr>/
+
+
+" Unite
+call unite#filters#matcher_default#use(['matcher_fuzzy'])
+call unite#custom#source('file_rec,file_rec/async,grep', 'ignore_pattern', join(['\.git/', 'tmp/', 'bundle/', 'node_modules/', 'libs/', 'log/'], '\|'))
+call unite#custom#source('file_rec,file_rec/async', 'max_candidates', 10000)
+call unite#custom#source('neomru/file', 'matchers', ['matcher_project_files', 'matcher_fuzzy'])
+
+let g:unite_source_buffer_time_format = ''
 
 if executable('ag')
     let g:unite_source_grep_command='ag'
@@ -304,231 +303,9 @@ elseif executable('ack')
     let g:unite_source_grep_search_word_highlight = 1
 endif
 
-" vimfiler
-call vimfiler#custom#profile('default', 'context', {
-     \ 'safe' : 0
-     \ })
-" Like Textmate icons.
-let g:vimfiler_tree_leaf_icon = ' '
-let g:vimfiler_tree_opened_icon = '▾'
-let g:vimfiler_tree_closed_icon = '▸'
-nmap <silent> <Bs> :VimFiler<CR>
-nmap <silent> <leader>f :VimFiler -find<CR>
-
-let g:vimshell_interactive_update_time = 500
-nnoremap <silent><leader>h :VimShell<CR>
-
-" fugitive
-nmap <silent> <leader>b :.Gblame<cr>
-vmap <silent> <leader>b :Gblame<cr>
-nmap <silent> <leader>g :Gstatus<cr>
-nmap <silent> <leader>w :Gwrite<cr>
-
-" delimitMate
-let delimitMate_matchpairs = '(:),[:],{:}'
-let delimitMate_expand_space = 1
-let delimitMate_expand_cr = 1
-
-" Save file by <leader>s
-nmap <leader>s :w<cr>
-imap <leader>s <esc>:w<cr>
-
-" OPTIMIZE: try to improve behavior
-nnoremap Q <c-w>s:bp<cr><c-w>j:bd<cr>
-" nnoremap Q :bd<cr>
-
-" nmap <leader>j :JSHint<cr>
-
-" Open files
-" Do not set autochdir (working dir should be root)
-nnoremap <leader>e :e <c-r>=expand("%:h")<cr>/
-nnoremap <leader>d :diffsplit <c-r>=expand("%:h")<cr>/
-cmap <leader>e <c-r>=expand("%:h")<cr>/
-
-" Neocomplete
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-
-" " Define dictionary.
-" let g:neocomplete#sources#dictionary#dictionaries = {
-"     \ 'default' : '',
-"     \ 'vimshell' : $HOME.'/.vimshell_hist',
-"     \ 'scheme' : $HOME.'/.gosh_completions'
-"     \ }
-
-if has('lua')
-  " Use neocomplete.
-  " let g:neocomplete#enable_at_startup = 1
-  " Use smartcase.
-  " let g:neocomplete#enable_smart_case = 1
-  " Set minimum syntax keyword length.
-  " let g:neocomplete#sources#syntax#min_keyword_length = 3
-  " let g:neocomplete#lock_buffer_name_pattern = '\*ku\*'
-
-  " Define keyword.
-  if !exists('g:neocomplete#keyword_patterns')
-    let g:neocomplete#keyword_patterns = {}
-  endif
-  let g:neocomplete#keyword_patterns['default'] = '\h\w*'
-
-  " Plugin key-mappings.
-  inoremap <expr><C-g>     neocomplete#undo_completion()
-  inoremap <expr><C-l>     neocomplete#complete_common_string()
-
-  " Recommended key-mappings.
-  " <CR>: close popup and save indent.
-  " inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-  " function! s:my_cr_function()
-  "   return neocomplete#close_popup() . "\<CR>"
-  "   " For no inserting <CR> key.
-  "   "return pumvisible() ? neocomplete#close_popup() : "\<CR>"
-  " endfunction
-  " <TAB>: completion.
-  inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-  " <C-h>, <BS>: close popup and delete backword char.
-  inoremap <expr><C-h> neocomplete#smart_close_popup()."\<C-h>"
-  inoremap <expr><BS> neocomplete#smart_close_popup()."\<C-h>"
-  inoremap <expr><C-y>  neocomplete#close_popup()
-  inoremap <expr><C-e>  neocomplete#cancel_popup()
-  " Close popup by <Space>.
-  "inoremap <expr><Space> pumvisible() ? neocomplete#close_popup() : "\<Space>"
-
-  " AutoComplPop like behavior.
-  "let g:neocomplete#enable_auto_select = 1
-
-  " Shell like behavior(not recommended).
-  "set completeopt+=longest
-  "let g:neocomplete#enable_auto_select = 1
-  "let g:neocomplete#disable_auto_complete = 1
-  "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-else
-  " Use neocomplcache.
-  " let g:neocomplcache_enable_at_startup = 1
-  " Use smartcase.
-  " let g:neocomplcache_enable_smart_case = 1
-  " Set minimum syntax keyword length.
-  " let g:neocomplcache_min_syntax_length = 3
-  " let g:neocomplcache_lock_buffer_name_pattern = '\*ku\*'
-
-  " Define keyword.
-  if !exists('g:neocomplcache_keyword_patterns')
-    let g:neocomplcache_keyword_patterns = {}
-  endif
-  let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-
-  " Plugin key-mappings.
-  inoremap <expr><C-g>     neocomplcache#undo_completion()
-  inoremap <expr><C-l>     neocomplcache#complete_common_string()
-
-  " Recommended key-mappings.
-  " <CR>: close popup and save indent.
-  " inoremap <silent> <CR> <C-r>=<SID>my_cr_function()<CR>
-  " function! s:my_cr_function()
-  "   return neocomplcache#smart_close_popup() . "\<CR>"
-  "   " For no inserting <CR> key.
-  "   "return pumvisible() ? neocomplcache#close_popup() : "\<CR>"
-  " endfunction
-  " <TAB>: completion.
-  inoremap <expr><TAB>  pumvisible() ? "\<C-n>" : "\<TAB>"
-  " <C-h>, <BS>: close popup and delete backword char.
-  inoremap <expr><C-h> neocomplcache#smart_close_popup()."\<C-h>"
-  inoremap <expr><BS> neocomplcache#smart_close_popup()."\<C-h>"
-  inoremap <expr><C-y>  neocomplcache#close_popup()
-  inoremap <expr><C-e>  neocomplcache#cancel_popup()
-  " Close popup by <Space>.
-  "inoremap <expr><Space> pumvisible() ? neocomplcache#close_popup() : "\<Space>"
-
-  " AutoComplPop like behavior.
-  "let g:neocomplcache_enable_auto_select = 1
-
-  " Shell like behavior(not recommended).
-  "set completeopt+=longest
-  "let g:neocomplcache_enable_auto_select = 1
-  "let g:neocomplcache_disable_auto_complete = 1
-  "inoremap <expr><TAB>  pumvisible() ? "\<Down>" : "\<C-x>\<C-u>"
-
-endif
-
-
-
-" Neosnippet
-" Plugin key-mappings.
-imap <C-k>     <Plug>(neosnippet_expand_or_jump)
-smap <C-k>     <Plug>(neosnippet_expand_or_jump)
-xmap <C-k>     <Plug>(neosnippet_expand_target)
-
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-\ "\<Plug>(neosnippet_expand_or_jump)"
-\: "\<TAB>"
-
-" For snippet_complete marker.
-if has('conceal')
-  set conceallevel=2 concealcursor=i
-endif
-
-let g:neosnippet#disable_runtime_snippets = {
-      \   '_' : 1,
-      \ }
-
-" Enable snipMate compatibility feature.
-let g:neosnippet#enable_snipmate_compatibility = 1
-
-" Tell Neosnippet about the other snippets
-let g:neosnippet#snippets_directory='~/.vim/snippets'
-
-nnoremap <silent> <leader>vi :e ~/.vimrc<cr>
-nnoremap <silent> <leader>vs :e ~/.vim/snippets/javascript.snippets
-nnoremap <silent> <leader>vp :vsp <c-r>=expand("%:h")<cr>/
-
-" Helpers for snipmate
-so ~/.vim/snippets/support_functions.vim
-
-
-
-" Slime-vim
-"
-" TODO: replace with vimshell
-"
-" Typical settings for tmux:
-" socket: "default"
-" pane: ":0.1"
-if executable('tmux')
-    let g:slime_target = "tmux"
-endif
-xmap gx <Plug>SlimeRegionSend
-" WARN: netrwPlugin has the same mapping
-nmap gx <Plug>SlimeParagraphSend
-
-let g:goog_user_conf = {
-            \ 'langpair': 'en|ru',
-            \ 'v_key': 'T'
-            \ }
-
-if has('gui_running')
-    source ~/.vim/.gvimrc
-endif
-
-function! SQLUpperCase()
-    %s:\<analyze\>\|\<and\>\|\<as\>\|\<by\>\|\<desc\>\|\<exists\>\|\<explain\>\|\<from\>\|\<group\>\|\<in\>\|\<insert\>\|\<intersect\>\|\<into\>\|\<join\>\|\<limit\>\|\<not\>\|\<on\>\|\<order\>\|\<select\>\|\<set\>\|\<update\>\|\<where\>:\U&:i
-endfunction
-
-let g:surround_125 = "{\n\r\n}"
-
-" Creating macros
-" :redir @a>
-" :history : -20,
-" :redir END
-" "ap
-
-" Regexp notes
-" /text1\(text2\)\@= 'text1' followed by 'text2'
-" /\(text1\)\@<=text2  'text2' preceded with 'text1'
-
-" comment selected sector
-" Это ломает use-case: 1) начать выделение 2) сделать поиск, чтобы выделить
-" vmap / gc
+" Airline
+let g:airline_powerline_fonts = 1 "Включить поддержку Powerline шрифтов
+let g:airline#extensions#keymap#enabled = 0 "Не показывать текущий маппинг
+let g:airline_section_z = "\ue0a1:%l/%L Col:%c" "Кастомная графа положения курсора
+let g:Powerline_symbols='unicode' "Поддержка unicode
+let g:airline#extensions#xkblayout#enabled = 0 "Про это позже расскажу"

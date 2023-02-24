@@ -125,3 +125,6 @@
 
 [url "git://gist.github.com/"]
     insteadOf = 'gist:'
+[user]
+	email = cherninely@gmail.com
+	name = cherninely

@@ -1,35 +1,27 @@
 #!/usr/bin/env bash
 
-cd "$(dirname "$0")"
-git pull
-for f in `find . -name '\.*' -exec basename {} \; | grep -v 'git\|\.$'`
-do
-    ln -fs $PWD/$f ~
-done
+cd "$(dirname "${BASH_SOURCE}")";
 
-# git clone https://github.com/NvChad/NvChad ~/.config/nvim --depth 1
+git pull origin main;
 
-#
-echo Настройка git ...
-GIT_AUTHOR_NAME=`cherninely`
-GIT_AUTHOR_EMAIL=`cherninely@yandex-team.ru`
-[ -f ~/.gitconfig ] || ln -s ~/dotfiles/.gitconfig ~/.gitconfig
-mkdir -p ~/.config/git/
-git config -f ~/.config/git/config user.name "$GIT_AUTHOR_NAME"
-git config -f ~/.config/git/config user.email "$GIT_AUTHOR_EMAIL"
+function doIt() {
+    rsync --exclude ".git/" \
+        --exclude ".DS_Store" \
+        --exclude ".osx" \
+        --exclude "bootstrap.sh" \
+        --exclude "README.md" \
+        --exclude "LICENSE-MIT.txt" \
+        -avh --no-perms . ~;
+    source ~/.bash_profile;
+}
 
-#
-echo Перезагрузка bash-профиля ...
-source ~/.profile
-
-# 
-echo Настройка vim ...
-echo Fetch/update neobundle.vim
-rm -rf ~/.vim/bundle/neobundle.vim
-wget -q https://codeload.github.com/Shougo/neobundle.vim/tar.gz/master
-mkdir -p .vim/bundle/
-tar xf master
-mv neobundle.vim-master .vim/bundle/neobundle.vim
-rm master
-
-echo Done
+if [ "$1" == "--force" -o "$1" == "-f" ]; then
+	doIt;
+else
+	read -p "This may overwrite existing files in your home directory. Are you sure? (y/n) " -n 1;
+	echo "";
+	if [[ $REPLY =~ ^[Yy]$ ]]; then
+		doIt;
+	fi;
+fi;
+unset doIt;
