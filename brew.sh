@@ -25,6 +25,7 @@ brew install gnu-sed --with-default-names
 # Install a modern version of Bash.
 brew install bash
 brew install bash-completion2
+brew install python3
 
 # Switch to using brew-installed bash as default shell
 if ! fgrep -q "${BREW_PREFIX}/bin/bash" /etc/shells; then
@@ -42,11 +43,12 @@ brew install gnupg
 brew install vim --with-override-system-vi
 #brew install neovim
 brew install grep
+brew install the_silver_searcher
+brew install fzf
 brew install screen
 brew install gmp
 
 # Install other useful binaries.
-brew install the_silver_searcher
 brew install git
 brew install git-lfs
 brew install gs
@@ -62,6 +64,7 @@ brew install ssh-copy-id
 brew install tree
 brew install vbindiff
 brew install zopfli
+brew install node
 
 # Remove outdated versions from the cellar.
 brew cleanup

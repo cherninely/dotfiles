@@ -3,8 +3,8 @@ scriptencoding utf-8
 " don't bother with vi compatibility
 set nocompatible
 
-" enable syntax highlighting
 syntax enable
+filetype plugin indent on
 
 " Install vim-plug if not found
 if empty(glob('~/.vim/autoload/plug.vim'))
@@ -29,7 +29,6 @@ call plug#begin()
 " Make sure you use single quotes
 
 Plug 'Shougo/unite.vim'
-Plug 'airblade/vim-gitgutter'
 Plug 'jam1garner/vim-code-monokai'
 Plug 'austintaylor/vim-indentobject'
 Plug 'christoomey/vim-tmux-navigator'
@@ -44,7 +43,7 @@ Plug 'nathanaelkane/vim-indent-guides'
 Plug 'preservim/nerdtree'
 Plug 'ryanoasis/vim-devicons'
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
-Plug 'scrooloose/nerdtree-project-plugin'
+" Plug 'scrooloose/nerdtree-project-plugin'
 Plug 'PhilRunninger/nerdtree-visual-selection'
 Plug 'scrooloose/syntastic'
 Plug 'tpope/vim-commentary'
@@ -60,10 +59,16 @@ Plug 'gregsexton/MatchTag'
 Plug 'vim-airline/vim-airline'
 Plug 'ConradIrwin/vim-bracketed-paste'
 
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
+
+Plug 'Shougo/deoplete.nvim'
+Plug 'roxma/nvim-yarp', { 'do': 'pip install -r requirements.txt' }
+Plug 'roxma/vim-hug-neovim-rpc'
+
 " Initialize plugin system
 " - Automatically executes `filetype plugin indent on` and `syntax enable`.
 call plug#end()
-
 
 " General options
 set exrc secure             " Enable per-directory .vimrc files and disable unsafe commands in them
@@ -183,10 +188,12 @@ map  <C-n> :tabnew<CR>
 nnoremap <leader>a :Ag<space>
 nnoremap <leader>b :CtrlPBuffer<CR>
 nnoremap <leader>d :NERDTreeToggle<CR>
-nnoremap <leader>f :NERDTreeFind<CR>
 nnoremap <leader>t :CtrlP<CR>
 nnoremap <leader>T :CtrlPClearCache<CR>:CtrlP<CR>
-nnoremap <leader>g :GitGutterToggle<CR>
+
+noremap <leader>p :Files<CR>
+noremap <leader>g :GFiles?<CR>
+
 noremap <silent> <leader>V :source ~/.vimrc<CR>:filetype detect<CR>:exe
 nmap <space> [unite]
 nnoremap [unite] <nop>
@@ -196,6 +203,9 @@ nnoremap <silent> [unite]b :<C-u>Unite -auto-resize -buffer-name=buffers buffer<
 nnoremap <silent> [unite]/ :<C-u>Unite -no-quit -buffer-name=search grep:.<cr>
 nnoremap <silent> [unite]* :<C-u>UniteWithCursorWord -no-quit -buffer-name=search grep:.<cr>
 nnoremap <silent> [unite]m :<C-u>Unite -auto-resize -buffer-name=mappings mapping<cr>
+" Save file by <leader>s
+nmap <leader>s :w<cr>
+imap <leader>s <esc>:w<cr>
 
 " in case you forgot to sudo
 cnoremap w!! %!sudo tee > /dev/null %
@@ -203,7 +213,6 @@ cnoremap w!! %!sudo tee > /dev/null %
 " plugin settings
 let g:ctrlp_match_window = 'order:ttb,max:20'
 let g:NERDSpaceDelims=1
-let g:gitgutter_enabled = 0
 
 let g:nerdtree_vis_confirm_open = 0
 let g:nerdtree_vis_confirm_copy = 0
@@ -273,10 +282,6 @@ let delimitMate_matchpairs = '(:),[:],{:}'
 let delimitMate_expand_space = 1
 let delimitMate_expand_cr = 1
 
-" Save file by <leader>s
-nmap <leader>s :w<cr>
-imap <leader>s <esc>:w<cr>
-
 " Open files
 " Do not set autochdir (working dir should be root)
 nnoremap <leader>e :e <c-r>=expand("%:h")<cr>/
@@ -309,3 +314,11 @@ let g:airline#extensions#keymap#enabled = 0 "Не показывать теку�
 let g:airline_section_z = "\ue0a1:%l/%L Col:%c" "Кастомная графа положения курсора
 let g:Powerline_symbols='unicode' "Поддержка unicode
 let g:airline#extensions#xkblayout#enabled = 0 "Про это позже расскажу"
+
+" fzf
+" Если файл уже открыт в vim, то перейти к нужному буферу
+let g:fzf_buffers_jump = 1  
+
+" Use deoplete.
+let g:deoplete#enable_at_startup = 1
+set runtimepath+=~/.vim/plugged/deoplete.nvim/

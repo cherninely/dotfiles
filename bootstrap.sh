@@ -25,3 +25,5 @@ else
 	fi;
 fi;
 unset doIt;
+
+pip3 install --user pynvim
