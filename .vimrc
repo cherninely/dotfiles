@@ -182,11 +182,12 @@ nnoremap <C-l> <C-W>l
 noremap j gj
 noremap k gk
 noremap <leader>l :Align
-map  <C-l> :tabn<CR>
-map  <C-h> :tabp<CR>
+map  <C-]> :tabn<CR>
+map  <C-[> :tabp<CR>
 map  <C-n> :tabnew<CR>
-nnoremap <leader>a :Ag<space>
+nnoremap <leader>f :Ag<space>
 nnoremap <leader>b :CtrlPBuffer<CR>
+nnoremap <leader>n :NERDTreeFocus<CR>
 nnoremap <leader>d :NERDTreeToggle<CR>
 nnoremap <leader>t :CtrlP<CR>
 nnoremap <leader>T :CtrlPClearCache<CR>:CtrlP<CR>
