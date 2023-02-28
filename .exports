@@ -8,11 +8,10 @@ export PATH=./node_modules/.bin:$PATH
 export PATH=~/node_modules/.bin:$PATH
 export PATH=/usr/local/share/npm/bin:$PATH
 export PATH=~/bin:$PATH
-export PATH=.bin:$PATH # @sbmaxx: Чтобы бинарники из ./.bin запускать
-export PATH=bin:$PATH # @sbmaxx: Чтобы бинарники из ./bin запускать
+export PATH=.bin:$PATH
+export PATH=bin:$PATH
 export PATH=~/dotfiles/bin:$PATH
-export PATH=/usr/local/php5/bin:$PATH
-export PATH=~/.rvm/bin:$PATH
+export PATH=$HOME/.local/bin:$HOME/bin:$PATH
 PATH="$HOME/arcadia:$PATH"
 
 export NODE_PATH=./node_modules:$NODE_PATH

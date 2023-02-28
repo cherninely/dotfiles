@@ -25,7 +25,6 @@ brew install gnu-sed --with-default-names
 # Install a modern version of Bash.
 brew install bash
 brew install bash-completion2
-brew install python3
 
 # Switch to using brew-installed bash as default shell
 if ! fgrep -q "${BREW_PREFIX}/bin/bash" /etc/shells; then
@@ -39,14 +38,19 @@ brew install wget --with-iri
 # Install GnuPG to enable PGP-signing commits.
 brew install gnupg
 
+# Install fonts
+brew tap homebrew/cask-fonts
+brew install --cask font-liberation-nerd-font
+
 # Install more recent versions of some macOS tools.
-brew install vim --with-override-system-vi
-#brew install neovim
+brew install neovim
 brew install grep
+brew install ripgrep # for neovim
 brew install the_silver_searcher
 brew install fzf
 brew install screen
 brew install gmp
+brew install rsync
 
 # Install other useful binaries.
 brew install git
@@ -65,6 +69,7 @@ brew install tree
 brew install vbindiff
 brew install zopfli
 brew install node
+brew install python3
 
 # Remove outdated versions from the cellar.
 brew cleanup
