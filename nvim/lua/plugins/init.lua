@@ -17,7 +17,7 @@ return require('packer').startup(function()
     use { 'nvim-lualine/lualine.nvim',
     requires = {'kyazdani42/nvim-web-devicons', opt = true},
     config = function()
-        require('lualine').setup()
+        require('lualine').setup{}
     end, }
 
     -- Табы вверху
@@ -51,31 +51,59 @@ return require('packer').startup(function()
     -- Highlight, edit, and navigate code using a fast incremental parsing library
     use 'nvim-treesitter/nvim-treesitter'
 
-    -- Collection of configurations for built-in LSP client
+    -- Плагин для того чтобы в Neovim была поддержка LSP, он позволяет включать автодополнение, проверку синтаксиса и ещё много прочего
     use 'neovim/nvim-lspconfig'
+
+    -- Добавляет иконки для пунктов автодополнения
+	use {
+		'onsails/lspkind-nvim',
+		config = function()
+            require('plugins.configs.lspkind')
+		end
+	}
+
+    -- for formatters and linters
+    use "jose-elias-alvarez/null-ls.nvim"
+
+    -- Позволяет устанавливать LSP-сервера быстро и без боли
     use {
-        'williamboman/nvim-lsp-installer',
+        'williamboman/mason.nvim',
+        requires = {
+            'williamboman/mason-lspconfig.nvim',
+        },
         config = function()
-            pcall(require, "configs.lspinstaller")
+            require('plugins.configs.lsp')
         end,
     }
 
-    -- Автодополнялка
-    use {
-        'hrsh7th/nvim-cmp',
-        config = function()
-            pcall(require, "configs.cmp")
-        end,
-    }
-    use 'hrsh7th/cmp-nvim-lsp'
-    use 'hrsh7th/cmp-buffer'
-    use 'saadparwaiz1/cmp_luasnip'
+    -- Позволяет удобно показывать все ошибки и предупреждения, которые нашел LSP
+	use {
+		"folke/trouble.nvim",
+		requires = "kyazdani42/nvim-web-devicons",
+		config = function()
+			require("trouble").setup {}
+		end,
+	}
 
-    --- Автодополнлялка к файловой системе
-    use 'hrsh7th/cmp-path'
+    -- Фutomatically highlighting other uses of the word under the cursor using either LSP, Tree-sitter, or regex matching.
+    use 'RRethy/vim-illuminate'
 
-    -- Snippets plugin
-    use 'L3MON4D3/LuaSnip'
+    -- Автодополнение
+	use {
+		'hrsh7th/nvim-cmp',
+		requires = {
+			'L3MON4D3/LuaSnip',
+			'saadparwaiz1/cmp_luasnip',
+			'hrsh7th/cmp-nvim-lsp',
+			'hrsh7th/cmp-path',
+			'hrsh7th/cmp-emoji',
+			'hrsh7th/cmp-nvim-lsp-signature-help',
+			'hrsh7th/cmp-nvim-lua'
+		},
+		config = function()
+            require('plugins.configs.cmp')
+		end,
+	}
 
     -----------------------------------------------------------
     -- HTML и CSS
@@ -142,7 +170,6 @@ return require('packer').startup(function()
             require("which-key").setup {}
         end
     }
-
 
     -- Speed up loading Lua modules in Neovim to improve startup time.
     use 'lewis6991/impatient.nvim'

@@ -12,6 +12,8 @@ filetype indent plugin on
 syntax enable
 ]])
 
+g.python3_host_prog = '/usr/bin/python3'
+
 -- Buffer options
 opt.hidden = true                     -- hide buffers when they are abandoned
 opt.autoread = true                -- auto reload changed files

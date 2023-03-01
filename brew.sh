@@ -42,10 +42,10 @@ brew install gnupg
 brew tap homebrew/cask-fonts
 brew install --cask font-liberation-nerd-font
 
-# Install more recent versions of some macOS tools.
 brew install neovim
 brew install grep
 brew install ripgrep # for neovim
+brew install fd # for neovim telescope
 brew install the_silver_searcher
 brew install fzf
 brew install screen
@@ -58,6 +58,7 @@ brew install git-lfs
 brew install gs
 brew install imagemagick --with-webp
 brew install lua
+brew install go # for lsp sqls
 brew install lynx
 brew install p7zip
 brew install pigz
