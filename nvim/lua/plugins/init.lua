@@ -30,6 +30,8 @@ return require('packer').startup(function()
     -- НАВИГАЦИЯ
     -----------------------------------------------------------
 
+    use 'nvim-tree/nvim-web-devicons'
+
     -- Файловый менеджер
     use { 'kyazdani42/nvim-tree.lua',
     requires = 'kyazdani42/nvim-web-devicons',
