@@ -11,7 +11,7 @@ map('', '<right>', ':echoe "Use l"<CR>', {noremap = true, silent = false})
 
 -- Tabs
 map('n', 'gb', '<CMD>BufferLinePick<CR>', default_opts)
-map('n', '<leader>x', ':bd<CR>', default_opts)
+map('n', '<leader>x', ':Bdelete<CR>', default_opts)
 map('n', '<S-l>', '<CMD>BufferLineCycleNext<CR>', default_opts)
 map('n', '<S-h>', '<CMD>BufferLineCyclePrev<CR>', default_opts)
 map('n', ']b', '<CMD>BufferLineMoveNext<CR>', default_opts)

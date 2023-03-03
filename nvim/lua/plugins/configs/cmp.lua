@@ -11,6 +11,15 @@ if not present then
 end
 
 cmp.setup{
+     experimental = {
+        ghost_text = true
+    },
+
+    window = {
+        completion = cmp.config.window.bordered(),
+        documentation = cmp.config.window.bordered(),
+    },
+
     snippet = {
 
         -- REQUIRED - you must specify a snippet engine
@@ -23,17 +32,17 @@ cmp.setup{
     mapping = {
 
         -- Вызов меню автодополнения
-        ['<C-Space>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+        ['<C-;>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
         ['<CR>'] = cmp.config.disable,                      -- Я не люблю, когда вещи автодополняются на <Enter>
-        ['<C-y>'] = cmp.mapping.confirm({ select = true }), -- А вот на <C-y> вполне ок
+        ['<Tab>'] = cmp.mapping.confirm({ select = true }), -- А вот на <C-y> вполне ок
 
-        -- Используем <C-e> для того чтобы прервать автодополнение
-        ['<C-e>'] = cmp.mapping({
+        -- Используем для того чтобы прервать автодополнение
+        ['<C-s>'] = cmp.mapping({
             i = cmp.mapping.abort(), -- Прерываем автодополнение
             c = cmp.mapping.close(), -- Закрываем автодополнение
         }),
-        ['<C-p>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
-        ['<C-n>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
+        ['<C-j>'] = cmp.mapping(cmp.mapping.select_next_item(), { 'i', 'c' }),
+        ['<C-k>'] = cmp.mapping(cmp.mapping.select_prev_item(), { 'i', 'c' }),
     },
 
     sources = cmp.config.sources({

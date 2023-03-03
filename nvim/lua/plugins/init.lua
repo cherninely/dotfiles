@@ -15,16 +15,22 @@ return require('packer').startup(function()
 
     --- Информационная строка внизу
     use { 'nvim-lualine/lualine.nvim',
-    requires = {'kyazdani42/nvim-web-devicons', opt = true},
+    requires = {'kyazdani42/nvim-web-devicons'},
     config = function()
         require('lualine').setup{}
     end, }
 
     -- Табы вверху
-    use {'akinsho/bufferline.nvim', requires = 'kyazdani42/nvim-web-devicons',
-    config = function()
-        require("bufferline").setup{}
-    end, }
+    use {
+        'akinsho/bufferline.nvim',
+        requires = {
+            'kyazdani42/nvim-web-devicons',
+            'moll/vim-bbye'
+        },
+        config = function()
+                require('plugins.configs.bufferline')
+        end,
+    }
 
     -----------------------------------------------------------
     -- НАВИГАЦИЯ
@@ -87,7 +93,7 @@ return require('packer').startup(function()
 		end,
 	}
 
-    -- Фutomatically highlighting other uses of the word under the cursor using either LSP, Tree-sitter, or regex matching.
+    -- Automatically highlighting other uses of the word under the cursor using either LSP, Tree-sitter, or regex matching.
     use 'RRethy/vim-illuminate'
 
     -- Автодополнение
@@ -100,7 +106,9 @@ return require('packer').startup(function()
 			'hrsh7th/cmp-path',
 			'hrsh7th/cmp-emoji',
 			'hrsh7th/cmp-nvim-lsp-signature-help',
-			'hrsh7th/cmp-nvim-lua'
+			'hrsh7th/cmp-nvim-lua',
+            'hrsh7th/cmp-buffer',
+            'hrsh7th/cmp-cmdline'
 		},
 		config = function()
             require('plugins.configs.cmp')
