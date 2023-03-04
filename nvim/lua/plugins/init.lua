@@ -15,7 +15,7 @@ return require('packer').startup(function()
 
     --- Информационная строка внизу
     use { 'nvim-lualine/lualine.nvim',
-    requires = {'kyazdani42/nvim-web-devicons'},
+    requires = {'nvim-tree/nvim-web-devicons'},
     config = function()
         require('lualine').setup{}
     end, }
@@ -24,11 +24,11 @@ return require('packer').startup(function()
     use {
         'akinsho/bufferline.nvim',
         requires = {
-            'kyazdani42/nvim-web-devicons',
+            'nvim-tree/nvim-web-devicons',
             'moll/vim-bbye'
         },
         config = function()
-                require('plugins.configs.bufferline')
+            require('plugins.configs.bufferline')
         end,
     }
 
@@ -36,11 +36,9 @@ return require('packer').startup(function()
     -- НАВИГАЦИЯ
     -----------------------------------------------------------
 
-    use 'nvim-tree/nvim-web-devicons'
-
     -- Файловый менеджер
-    use { 'kyazdani42/nvim-tree.lua',
-    requires = 'kyazdani42/nvim-web-devicons',
+    use { 'nvim-tree/nvim-tree.lua',
+    requires = 'nvim-tree/nvim-web-devicons',
     config = function() require'nvim-tree'.setup {} end, }
 
     -- Замена fzf и ack
@@ -87,7 +85,7 @@ return require('packer').startup(function()
     -- Позволяет удобно показывать все ошибки и предупреждения, которые нашел LSP
 	use {
 		"folke/trouble.nvim",
-		requires = "kyazdani42/nvim-web-devicons",
+		requires = "nvim-tree/nvim-web-devicons",
 		config = function()
 			require("trouble").setup {}
 		end,
@@ -119,7 +117,7 @@ return require('packer').startup(function()
     -- HTML и CSS
     -----------------------------------------------------------
 
-    -- Подсвечивает закрывающий и откры. тэг. Если, где-то что-то не закрыто, то не подсвечивает.
+    -- Подсвечивает закрывающий и откры. тэг. Если, где-то что-то не закрыто, то не подсвечивает
     use 'idanarye/breeze.vim'
 
     -- Закрывает автоматом html и xml тэги. Пишешь <h1> и он автоматом закроется </h1>
@@ -141,9 +139,6 @@ return require('packer').startup(function()
     -- ]p - вставить на строку выше, [p - ниже
     use 'tpope/vim-unimpaired'
 
-    -- Переводчик рус - англ
-    use 'skanehira/translate.vim'
-
     --- popup окошки
     use 'nvim-lua/popup.nvim'
 
@@ -157,7 +152,14 @@ return require('packer').startup(function()
     use 'tpope/vim-repeat'
 
     -- Стартовая страница, если просто набрать vim в консоле
-    use 'mhinz/vim-startify'
+    use {
+        'glepnir/dashboard-nvim',
+        event = 'VimEnter',
+        config = function()
+            require('plugins.configs.dashboard')
+        end,
+        requires = {'nvim-tree/nvim-web-devicons'}
+    }
 
     -- Комментирует по gc все, вне зависимости от языка программирования
     use { 'numToStr/Comment.nvim',
@@ -166,8 +168,13 @@ return require('packer').startup(function()
     -- Обрамляет строку в теги по ctrl- y + ,
     use 'mattn/emmet-vim'
 
-    -- Закрывает автоматом скобки
-    use 'cohama/lexima.vim'
+    -- Плагин для автодополнения скобок и кавычек
+	use {
+		'windwp/nvim-autopairs',
+		config = function()
+			require('nvim-autopairs').setup {}
+		end
+	}
 
     -- Линтер, работает для всех языков
     use 'dense-analysis/ale'
@@ -183,5 +190,21 @@ return require('packer').startup(function()
 
     -- Speed up loading Lua modules in Neovim to improve startup time.
     use 'lewis6991/impatient.nvim'
+
+    -- adds indentation guides to all lines (including empty lines)
+    use "lukas-reineke/indent-blankline.nvim"
+
+    -- TODOs
+    use {
+        "folke/todo-comments.nvim",
+        requires = "nvim-lua/plenary.nvim",
+        config = function()
+            require("todo-comments").setup {
+                -- your configuration comes here
+                -- or leave it empty to use the default settings
+                -- refer to the configuration section below
+            }
+        end
+    }
 
 end)
