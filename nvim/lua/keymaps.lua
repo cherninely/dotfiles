@@ -9,6 +9,13 @@ map('', '<down>', ':echoe "Use j"<CR>', {noremap = true, silent = false})
 map('', '<left>', ':echoe "Use h"<CR>', {noremap = true, silent = false})
 map('', '<right>', ':echoe "Use l"<CR>', {noremap = true, silent = false})
 
+-- Save
+map('n', '<leader>s', '<cmd>w<CR>', default_opts)
+map('i', '<leader>s', '<esc><cmd>w<CR>', default_opts)
+
+-- Don't copy the contents of an overwritten selection
+map('v', 'p', '\"_dP\"', default_opts)
+
 -- Tabs
 map('n', 'gb', '<CMD>BufferLinePick<CR>', default_opts)
 map('n', '<leader>x', ':Bdelete<CR>', default_opts)

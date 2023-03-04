@@ -1,8 +1,4 @@
-export readonly IS_OSX=$([[ $(uname) = Darwin  ]] && echo True)
-export readonly IS_BASH=$([ $BASH ] && echo True)
-export readonly IS_ZSH=$([ $ZSH_NAME ] && echo True)
-export readonly IS_OMZ=$([ -e ~/.oh-my-zsh  ] && echo True)
-export readonly IS_OPENSTACK=$([ $(hostname | grep '\.serp\.yandex\.ru') ] && echo True)
+#!/usr/bin/env bash
 
 export PATH=./node_modules/.bin:$PATH
 export PATH=~/node_modules/.bin:$PATH
@@ -23,8 +19,8 @@ export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
 export BLOCKSIZE=K      # FreeBSD only
 
-# Make vim the default editor.
-export EDITOR=vim
+# Make nvim the default editor.
+export EDITOR=nvim
 
 export PAGER=less
 export CLICOLOR=yes; # git colors

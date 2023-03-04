@@ -1,3 +1,5 @@
+#!/usr/bin/env bash
+
 # sed alias polyfills for os x and for linux
 # see also: https://beta.wiki.yandex-team.ru/users/invntrm/zsh/#osxvslinux
 
@@ -46,7 +48,6 @@ alias egrep='egrep --color=auto'
 
 # Editor
 alias e=$EDITOR
-alias es='vim -c"sy off"'
 
 
 # Git
@@ -62,7 +63,7 @@ alias gf='git fetch --prune'
 alias gh='git hist'
 alias gl='git lol'
 alias gm='git merge --no-ff'
-alias gp='git pull --rebase'
+alias gp='git push'
 alias gr='git remote -v'
 alias gs='git st'
 alias gt='git tag'
@@ -87,7 +88,7 @@ alias adc='arc diff --cached'
 alias ads='arc diff --staged'
 alias af='arc fetch --prune'
 alias al='arc log --oneline'
-alias ap='arc pull --rebase'
+alias ap='arc push'
 alias as='arc st'
 alias at='arc tag'
 alias ast='arc status -sb'
@@ -96,15 +97,11 @@ alias apf='arc push --force'
 
 [ -f "`which ack`" ] || alias ack=ack-grep
 alias gmt="git mergetool && find -type f -name '*.orig' -delete"
-alias gse='vim $(git status --porcelain | sed -ne "s/^ M //p")' # git status: edit all changed files
+alias gse='e $(git status --porcelain | sed -ne "s/^ M //p")' # git status: edit all changed files
 [ -f "`which gmake`" ] && alias make=gmake
 
 hub_path=`which hub`
 [[ -f $hub_path ]] && alias git=$hub_path
-
-alias apache-restart='sudo /usr/local/etc/rc.d/apache.sh restart'
-alias apache-stop='sudo /usr/local/etc/rc.d/apache.sh stop'
-alias apache-start='sudo /usr/local/etc/rc.d/apache.sh start'
 
 alias mine='sudo chown -R $USER .'
 

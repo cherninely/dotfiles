@@ -10,7 +10,7 @@ return require('packer').startup(function()
     use {
 	    'tanvirtin/monokai.nvim',
     config = function()
-        require('monokai').setup{}
+        require('plugins.configs.colorscheme')
     end, }
 
     --- Информационная строка внизу
