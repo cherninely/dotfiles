@@ -1,3 +1,21 @@
+local ensure_packer = function()
+    local fn = vim.fn
+    local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+    if fn.empty(fn.glob(install_path)) > 0 then
+        fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+        vim.cmd [[packadd packer.nvim]]
+        return true
+    end
+    return false
+end
+
+vim.defer_fn(function()
+  pcall(require, "impatient")
+end, 0)
+
+
+local packer_bootstrap = ensure_packer()
+
 return require('packer').startup(function()
     -- Packer сам себя
     use 'wbthomason/packer.nvim'
@@ -46,7 +64,7 @@ return require('packer').startup(function()
         'nvim-telescope/telescope.nvim',
         requires = { {'nvim-lua/plenary.nvim'} },
         config = function() 
-            require'telescope'.setup {}
+            require'plugins.configs.telescope'
         end,
     }
 
@@ -55,7 +73,12 @@ return require('packer').startup(function()
     -----------------------------------------------------------
 
     -- Highlight, edit, and navigate code using a fast incremental parsing library
-    use 'nvim-treesitter/nvim-treesitter'
+    use {
+        'nvim-treesitter/nvim-treesitter',
+		config = function()
+            require 'plugins.configs.treesitter'
+		end,
+    }
 
     -- Плагин для того чтобы в Neovim была поддержка LSP, он позволяет включать автодополнение, проверку синтаксиса и ещё много прочего
     use 'neovim/nvim-lspconfig'
@@ -206,5 +229,19 @@ return require('packer').startup(function()
             }
         end
     }
+
+    -- Automatically set up your configuration after cloning packer.nvim
+    -- Put this at the end after all plugins
+    if packer_bootstrap then
+        require('packer').sync()
+
+        -- install binaries from mason.nvim
+        vim.api.nvim_create_autocmd("User", {
+            pattern = "PackerComplete",
+            callback = function()
+                vim.cmd "bw | silent! MasonInstallAll" -- close packer window
+            end,
+        })
+    end
 
 end)
