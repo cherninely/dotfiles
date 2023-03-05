@@ -2,8 +2,6 @@
 
 cd "$(dirname "${BASH_SOURCE}")";
 
-git pull origin master;
-
 function doIt() {
     rsync --exclude ".git/" \
         --exclude "nvim/" \
@@ -17,6 +15,10 @@ function doIt() {
     source ~/.bash_profile;
 }
 
+git pull origin master;
+pip3 install --user pynvim
+npm install -g neovim
+
 if [ "$1" == "--force" -o "$1" == "-f" ]; then
 	doIt;
 else
@@ -27,6 +29,3 @@ else
 	fi;
 fi;
 unset doIt;
-
-pip3 install --user pynvim
-npm install -g neovim
