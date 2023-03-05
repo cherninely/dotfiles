@@ -10,7 +10,7 @@ local ensure_packer = function()
 end
 
 vim.defer_fn(function()
-    pcall(require, "impatient")
+    pcall(require, 'impatient')
 end, 0)
 
 
@@ -114,10 +114,10 @@ return require('packer').startup(function(use)
     }
 
     use {
-        "ThePrimeagen/refactoring.nvim",
+        'ThePrimeagen/refactoring.nvim',
         requires = {
-            { "nvim-lua/plenary.nvim" },
-            { "nvim-treesitter/nvim-treesitter" }
+            { 'nvim-lua/plenary.nvim' },
+            { 'nvim-treesitter/nvim-treesitter' }
         },
         config = function()
             require('refactoring').setup {}
@@ -127,8 +127,8 @@ return require('packer').startup(function(use)
 
     -- for formatters and linters
     use {
-        "jose-elias-alvarez/null-ls.nvim",
-        requires = "ThePrimeagen/refactoring.nvim",
+        'jose-elias-alvarez/null-ls.nvim',
+        requires = 'ThePrimeagen/refactoring.nvim',
         config = function()
             require('plugins.configs.lsp.null-ls')
         end,
@@ -147,10 +147,10 @@ return require('packer').startup(function(use)
 
     -- Позволяет удобно показывать все ошибки и предупреждения, которые нашел LSP
     use {
-        "folke/trouble.nvim",
-        requires = "nvim-tree/nvim-web-devicons",
+        'folke/trouble.nvim',
+        requires = 'nvim-tree/nvim-web-devicons',
         config = function()
-            require("plugins.configs.trouble")
+            require('plugins.configs.trouble')
         end,
         commit = '67337644e38144b444d026b0df2dc5fa0038930f',
     }
@@ -282,11 +282,11 @@ return require('packer').startup(function(use)
     }
 
     use {
-        "folke/which-key.nvim",
+        'folke/which-key.nvim',
         config = function()
             vim.o.timeout = true
             vim.o.timeoutlen = 300
-            require("which-key").setup {}
+            require('which-key').setup {}
         end,
         commit = 'fb027738340502b556c3f43051f113bcaa7e8e63',
     }
@@ -299,16 +299,16 @@ return require('packer').startup(function(use)
 
     -- Adds indentation guides to all lines (including empty lines)
     use {
-        "lukas-reineke/indent-blankline.nvim",
+        'lukas-reineke/indent-blankline.nvim',
         commit = '018bd04d80c9a73d399c1061fa0c3b14a7614399',
     }
 
     -- TODOs
     use {
-        "folke/todo-comments.nvim",
-        requires = "nvim-lua/plenary.nvim",
+        'folke/todo-comments.nvim',
+        requires = 'nvim-lua/plenary.nvim',
         config = function()
-            require("todo-comments").setup {}
+            require('todo-comments').setup {}
         end,
         commit = '74c7d28cb50b0713c881ef69bcb6cdd77d8907d1',
     }
@@ -319,10 +319,10 @@ return require('packer').startup(function(use)
         require('packer').sync()
 
         -- install binaries from mason.nvim
-        vim.api.nvim_create_autocmd("User", {
-            pattern = "PackerComplete",
+        vim.api.nvim_create_autocmd('User', {
+            pattern = 'PackerComplete',
             callback = function()
-                vim.cmd "bw | silent! MasonInstallAll" -- close packer window
+                vim.cmd 'bw | silent! MasonInstallAll' -- close packer window
             end,
         })
     end

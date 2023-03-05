@@ -55,6 +55,7 @@ brew install rsync
 # Install other useful binaries.
 brew install git
 brew install git-lfs
+brew install jesseduffield/lazygit/lazygit
 brew install gs
 brew install imagemagick --with-webp
 brew install lua
@@ -69,7 +70,7 @@ brew install ssh-copy-id
 brew install tree
 brew install vbindiff
 brew install zopfli
-brew install node
+brew install nvm
 brew install python3
 
 # Remove outdated versions from the cellar.
