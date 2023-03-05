@@ -6,6 +6,6 @@ end
 
 trouble.setup {
     auto_open = true,
-    auto_close = true,
+    auto_close = false,
     use_diagnostic_signs = true
 }
