@@ -72,6 +72,7 @@ brew install vbindiff
 brew install zopfli
 brew install nvm
 brew install python3
+brew install --cask finicky
 
 # Remove outdated versions from the cellar.
 brew cleanup

@@ -43,7 +43,7 @@ return require('packer').startup(function(use)
         'nvim-lualine/lualine.nvim',
         requires = 'nvim-tree/nvim-web-devicons',
         config = function()
-            require('lualine').setup {}
+            require('plugins.configs.lualine')
         end,
         commit = 'e99d733e0213ceb8f548ae6551b04ae32e590c80',
     }
@@ -161,11 +161,20 @@ return require('packer').startup(function(use)
         commit = '49062ab1dd8fec91833a69f0a1344223dd59d643',
     }
 
+    use {
+        'rafamadriz/friendly-snippets',
+        commit = '009887b76f15d16f69ae1341f86a7862f61cf2a1',
+    }
+
     -- Автодополнение
     use {
         'hrsh7th/nvim-cmp',
         requires = {
-            { 'L3MON4D3/LuaSnip',                    commit = '58236e8b2f20de23ff35106dace9212b41d78860' },
+            {
+                'L3MON4D3/LuaSnip',
+                run = 'make install_jsregexp',
+                commit = '58236e8b2f20de23ff35106dace9212b41d78860',
+            },
             { 'saadparwaiz1/cmp_luasnip',            commit = '18095520391186d634a0045dacaa346291096566' },
             { 'hrsh7th/cmp-nvim-lsp',                commit = '0e6b2ed705ddcff9738ec4ea838141654f12eeef' },
             { 'hrsh7th/cmp-path',                    commit = '91ff86cd9c29299a64f968ebb45846c485725f23' },

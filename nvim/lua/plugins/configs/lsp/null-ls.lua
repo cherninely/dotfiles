@@ -24,4 +24,4 @@ null_ls.setup({
 })
 
 -- formating after save
-vim.cmd("autocmd BufWritePost * lua vim.lsp.buf.formatting_seq_sync()")
+vim.cmd("autocmd BufWritePost * lua vim.lsp.buf.format()")

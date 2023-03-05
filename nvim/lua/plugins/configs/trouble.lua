@@ -5,7 +5,7 @@ if not present then
 end
 
 trouble.setup {
-    auto_open = true,
+    auto_open = false,
     auto_close = false,
     use_diagnostic_signs = true
 }
