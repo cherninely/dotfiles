@@ -1,9 +1,9 @@
-local present, monokai = pcall(require, 'monokai')
+local present, onedark = pcall(require, 'onedark')
 
 if not present then
-  return
+    return
 end
 
-monokai.setup{}
-vim.cmd 'colorscheme monokai' -- без этой настройки не применяет тему
+onedark.setup {}
 
+vim.cmd 'colorscheme onedark' -- без этой настройки не применяет тему

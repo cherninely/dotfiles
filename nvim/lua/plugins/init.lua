@@ -26,7 +26,7 @@ return require('packer').startup(function(use)
 
     -- Цветовая схема
     use {
-        'tanvirtin/monokai.nvim',
+        'navarasu/onedark.nvim',
         config = function()
             require('plugins.configs.colorscheme')
         end, }
