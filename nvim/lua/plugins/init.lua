@@ -1,8 +1,8 @@
 local ensure_packer = function()
     local fn = vim.fn
-    local install_path = fn.stdpath('data')..'/site/pack/packer/start/packer.nvim'
+    local install_path = fn.stdpath('data') .. '/site/pack/packer/start/packer.nvim'
     if fn.empty(fn.glob(install_path)) > 0 then
-        fn.system({'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path})
+        fn.system({ 'git', 'clone', '--depth', '1', 'https://github.com/wbthomason/packer.nvim', install_path })
         vim.cmd [[packadd packer.nvim]]
         return true
     end
@@ -10,13 +10,13 @@ local ensure_packer = function()
 end
 
 vim.defer_fn(function()
-  pcall(require, "impatient")
+    pcall(require, "impatient")
 end, 0)
 
 
 local packer_bootstrap = ensure_packer()
 
-return require('packer').startup(function()
+return require('packer').startup(function(use)
     -- Packer сам себя
     use 'wbthomason/packer.nvim'
 
@@ -24,19 +24,19 @@ return require('packer').startup(function()
     -- ПЛАГИНЫ ВНЕШНЕГО ВИДА
     -----------------------------------------------------------
 
-     -- Цветовая схема
+    -- Цветовая схема
     use {
-	    'tanvirtin/monokai.nvim',
-    config = function()
-        require('plugins.configs.colorscheme')
-    end, }
+        'tanvirtin/monokai.nvim',
+        config = function()
+            require('plugins.configs.colorscheme')
+        end, }
 
     --- Информационная строка внизу
     use { 'nvim-lualine/lualine.nvim',
-    requires = {'nvim-tree/nvim-web-devicons'},
-    config = function()
-        require('lualine').setup{}
-    end, }
+        requires = { 'nvim-tree/nvim-web-devicons' },
+        config = function()
+            require('lualine').setup {}
+        end, }
 
     -- Табы вверху
     use {
@@ -56,15 +56,15 @@ return require('packer').startup(function()
 
     -- Файловый менеджер
     use { 'nvim-tree/nvim-tree.lua',
-    requires = 'nvim-tree/nvim-web-devicons',
-    config = function() require'nvim-tree'.setup {} end, }
+        requires = 'nvim-tree/nvim-web-devicons',
+        config = function() require 'nvim-tree'.setup {} end, }
 
     -- Замена fzf и ack
     use {
         'nvim-telescope/telescope.nvim',
-        requires = { {'nvim-lua/plenary.nvim'} },
-        config = function() 
-            require'plugins.configs.telescope'
+        requires = { { 'nvim-lua/plenary.nvim' } },
+        config = function()
+            require 'plugins.configs.telescope'
         end,
     }
 
@@ -75,24 +75,43 @@ return require('packer').startup(function()
     -- Highlight, edit, and navigate code using a fast incremental parsing library
     use {
         'nvim-treesitter/nvim-treesitter',
-		config = function()
+        config = function()
             require 'plugins.configs.treesitter'
-		end,
+        end,
     }
 
     -- Плагин для того чтобы в Neovim была поддержка LSP, он позволяет включать автодополнение, проверку синтаксиса и ещё много прочего
     use 'neovim/nvim-lspconfig'
 
     -- Добавляет иконки для пунктов автодополнения
-	use {
-		'onsails/lspkind-nvim',
-		config = function()
+    use {
+        'onsails/lspkind-nvim',
+        config = function()
             require('plugins.configs.lspkind')
-		end
-	}
+        end
+    }
+
+    use {
+        "ThePrimeagen/refactoring.nvim",
+        requires = {
+            { "nvim-lua/plenary.nvim" },
+            { "nvim-treesitter/nvim-treesitter" }
+        },
+        config = function()
+            require('refactoring').setup {}
+        end,
+    }
 
     -- for formatters and linters
-    use "jose-elias-alvarez/null-ls.nvim"
+    use {
+        "jose-elias-alvarez/null-ls.nvim",
+        requires = {
+            { "ThePrimeagen/refactoring.nvim" },
+        },
+        config = function()
+            require('plugins.configs.lsp.null-ls')
+        end,
+    }
 
     -- Позволяет устанавливать LSP-сервера быстро и без боли
     use {
@@ -106,35 +125,35 @@ return require('packer').startup(function()
     }
 
     -- Позволяет удобно показывать все ошибки и предупреждения, которые нашел LSP
-	use {
-		"folke/trouble.nvim",
-		requires = "nvim-tree/nvim-web-devicons",
-		config = function()
-			require("trouble").setup {}
-		end,
-	}
+    use {
+        "folke/trouble.nvim",
+        requires = "nvim-tree/nvim-web-devicons",
+        config = function()
+            require("plugins.configs.trouble")
+        end,
+    }
 
     -- Automatically highlighting other uses of the word under the cursor using either LSP, Tree-sitter, or regex matching.
     use 'RRethy/vim-illuminate'
 
     -- Автодополнение
-	use {
-		'hrsh7th/nvim-cmp',
-		requires = {
-			'L3MON4D3/LuaSnip',
-			'saadparwaiz1/cmp_luasnip',
-			'hrsh7th/cmp-nvim-lsp',
-			'hrsh7th/cmp-path',
-			'hrsh7th/cmp-emoji',
-			'hrsh7th/cmp-nvim-lsp-signature-help',
-			'hrsh7th/cmp-nvim-lua',
+    use {
+        'hrsh7th/nvim-cmp',
+        requires = {
+            'L3MON4D3/LuaSnip',
+            'saadparwaiz1/cmp_luasnip',
+            'hrsh7th/cmp-nvim-lsp',
+            'hrsh7th/cmp-path',
+            'hrsh7th/cmp-emoji',
+            'hrsh7th/cmp-nvim-lsp-signature-help',
+            'hrsh7th/cmp-nvim-lua',
             'hrsh7th/cmp-buffer',
             'hrsh7th/cmp-cmdline'
-		},
-		config = function()
+        },
+        config = function()
             require('plugins.configs.cmp')
-		end,
-	}
+        end,
+    }
 
     -----------------------------------------------------------
     -- HTML и CSS
@@ -181,26 +200,23 @@ return require('packer').startup(function()
         config = function()
             require('plugins.configs.dashboard')
         end,
-        requires = {'nvim-tree/nvim-web-devicons'}
+        requires = { 'nvim-tree/nvim-web-devicons' }
     }
 
     -- Комментирует по gc все, вне зависимости от языка программирования
     use { 'numToStr/Comment.nvim',
-    config = function() require('Comment').setup() end }
+        config = function() require('Comment').setup() end }
 
     -- Обрамляет строку в теги по ctrl- y + ,
     use 'mattn/emmet-vim'
 
     -- Плагин для автодополнения скобок и кавычек
-	use {
-		'windwp/nvim-autopairs',
-		config = function()
-			require('nvim-autopairs').setup {}
-		end
-	}
-
-    -- Линтер, работает для всех языков
-    use 'dense-analysis/ale'
+    use {
+        'windwp/nvim-autopairs',
+        config = function()
+            require('nvim-autopairs').setup {}
+        end
+    }
 
     use {
         "folke/which-key.nvim",
@@ -214,7 +230,7 @@ return require('packer').startup(function()
     -- Speed up loading Lua modules in Neovim to improve startup time.
     use 'lewis6991/impatient.nvim'
 
-    -- adds indentation guides to all lines (including empty lines)
+    -- Adds indentation guides to all lines (including empty lines)
     use "lukas-reineke/indent-blankline.nvim"
 
     -- TODOs
@@ -243,5 +259,4 @@ return require('packer').startup(function()
             end,
         })
     end
-
 end)

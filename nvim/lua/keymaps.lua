@@ -29,9 +29,12 @@ map('n', 'gs', '<CMD>BufferLineSortByDirectory<CR>', default_opts)
 map('n', '<leader>d', ':NvimTreeToggle<CR>', default_opts)
 
 -- Telscope
-map('n', '<leader>p', '<cmd> Telescope find_files<CR>', default_opts)
-map('n', '<leader>f', '<cmd> Telescope live_grep<CR>', default_opts)
-map('n', '<leader>gs', '<cmd> Telescope get_status<CR>', default_opts)
+map('n', '<leader>p', '<cmd>Telescope find_files<CR>', default_opts)
+map('n', '<leader>f', '<cmd>Telescope live_grep<CR>', default_opts)
+map('n', '<leader>gs', '<cmd>Telescope get_status<CR>', default_opts)
 
 -- TODOs
-map('n', '<leader>t', '<cmd> TodoTelescope<CR>', default_opts)
+map('n', '<leader>t', '<cmd>TodoTelescope<CR>', default_opts)
+
+-- Trouble
+map('n', '<leader>lt', '<cmd>TroubleToggle<CR>', default_opts)

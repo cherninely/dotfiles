@@ -22,3 +22,6 @@ null_ls.setup({
         formatting.prettier,
     },
 })
+
+-- formating after save
+vim.cmd("autocmd BufWritePost * lua vim.lsp.buf.formatting_seq_sync()")

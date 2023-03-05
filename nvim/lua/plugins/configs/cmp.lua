@@ -52,7 +52,6 @@ cmp.setup{
         { name = 'buffer' },                  -- Буфферы 🐃
         { name = 'path' },                    -- Пути 🪤
         { name = "emoji" },                   -- Эмодзи 😳
-        }, {
     }),
     formatting = {
         format = lspkind.cmp_format({
