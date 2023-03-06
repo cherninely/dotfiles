@@ -26,7 +26,7 @@ opt.scrolljump = 5
 opt.sidescroll = 4
 opt.sidescrolloff = 10
 opt.showcmd = true
-opt.completeopt = 'menu,preview'
+opt.completeopt = 'menu,menuone,noselect' -- Better autocompletion
 opt.infercase = true
 opt.ruler = true
 opt.ttyfast = true    -- Optimize for fast terminal connections
@@ -35,10 +35,14 @@ opt.startofline = false
 opt.number = true
 opt.relativenumber = true
 opt.laststatus = 2 -- always show statusline
-opt.wrap = true    -- when on, lines longer than the width of the window will wrap and displaying continues on the next line
+opt.wrap = false    -- when on, lines longer than the width of the window will wrap and displaying continues on the next line
 opt.scrolloff = 3  -- show context above/below cursorline
 opt.termguicolors = true
 opt.background = 'dark'
+opt.timeoutlen = 200  -- Faster completion (cannot be lower than 200 because then commenting doesn't work)
+opt.updatetime = 100  -- Faster completion
+opt.undofile = true   -- Sets undo to file
+opt.viminfo = "'1000" -- Increase the size of file history
 
 -- Tab options
 opt.autoindent = true  -- copy indent from previous line

@@ -9,9 +9,24 @@ map('', '<down>', ':echoe "Use j"<CR>', { noremap = true, silent = false })
 map('', '<left>', ':echoe "Use h"<CR>', { noremap = true, silent = false })
 map('', '<right>', ':echoe "Use l"<CR>', { noremap = true, silent = false })
 
+-- Better window movement
+map("n", "<C-h>", "<C-w>h", default_opts)
+map("n", "<C-j>", "<C-w>j", default_opts)
+map("n", "<C-k>", "<C-w>k", default_opts)
+map("n", "<C-l>", "<C-w>l", default_opts)
+
 -- Save
 map('n', '<leader>s', '<cmd>w<CR>', default_opts)
 map('i', '<leader>s', '<esc><cmd>w<CR>', default_opts)
+
+-- Remove highlights
+map("n", "<CR>", ":noh<CR><CR>", default_opts)
+
+-- Don't yank on delete char
+map("n", "x", '"_x', default_opts)
+map("n", "X", '"_X', default_opts)
+map("v", "x", '"_x', default_opts)
+map("v", "X", '"_X', default_opts)
 
 -- Don't copy the contents of an overwritten selection
 map('v', 'p', '\"_dP\"', default_opts)

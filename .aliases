@@ -71,7 +71,7 @@ alias gst='git status -sb'
 alias grd='git rb origin/dev'
 alias grm='git rb origin/master'
 alias diff-diff='git-diff-diff'
-Alias g1='git log -1'
+alias g1='git log -1'
 alias g9='git lol -9'
 
 # Git bisect helpers

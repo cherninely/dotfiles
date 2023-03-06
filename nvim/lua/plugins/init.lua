@@ -104,6 +104,15 @@ return require('packer').startup(function(use)
         commit = 'a557dd4d493e6afba3c24ffeb96fa32695f00874',
     }
 
+    -- Standalone UI for nvim-lsp progress. Eye candy for the impatient
+    use {
+        'j-hui/fidget.nvim',
+        config = function()
+            require('fidget').setup {}
+        end,
+        commit = '688b4fec4517650e29c3e63cfbb6e498b3112ba1',
+    }
+
     -- Добавляет иконки для пунктов автодополнения
     use {
         'onsails/lspkind-nvim',
@@ -158,6 +167,7 @@ return require('packer').startup(function(use)
     -- Automatically highlighting other uses of the word under the cursor using either LSP, Tree-sitter, or regex matching.
     use {
         'RRethy/vim-illuminate',
+        disable = true,
         commit = '49062ab1dd8fec91833a69f0a1344223dd59d643',
     }
 

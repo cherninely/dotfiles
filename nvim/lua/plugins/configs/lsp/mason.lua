@@ -14,6 +14,7 @@ end
 local servers = {
     'html',                   -- HTML
     'cssls',                  -- CSS
+    'eslint', -- eslint
     'emmet_ls',               -- emmet
     'jedi_language_server',   -- Python
     'lua_ls',                 -- Lua
