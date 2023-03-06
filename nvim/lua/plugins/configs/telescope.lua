@@ -5,10 +5,7 @@ if not present then
 end
 
 telescope.setup {
-    defaults = {
-        file_ignore_patterns = {
-            "node_modules",
-            "build",
-        }
-    }
+    builtin = {
+        treesitter = true,
+    },
 }
