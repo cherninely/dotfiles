@@ -3,6 +3,12 @@
 cd "$(dirname "${BASH_SOURCE}")";
 
 function doIt() {
+
+    git pull origin master;
+
+    pip3 install --user pynvim
+    npm install -g neovim
+
     rsync --exclude ".git/" \
         --exclude "nvim/" \
         --exclude ".osx" \
@@ -12,12 +18,16 @@ function doIt() {
 
     rsync -avh --mkpath --no-perms ./nvim/ ~/.config/nvim/;
 
+    rm -rf "${HOME}/.tmux/plugins/tpm"
+    git clone --depth 1 https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
+
+    printf "\n\nInstalling tmux plugins...\n"
+
+    export TMUX_PLUGIN_MANAGER_PATH="${HOME}/.tmux/plugins"
+    "${HOME}/.tmux/plugins/tpm/bin/install_plugins"
+
     source ~/.bash_profile;
 }
-
-git pull origin master;
-pip3 install --user pynvim
-npm install -g neovim
 
 if [ "$1" == "--force" -o "$1" == "-f" ]; then
 	doIt;

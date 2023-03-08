@@ -42,6 +42,7 @@ brew install gnupg
 brew tap homebrew/cask-fonts
 brew install --cask font-liberation-nerd-font
 
+brew install tmux
 brew install neovim
 brew install grep
 brew install ripgrep # for neovim
