@@ -35,7 +35,7 @@ opt.startofline = false
 opt.number = true
 opt.relativenumber = true
 opt.laststatus = 2 -- always show statusline
-opt.wrap = false    -- when on, lines longer than the width of the window will wrap and displaying continues on the next line
+opt.wrap = true    -- when on, lines longer than the width of the window will wrap and displaying continues on the next line
 opt.scrolloff = 3  -- show context above/below cursorline
 opt.termguicolors = true
 opt.background = 'dark'
@@ -111,3 +111,15 @@ autocmd!
 autocmd TextYankPost * silent! lua vim.highlight.on_yank{higroup="IncSearch", timeout=700}
 augroup end
 ]], false)
+
+
+-- Баним спам ошибки про отсутствущий форматер
+local banned_messages = { "[LSP] Format request failed, no matching language servers." }
+
+vim.notify = function(msg)
+    for _, banned in ipairs(banned_messages) do
+        if msg == banned then
+            return
+        end
+    end
+end

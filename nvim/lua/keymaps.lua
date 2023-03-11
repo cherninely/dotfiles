@@ -65,6 +65,7 @@ map('n', '<leader>d', ':NvimTreeToggle<CR>', silent_opts)
 -- Telscope
 map('n', '<leader>p', '<cmd>Telescope find_files hidden=true<CR>', silent_opts)
 map('n', '<leader>f', '<cmd>Telescope live_grep hidden=true<CR>', silent_opts)
+map('n', '<leader>F', '<cmd>Telescope grep_string hidden=true<CR>', silent_opts)
 map('n', '<leader>gs', '<cmd>Telescope get_status hidden=true<CR>', silent_opts)
 
 -- TODOs

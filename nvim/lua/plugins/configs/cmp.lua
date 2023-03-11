@@ -17,6 +17,10 @@ end
 
 require("luasnip/loaders/from_vscode").lazy_load()
 
+-- If we are in a TS file, make all JS snippets available too.
+luasnip.filetype_extend("typescript", { "javascript", "jsdoc" })
+luasnip.filetype_extend("typescriptreact", { "typescript", "javascript", "jsdoc" })
+
 local types = require("cmp.types")
 
 local check_backspace = function()
