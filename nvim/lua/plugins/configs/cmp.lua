@@ -18,8 +18,8 @@ end
 require("luasnip/loaders/from_vscode").lazy_load()
 
 -- If we are in a TS file, make all JS snippets available too.
-luasnip.filetype_extend("typescript", { "javascript", "jsdoc" })
-luasnip.filetype_extend("typescriptreact", { "typescript", "javascript", "jsdoc" })
+luasnip.filetype_extend("typescript", { "jsdoc" })
+luasnip.filetype_extend("typescriptreact", { "typescript", "jsdoc" })
 
 local types = require("cmp.types")
 
@@ -65,8 +65,8 @@ cmp.setup {
     mapping = {
         -- Вызов меню автодополнения
             ['<C-;>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-            ['<CR>'] = cmp.config.disable,                      -- Я не люблю, когда вещи автодополняются на <Enter>
-            ['<Tab>'] = cmp.mapping.confirm({ select = true }), -- А вот на <C-y> вполне ок
+            ['<CR>'] = cmp.config.disable, -- Я не люблю, когда вещи автодополняются на <Enter>
+            ['<Tab>'] = cmp.mapping.confirm({ select = true }),
         -- Используем для того чтобы прервать автодополнение
             ['<C-s>'] = cmp.mapping({
             i = cmp.mapping.abort(), -- Прерываем автодополнение

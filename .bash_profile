@@ -40,3 +40,6 @@ then
     ln -sf $SSH_AUTH_SOCK ~/.ssh/ssh_auth_sock
 fi
 
+# The next line updates PATH for Yandex Cloud YDB CLI.
+if [ -f '/Users/cherninely/ydb/path.bash.inc' ]; then source '/Users/cherninely/ydb/path.bash.inc'; fi
+

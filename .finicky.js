@@ -2,12 +2,8 @@ module.exports = {
     defaultBrowser: 'Google Chrome',
     handlers: [
         {
-            match: ['*yandex-team*', '*nda*', '*localhost*'],
+            match: ['*yandex-team*', '*nda*', '*localhost*', '*figma*', 'zoom.yandex*'],
             browser: 'Yandex'
-        },
-        {
-            match: '*',
-            browser: 'Google Chrome'
         },
     ]
 };
