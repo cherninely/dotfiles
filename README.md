@@ -11,4 +11,4 @@ https://github.com/NvChad/NvChad
 ### Установка
 
 ```bash
-git clone git://github.yandex-team.ru/cherninely/dotfiles ~/dotfiles && ~/dotfiles/bootstrap.sh
+git clone git://github.com/cherninely/dotfiles ~/dotfiles && ~/dotfiles/bootstrap.sh
