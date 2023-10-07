@@ -18,6 +18,12 @@ function doIt() {
 
     rsync -avh --mkpath --no-perms ./nvim/ ~/.config/nvim/;
 
+    #MailMate
+    rsync -avh --mkpath --no-perms ./mailmate.plist ~/Library/Application\ Support/MailMate/Resources/KeyBindings/mailmate.plist;
+
+    # Symling for rcmd
+    rsync -avh --mkpath --no-perms ~/com.lowtechguys.rcmd.plist ~/Library/Containers/com.lowtechguys.rcmd/Data/Library/Preferences/com.lowtechguys.rcmd.plist
+
     rm -rf "${HOME}/.tmux/plugins/tpm"
     git clone --depth 1 https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
 

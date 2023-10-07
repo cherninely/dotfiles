@@ -74,6 +74,7 @@ brew install zopfli
 brew install nvm
 brew install python3
 brew install --cask finicky
+brew install --cask alt-tab
 brew install docker
 
 # Remove outdated versions from the cellar.
