@@ -18,8 +18,8 @@ function doIt() {
 
     rsync -avh --mkpath --no-perms ./nvim/ ~/.config/nvim/;
 
-    #MailMate
-    rsync -avh --mkpath --no-perms ./mailmate.plist ~/Library/Application\ Support/MailMate/Resources/KeyBindings/mailmate.plist;
+    #Rectangle
+    rsync -avh --mkpath --no-perms ./rectangle.json ~/Library/Application\ Support/Rectangle/RectangleConfig.json;
 
     # Symling for rcmd
     rsync -avh --mkpath --no-perms ~/com.lowtechguys.rcmd.plist ~/Library/Containers/com.lowtechguys.rcmd/Data/Library/Preferences/com.lowtechguys.rcmd.plist
