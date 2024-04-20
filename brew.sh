@@ -21,8 +21,7 @@ brew install moreutils
 # Install GNU `find`, `locate`, `updatedb`, and `xargs`, `g`-prefixed.
 brew install findutils
 # Install GNU `sed`, overwriting the built-in `sed`.
-brew install gnu-sed --with-default-names
-# Install a modern version of Bash.
+brew install gnu-sed
 brew install bash
 brew install bash-completion2
 
@@ -32,8 +31,8 @@ if ! fgrep -q "${BREW_PREFIX}/bin/bash" /etc/shells; then
   chsh -s "${BREW_PREFIX}/bin/bash";
 fi;
 
-# Install `wget` with IRI support.
-brew install wget --with-iri
+# Install `wget`
+brew install wget
 
 # Install GnuPG to enable PGP-signing commits.
 brew install gnupg
@@ -58,7 +57,7 @@ brew install git
 brew install git-lfs
 brew install jesseduffield/lazygit/lazygit
 brew install gs
-brew install imagemagick --with-webp
+brew install imagemagick
 brew install lua
 brew install go # for lsp sqls
 brew install lynx
