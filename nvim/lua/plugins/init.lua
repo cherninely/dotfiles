@@ -200,6 +200,19 @@ return require('packer').startup(function(use)
         commit = '01f697a68905f9dcae70960a9eb013695a17f9a2',
     }
 
+    use {
+        "Exafunction/codeium.nvim",
+        requires = {
+            "nvim-lua/plenary.nvim",
+            "hrsh7th/nvim-cmp",
+        },
+        config = function()
+            require("codeium").setup({
+                enable_chat = true
+            })
+        end
+    }
+
     -----------------------------------------------------------
     -- HTML и CSS
     -----------------------------------------------------------

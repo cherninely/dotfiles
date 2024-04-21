@@ -64,15 +64,15 @@ cmp.setup {
     -- Клавиши, которые будут взаимодействовать в nvim-cmp
     mapping = {
         -- Вызов меню автодополнения
-            ['<C-;>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
-            ['<CR>'] = cmp.config.disable, -- Я не люблю, когда вещи автодополняются на <Enter>
-            ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+        ['<C-;>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
+        ['<CR>'] = cmp.config.disable, -- Я не люблю, когда вещи автодополняются на <Enter>
+        ['<Tab>'] = cmp.mapping.confirm({ select = true }),
         -- Используем для того чтобы прервать автодополнение
-            ['<C-s>'] = cmp.mapping({
+        ['<C-s>'] = cmp.mapping({
             i = cmp.mapping.abort(), -- Прерываем автодополнение
             c = cmp.mapping.close(), -- Закрываем автодополнение
         }),
-            ['<C-j>'] = cmp.mapping(function(fallback)
+        ['<C-j>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_next_item()
             elseif luasnip.expandable() then
@@ -85,7 +85,7 @@ cmp.setup {
                 fallback()
             end
         end, { 'i', 'c' }),
-            ['<C-k>'] = cmp.mapping(function(fallback)
+        ['<C-k>'] = cmp.mapping(function(fallback)
             if cmp.visible() then
                 cmp.select_prev_item()
             elseif luasnip.jumpable(-1) then
@@ -100,15 +100,16 @@ cmp.setup {
         { name = 'nvim_lsp',                priority_weigh = 9 },                     -- LSP 👄
         { name = 'nvim_lsp_signature_help', priority_weigh = 8 },                     -- Помощь при введении параметров в методах 🚁
         { name = 'luasnip',                 priority_weigh = 7, max_item_count = 8 }, -- Luasnip 🐌
+        { name = "codeium", priority_weigh = 7, max_item_count = 3 }, -- AI
         {
             name = 'buffer',
             priority_weigh = 7,
             keyword_length = 5,
             option = buffer_option,
             max_item_count = 8,
-        },                                       -- Буфферы 🐃
-        { name = 'path',  priority_weigh = 9 },  -- Пути 🪤
-        { name = "emoji", priority_weigh = 10 }, -- Эмодзи 😳
+        },                                         -- Буфферы 🐃
+        { name = 'path',    priority_weigh = 9 },  -- Пути 🪤
+        { name = "emoji",   priority_weigh = 10 }, -- Эмодзи 😳
     }),
 
     sorting = {
