@@ -10,6 +10,7 @@ function doIt() {
     npm install -g neovim
 
     rsync --exclude ".git/" \
+        --exclude ".gitignore" \
         --exclude "nvim/" \
         --exclude ".osx" \
         --exclude "bootstrap.sh" \
