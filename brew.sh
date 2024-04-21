@@ -51,10 +51,12 @@ brew install fzf
 brew install screen
 brew install gmp
 brew install rsync
-
-# Install other useful binaries.
+brew install eza # better ls
+brew install tldr # easier man
+brew install thefuck
 brew install git
 brew install git-lfs
+brew install git-delta # better git diff
 brew install jesseduffield/lazygit/lazygit
 brew install gs
 brew install imagemagick

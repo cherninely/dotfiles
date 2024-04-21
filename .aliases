@@ -29,10 +29,8 @@ alias c="tr -d '\n' | pbcopy"
 # URL-encode strings
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
 
-alias ll='ls -laFo'
-alias l='ls -l'
-alias la='ls -a'
-alias ltr='ls -ltr'
+# Better ls
+alias ll='eza --color=always --long --git --no-filesize --icons=always --all'
 
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -126,3 +124,8 @@ function tm-pair
         echo 'tm-pair user_name feature_name # Attach to session'
     fi
 }
+
+
+# thefuck alias
+eval $(thefuck --alias)
+eval $(thefuck --alias fk)
