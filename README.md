@@ -32,4 +32,5 @@ Install Codeium
 * `:checkhealth` - checks health with neovim
 * `:PackerSync` - install plugins
 * `:Codeium Auth` - install free AI
+* `:MarkdownPreview` - run markdown preview
 

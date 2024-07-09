@@ -15,9 +15,13 @@ function doIt() {
         --exclude ".osx" \
         --exclude "bootstrap.sh" \
         --exclude "README.md" \
+        --exclude "ansible.cfg" \
         -avh --no-perms . ~;
 
     rsync -avh --mkpath --no-perms ./nvim/ ~/.config/nvim/;
+
+    # Ansible
+    rsync -avh --mkpath --no-perms ./ansible.cfg ~/.ansible/ansible.cfg;
 
     #Rectangle
     rsync -avh --mkpath --no-perms ./rectangle.json ~/Library/Application\ Support/Rectangle/RectangleConfig.json;
