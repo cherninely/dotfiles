@@ -74,7 +74,7 @@ opt.spelllang = 'en,ru'          -- Languages
 -- opt.spell
 opt.encoding = 'utf-8' -- Default encoding
 opt.fileencodings = 'utf-8,cp1251,koi8-r,cp866'
-opt.termencoding = 'utf-8'
+-- opt.termencoding = 'utf-8'
 opt.fileformat = 'unix'
 
 -- Enhance command-line completion
