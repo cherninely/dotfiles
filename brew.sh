@@ -78,6 +78,7 @@ brew install --cask finicky
 brew install --cask alt-tab
 brew install docker
 brew install --cask rectangle
+brew install --cask amazon-q
 
 # Remove outdated versions from the cellar.
 brew cleanup
