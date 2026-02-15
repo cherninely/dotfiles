@@ -161,14 +161,14 @@ return require('packer').startup(function(use)
                 'L3MON4D3/LuaSnip',
                 run = 'make install_jsregexp'
             },
-            { 'saadparwaiz1/cmp_luasnip'             },
-            { 'hrsh7th/cmp-nvim-lsp'                 },
-            { 'hrsh7th/cmp-path'                     },
-            { 'hrsh7th/cmp-emoji'                    },
-            { 'hrsh7th/cmp-nvim-lsp-signature-help'  },
-            { 'hrsh7th/cmp-nvim-lua'                 },
-            { 'hrsh7th/cmp-buffer'                   },
-            { 'hrsh7th/cmp-cmdline'                  }
+            { 'saadparwaiz1/cmp_luasnip' },
+            { 'hrsh7th/cmp-nvim-lsp' },
+            { 'hrsh7th/cmp-path' },
+            { 'hrsh7th/cmp-emoji' },
+            { 'hrsh7th/cmp-nvim-lsp-signature-help' },
+            { 'hrsh7th/cmp-nvim-lua' },
+            { 'hrsh7th/cmp-buffer' },
+            { 'hrsh7th/cmp-cmdline' }
         },
         config = function()
             require('plugins.configs.cmp')
@@ -200,6 +200,18 @@ return require('packer').startup(function(use)
 
     -- Подсвечивает #ffffff
     use { 'ap/vim-css-color' }
+
+    -----------------------------------------------------------
+    -- AI
+    -----------------------------------------------------------
+    use {
+        "coder/claudecode.nvim",
+        config = function()
+            require("claudecode").setup({
+                provider = "none", -- No-Op provider: терминал не создаём, Claude живёт в tmux
+            })
+        end,
+    }
 
     -----------------------------------------------------------
     -- РАЗНОЕ

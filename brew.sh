@@ -80,5 +80,12 @@ brew install docker
 brew install --cask rectangle
 brew install --cask amazon-q
 
+# dpi
+brew install libpcap
+brew install spoofdpi
+
+# AI
+brew install --cask claude-code
+
 # Remove outdated versions from the cellar.
 brew cleanup
