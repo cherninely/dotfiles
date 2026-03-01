@@ -28,9 +28,12 @@ Install Codeium
 :Codeium Auth
 ``````
 
-### Shortcuts
-* `:checkhealth` - checks health with neovim
-* `:PackerSync` - install plugins
-* `:Codeium Auth` - install free AI
-* `:MarkdownPreview` - run markdown preview
+### Docs
+
+* [Nvim Keymaps](docs/nvim-keymaps.md)
+* [Nvim Commands](docs/nvim-commands.md)
+* [Git](docs/git.md)
+* [Arc](docs/arc.md)
+* [Shell](docs/shell.md)
+* [Tmux](docs/tmux.md)
 

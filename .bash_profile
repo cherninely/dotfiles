@@ -1,3 +1,7 @@
+
+# Kiro CLI pre block. Keep at the top of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/bash_profile.pre.bash" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/bash_profile.pre.bash"
+
 # Add `~/bin` to the `$PATH`
 export "PATH=$HOME/.bin:$PATH"
 
@@ -43,3 +47,7 @@ fi
 # The next line updates PATH for Yandex Cloud YDB CLI.
 if [ -f '/Users/cherninely/ydb/path.bash.inc' ]; then source '/Users/cherninely/ydb/path.bash.inc'; fi
 
+
+
+# Kiro CLI post block. Keep at the bottom of this file.
+[[ -f "${HOME}/Library/Application Support/kiro-cli/shell/bash_profile.post.bash" ]] && builtin source "${HOME}/Library/Application Support/kiro-cli/shell/bash_profile.post.bash"

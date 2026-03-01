@@ -86,6 +86,7 @@ brew install spoofdpi
 
 # AI
 brew install --cask claude-code
+brew install uv # For Serena plugin
 
 # Remove outdated versions from the cellar.
 brew cleanup
