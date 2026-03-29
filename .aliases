@@ -23,9 +23,6 @@ command -v md5sum > /dev/null || alias md5sum="md5"
 # macOS has no `sha1sum`, so use `shasum` as a fallback
 command -v sha1sum > /dev/null || alias sha1sum="shasum"
 
-# Trim new lines and copy to clipboard
-alias c="claude"
-
 # URL-encode strings
 alias urlencode='python -c "import sys, urllib as ul; print ul.quote_plus(sys.argv[1]);"'
 
@@ -37,6 +34,7 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias dl="cd ~/Downloads"
 alias dt="cd ~/Desktop"
+alias dot="cd ~/dotfiles"
 
 # Always enable colored `grep` output
 # Note: `GREP_OPTIONS="--color=auto"` is deprecated, hence the alias usage.
@@ -129,3 +127,10 @@ function tm-pair
 # thefuck alias
 eval $(thefuck --alias)
 eval $(thefuck --alias fk)
+
+# AI
+alias c="claude" # work api billing
+alias cc="c --continue"
+alias cs="env -u ANTHROPIC_AUTH_TOKEN -u ANTHROPIC_BASE_URL claude" # subscription
+alias csc="cs --continue"
+alias specinit="specify init . --ai claude --script sh --no-git --force"

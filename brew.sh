@@ -87,6 +87,7 @@ brew install spoofdpi
 # AI
 brew install --cask claude-code
 brew install uv # For Serena plugin
+brew install rtk # Compress commands for AI
 
 # Remove outdated versions from the cellar.
 brew cleanup
