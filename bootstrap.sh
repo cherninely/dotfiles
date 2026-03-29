@@ -9,26 +9,17 @@ function doIt() {
     pip3 install --user pynvim
     npm install -g neovim
 
-    rsync --exclude ".git/" \
-        --exclude ".gitignore" \
-        --exclude "nvim/" \
-        --exclude ".osx" \
-        --exclude "bootstrap.sh" \
-        --exclude "README.md" \
-        --exclude "ansible.cfg" \
-        -avh --no-perms . ~;
+    # Stow
+    stow --dir=deploy-auto --target="$HOME" --restow home
 
-    rsync -avh --mkpath --no-perms ./nvim/ ~/.config/nvim/;
+    # Конфиги приложений
+    ln -sf "$(pwd)/deploy-auto/external-apps/rectangle.json" \
+        "$HOME/Library/Application Support/Rectangle/RectangleConfig.json"
 
-    # Ansible
-    rsync -avh --mkpath --no-perms ./ansible.cfg ~/.ansible/ansible.cfg;
+    ln -sf "$(pwd)/deploy-auto/external-apps/com.lowtechguys.rcmd.plist" \
+        "$HOME/Library/Containers/com.lowtechguys.rcmd/Data/Library/Preferences/com.lowtechguys.rcmd.plist"
 
-    #Rectangle
-    rsync -avh --mkpath --no-perms ./rectangle.json ~/Library/Application\ Support/Rectangle/RectangleConfig.json;
-
-    # Symling for rcmd
-    rsync -avh --mkpath --no-perms ~/com.lowtechguys.rcmd.plist ~/Library/Containers/com.lowtechguys.rcmd/Data/Library/Preferences/com.lowtechguys.rcmd.plist
-
+    # Tmux plugins
     rm -rf "${HOME}/.tmux/plugins/tpm"
     git clone --depth 1 https://github.com/tmux-plugins/tpm "${HOME}/.tmux/plugins/tpm"
 

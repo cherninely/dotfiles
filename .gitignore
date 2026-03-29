@@ -1,2 +1,3 @@
 .exports_ignore
 .serena
+deploy-auto/home/.config/nvim/plugin/packer_compiled.lua

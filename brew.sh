@@ -50,7 +50,7 @@ brew install the_silver_searcher
 brew install fzf
 brew install screen
 brew install gmp
-brew install rsync
+brew install stow
 brew install eza # better ls
 brew install tldr # easier man
 brew install thefuck
