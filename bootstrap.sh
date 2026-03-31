@@ -16,7 +16,7 @@ function doIt() {
     ln -sf "$(pwd)/deploy-auto/external-apps/rectangle.json" \
         "$HOME/Library/Application Support/Rectangle/RectangleConfig.json"
 
-    ln -sf "$(pwd)/deploy-auto/external-apps/com.lowtechguys.rcmd.plist" \
+    cp "$(pwd)/deploy-auto/external-apps/com.lowtechguys.rcmd.plist" \
         "$HOME/Library/Containers/com.lowtechguys.rcmd/Data/Library/Preferences/com.lowtechguys.rcmd.plist"
 
     # Tmux plugins
