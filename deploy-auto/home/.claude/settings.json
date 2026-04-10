@@ -334,14 +334,6 @@
         "code-simplifier@claude-plugins-official": true,
         "code-review@claude-plugins-official": false
     },
-    "disabledMcpServers": [
-        "wiki",
-        "tracker",
-        "yt",
-        "monium",
-        "infractl",
-        "deepagent"
-    ],
     "defaultMode": "dontAsk",
     "effortLevel": "max"
 }
