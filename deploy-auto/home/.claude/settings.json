@@ -335,5 +335,9 @@
         "code-review@claude-plugins-official": false
     },
     "defaultMode": "dontAsk",
-    "effortLevel": "max"
+    "effortLevel": "max",
+    "statusLine": {
+        "type": "command",
+        "command": "$HOME/.claude/statusline-command.sh"
+    }
 }
