@@ -348,6 +348,5 @@
     "code-simplifier@claude-plugins-official": true,
     "code-review@claude-plugins-official": false
   },
-  "defaultMode": "dontAsk",
   "effortLevel": "high"
 }
