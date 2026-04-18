@@ -73,3 +73,10 @@ map('n', '<leader>t', '<cmd>TodoTelescope<CR>', silent_opts)
 
 -- Trouble
 map('n', '<leader>lt', '<cmd>TroubleToggle<CR>', silent_opts)
+
+-- Claude Code (отправка контекста в tmux-сессию через WebSocket-бридж)
+map('v', '<leader>cs', '<cmd>ClaudeCodeSend<CR>', silent_opts)             -- выделение → Claude
+map('n', '<leader>ca', '<cmd>ClaudeCodeAdd %<CR>', silent_opts)            -- текущий файл как @-ref
+map('n', '<leader>cy', [[:let @+=expand('%:p').':'.line('.')<CR>]], silent_opts) -- file:line в системный буфер
+map('n', '<leader>cA', '<cmd>ClaudeCodeDiffAccept<CR>', silent_opts)       -- принять diff от Claude
+map('n', '<leader>cD', '<cmd>ClaudeCodeDiffDeny<CR>', silent_opts)         -- отклонить diff от Claude

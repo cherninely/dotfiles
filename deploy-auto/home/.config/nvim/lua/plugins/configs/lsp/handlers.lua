@@ -71,16 +71,11 @@ local function lsp_keymaps(bufnr)
 end
 
 M.on_attach = function(client, bufnr)
-    if client.name == "tsserver" then
+    if client.name == "ts_ls" then
         client.server_capabilities.documentFormattingProvider = false
     end
 
     lsp_keymaps(bufnr)
-    local status_ok, illuminate = pcall(require, "illuminate")
-    if not status_ok then
-        return
-    end
-    illuminate.on_attach(client)
 end
 
 return M

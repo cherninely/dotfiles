@@ -145,12 +145,6 @@ return require('packer').startup(function(use)
         end
     }
 
-    -- Automatically highlighting other uses of the word under the cursor using either LSP, Tree-sitter, or regex matching.
-    use {
-        'RRethy/vim-illuminate',
-        disable = true
-    }
-
     use { 'rafamadriz/friendly-snippets' }
 
     -- Автодополнение
@@ -167,24 +161,10 @@ return require('packer').startup(function(use)
             { 'hrsh7th/cmp-emoji' },
             { 'hrsh7th/cmp-nvim-lsp-signature-help' },
             { 'hrsh7th/cmp-nvim-lua' },
-            { 'hrsh7th/cmp-buffer' },
             { 'hrsh7th/cmp-cmdline' }
         },
         config = function()
             require('plugins.configs.cmp')
-        end
-    }
-
-    use {
-        "Exafunction/codeium.nvim",
-        requires = {
-            "nvim-lua/plenary.nvim",
-            "hrsh7th/nvim-cmp",
-        },
-        config = function()
-            require("codeium").setup({
-                enable_chat = true
-            })
         end
     }
 
@@ -204,11 +184,36 @@ return require('packer').startup(function(use)
     -----------------------------------------------------------
     -- AI
     -----------------------------------------------------------
+
+    -- Inline ghost-text (быстрое предсказание продолжения строки/блока)
+    use {
+        "supermaven-inc/supermaven-nvim",
+        config = function()
+            require("supermaven-nvim").setup({
+                keymaps = {
+                    accept_suggestion = "<C-l>",
+                    clear_suggestion = "<C-]>",
+                    accept_word = "<C-f>",
+                },
+                ignore_filetypes = { "gitcommit", "gitrebase" },
+                color = {
+                    suggestion_color = "#808080",
+                    cterm = 244,
+                },
+                log_level = "off",
+                disable_inline_completion = false,
+                disable_keymaps = false,
+            })
+        end,
+    }
+
     use {
         "coder/claudecode.nvim",
         config = function()
             require("claudecode").setup({
-                provider = "none", -- No-Op provider: терминал не создаём, Claude живёт в tmux
+                terminal = {
+                    provider = "none", -- No-Op provider: терминал не создаём, Claude живёт в tmux
+                },
             })
         end,
     }
@@ -292,17 +297,12 @@ return require('packer').startup(function(use)
     }
 
 
-    -- Markdown
+    -- Markdown preview в браузере
     use({
         "iamcco/markdown-preview.nvim",
         run = function() vim.fn["mkdp#util#install"]() end,
-    })
-
-    use({
-        "iamcco/markdown-preview.nvim",
-        run = "cd app && npm install",
-        setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
         ft = { "markdown" },
+        setup = function() vim.g.mkdp_filetypes = { "markdown" } end,
     })
 
     -- Рендерит markdown прямо в буфере (заголовки, код-блоки, чек-листы и т.д.)

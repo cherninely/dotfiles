@@ -113,13 +113,39 @@ augroup end
 ]], false)
 
 
--- Баним спам ошибки про отсутствущий форматер
-local banned_messages = { "[LSP] Format request failed, no matching language servers." }
+-- Фильтр спам-сообщений. Паттерны — Lua patterns, матчим через string.find.
+-- Остальное пропускаем в оригинальный notify.
+local banned_patterns = {
+    "^%[LSP%] Format request failed, no matching language servers%.$",
+    -- eslint в pnpm-workspace не может резолвить плагины из shareable-config — архитектурный конфликт
+    "Failed to load plugin .+Cannot find module",
+}
+local original_notify = vim.notify
 
-vim.notify = function(msg)
-    for _, banned in ipairs(banned_messages) do
-        if msg == banned then
-            return
+vim.notify = function(msg, level, opts)
+    if type(msg) == "string" then
+        for _, pattern in ipairs(banned_patterns) do
+            if msg:find(pattern) then
+                return
+            end
         end
     end
+    original_notify(msg, level, opts)
 end
+
+-- Auto-reload файлов, которые изменились вне nvim (Claude в tmux, git checkout, форматтеры)
+vim.api.nvim_create_autocmd({ 'FocusGained', 'BufEnter', 'CursorHold', 'CursorHoldI' }, {
+    pattern = '*',
+    callback = function()
+        if vim.fn.mode() ~= 'c' and vim.fn.getcmdwintype() == '' then
+            vim.cmd('checktime')
+        end
+    end,
+})
+
+vim.api.nvim_create_autocmd('FileChangedShellPost', {
+    pattern = '*',
+    callback = function()
+        vim.notify('File changed on disk — reloaded', vim.log.levels.WARN)
+    end,
+})

@@ -33,20 +33,9 @@ local function deprioritize_snippet(entry1, entry2)
     if entry2:get_kind() == types.lsp.CompletionItemKind.Snippet then return true end
 end
 
-local buffer_option = {
-    -- Complete from all visible buffers (splits)
-    get_bufnrs = function()
-        local bufs = {}
-        for _, win in ipairs(vim.api.nvim_list_wins()) do
-            bufs[vim.api.nvim_win_get_buf(win)] = true
-        end
-        return vim.tbl_keys(bufs)
-    end
-}
-
 cmp.setup {
     experimental = {
-        ghost_text = true
+        ghost_text = false, -- ghost-text даёт supermaven
     },
 
     window = {
@@ -66,7 +55,16 @@ cmp.setup {
         -- Вызов меню автодополнения
         ['<C-;>'] = cmp.mapping(cmp.mapping.complete(), { 'i', 'c' }),
         ['<CR>'] = cmp.config.disable, -- Я не люблю, когда вещи автодополняются на <Enter>
-        ['<Tab>'] = cmp.mapping.confirm({ select = true }),
+        ['<Tab>'] = cmp.mapping(function(fallback)
+            local sm_ok, sm = pcall(require, "supermaven-nvim.completion_preview")
+            if sm_ok and sm.has_suggestion() then
+                sm.on_accept_suggestion()
+            elseif cmp.visible() then
+                cmp.confirm({ select = true })
+            else
+                fallback()
+            end
+        end, { 'i', 's' }),
         -- Используем для того чтобы прервать автодополнение
         ['<C-s>'] = cmp.mapping({
             i = cmp.mapping.abort(), -- Прерываем автодополнение
@@ -100,16 +98,8 @@ cmp.setup {
         { name = 'nvim_lsp',                priority_weigh = 9 },                     -- LSP 👄
         { name = 'nvim_lsp_signature_help', priority_weigh = 8 },                     -- Помощь при введении параметров в методах 🚁
         { name = 'luasnip',                 priority_weigh = 7, max_item_count = 8 }, -- Luasnip 🐌
-        { name = "codeium", priority_weigh = 7, max_item_count = 3 }, -- AI
-        {
-            name = 'buffer',
-            priority_weigh = 7,
-            keyword_length = 5,
-            option = buffer_option,
-            max_item_count = 8,
-        },                                         -- Буфферы 🐃
-        { name = 'path',    priority_weigh = 9 },  -- Пути 🪤
-        { name = "emoji",   priority_weigh = 10 }, -- Эмодзи 😳
+        { name = 'path',                    priority_weigh = 9 },                     -- Пути 🪤
+        { name = 'emoji',                   priority_weigh = 10 },                    -- Эмодзи 😳
     }),
 
     sorting = {
@@ -127,7 +117,14 @@ cmp.setup {
 
     formatting = {
         format = lspkind.cmp_format({
-            maxwidth = 50, -- prevent the popup from showing more than provided characters (e.g 50 will not show more than 50 characters)
+            maxwidth = 50, -- prevent the popup from showing more than provided characters
+            menu = {
+                nvim_lsp                = "[LSP]",
+                nvim_lsp_signature_help = "[Sig]",
+                luasnip                 = "[Snip]",
+                path                    = "[Path]",
+                emoji                   = "[Emoji]",
+            },
         })
     },
 }

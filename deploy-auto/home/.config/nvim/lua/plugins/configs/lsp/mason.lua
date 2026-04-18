@@ -18,7 +18,7 @@ local servers = {
     'emmet_ls',               -- emmet
     'jedi_language_server',   -- Python
     'lua_ls',                 -- Lua
-    'tsserver',               -- Typescript, Javascript
+    'ts_ls',                  -- Typescript, Javascript
     'jsonls',                 -- JSON
     'sqls',                   -- SQL
     'marksman',               -- Markdown
@@ -36,27 +36,18 @@ mason_lsp_config.setup {
     automatic_installation = true,
 }
 
-local present, lspconfig = pcall(require, "lspconfig")
-if not present then
-    return
-end
-
-local opts = {}
-
 for _, server in pairs(servers) do
-    opts = {
+    local opts = {
         on_attach = require('plugins.configs.lsp.handlers').on_attach,
         capabilities = require('plugins.configs.lsp.handlers').capabilities,
     }
 
-    server = vim.split(server, "@")[1]
-
-    local present, conf_opts = pcall(require, "plugins.configs.lsp.settings." .. server)
-
-    if present then
+    local has_user_opts, conf_opts = pcall(require, "plugins.configs.lsp.settings." .. server)
+    if has_user_opts then
         opts = vim.tbl_deep_extend("force", conf_opts, opts)
     end
 
-    lspconfig[server].setup(opts)
+    vim.lsp.config(server, opts)
+    vim.lsp.enable(server)
 end
 
