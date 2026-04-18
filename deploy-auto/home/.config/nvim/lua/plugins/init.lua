@@ -305,6 +305,18 @@ return require('packer').startup(function(use)
         ft = { "markdown" },
     })
 
+    -- Рендерит markdown прямо в буфере (заголовки, код-блоки, чек-листы и т.д.)
+    use({
+        'MeanderingProgrammer/render-markdown.nvim',
+        after = { 'nvim-treesitter' },
+        requires = {
+            'nvim-tree/nvim-web-devicons',
+        },
+        config = function()
+            require('plugins.configs.render-markdown')
+        end,
+    })
+
     -- Automatically set up your configuration after cloning packer.nvim
     -- Put this at the end after all plugins
     if packer_bootstrap then
