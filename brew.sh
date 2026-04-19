@@ -22,13 +22,16 @@ brew install moreutils
 brew install findutils
 # Install GNU `sed`, overwriting the built-in `sed`.
 brew install gnu-sed
-brew install bash
-brew install bash-completion2
+# zsh + plugins + prompt
+brew install zsh
+brew install zsh-autosuggestions
+brew install zsh-syntax-highlighting
+brew install starship
 
-# Switch to using brew-installed bash as default shell
-if ! fgrep -q "${BREW_PREFIX}/bin/bash" /etc/shells; then
-  echo "${BREW_PREFIX}/bin/bash" | sudo tee -a /etc/shells;
-  chsh -s "${BREW_PREFIX}/bin/bash";
+# Switch default shell to brew-installed zsh
+if ! fgrep -q "${BREW_PREFIX}/bin/zsh" /etc/shells; then
+  echo "${BREW_PREFIX}/bin/zsh" | sudo tee -a /etc/shells;
+  chsh -s "${BREW_PREFIX}/bin/zsh";
 fi;
 
 # Install `wget`
@@ -78,7 +81,6 @@ brew install --cask finicky
 brew install --cask alt-tab
 brew install docker
 brew install --cask rectangle
-brew install --cask amazon-q
 
 # dpi
 brew install libpcap

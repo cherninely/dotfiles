@@ -26,7 +26,8 @@ export EDITOR=nvim
 
 export PAGER=less
 export CLICOLOR=yes; # git colors
-export TERM=screen-256color
+# TERM is set by the terminal emulator (iTerm -> xterm-256color).
+# Inside tmux it becomes screen-256color automatically. Do NOT force it here.
 
 # Highlight section titles in manual pages.
 # http://habrahabr.ru/post/153871/
@@ -61,5 +62,12 @@ export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
 eval "$(pyenv init --path)"
 eval "$(pyenv init -)"
+
+# pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
 
 [ -f "$HOME/.exports_ignore" ] && source "$HOME/.exports_ignore"

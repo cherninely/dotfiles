@@ -28,7 +28,18 @@ function doIt() {
     export TMUX_PLUGIN_MANAGER_PATH="${HOME}/.tmux/plugins"
     "${HOME}/.tmux/plugins/tpm/bin/install_plugins"
 
-    source ~/.bash_profile;
+    # fzf-tab (not available via brew)
+    if [ ! -d "${HOME}/.zsh/fzf-tab" ]; then
+        mkdir -p "${HOME}/.zsh"
+        git clone --depth 1 https://github.com/Aloxaf/fzf-tab "${HOME}/.zsh/fzf-tab"
+    fi
+
+    # fzf shell integration (~/.fzf.zsh with Ctrl-R/Ctrl-T/Alt-C bindings)
+    if [ ! -f "${HOME}/.fzf.zsh" ] && [ -f "$(brew --prefix)/opt/fzf/install" ]; then
+        "$(brew --prefix)/opt/fzf/install" --key-bindings --completion --no-update-rc --no-bash --no-fish
+    fi
+
+    printf "\n\nRun \`exec zsh\` to start the new shell.\n"
 }
 
 if [ "$1" == "--force" -o "$1" == "-f" ]; then

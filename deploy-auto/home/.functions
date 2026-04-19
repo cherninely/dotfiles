@@ -5,6 +5,15 @@ function mkd() {
     mkdir -p "$@" && cd "$_";
 }
 
+# tma [name]: no arg -> attach last session, with arg -> attach specific
+function tma() {
+    if [ $# -eq 0 ]; then
+        tmux -2 -S "/tmp/tm-$(whoami)" attach;
+    else
+        tmux -2 -S "/tmp/tm-$(whoami)" attach -t "$1";
+    fi
+}
+
 # Change working directory to the top-most Finder window location
 function cdf() { # short for `cdfinder`
     cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";
