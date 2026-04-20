@@ -14,6 +14,23 @@ function tma() {
     fi
 }
 
+# tm [name]: создать новую сессию с двумя сплитами (слева под nvim, справа под claude)
+# Имя берётся из аргумента или из basename текущей директории.
+function tm() {
+    local socket="/tmp/tm-$(whoami)"
+    local name="${1:-$(basename "$PWD")}"
+
+    if tmux -2 -S "$socket" has-session -t "$name" 2>/dev/null; then
+        tmux -2 -S "$socket" attach -t "$name"
+        return
+    fi
+
+    tmux -2 -S "$socket" new-session  -d -s "$name"
+    tmux -2 -S "$socket" split-window -h -t "$name" -l 40%
+    tmux -2 -S "$socket" select-pane  -t "${name}.1"
+    tmux -2 -S "$socket" attach       -t "$name"
+}
+
 # Change working directory to the top-most Finder window location
 function cdf() { # short for `cdfinder`
     cd "$(osascript -e 'tell app "Finder" to POSIX path of (insertion location as alias)')";
