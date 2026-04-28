@@ -12,19 +12,9 @@ for file in ~/.{path,exports,aliases,functions,extra}; do
 done
 unset file
 
-# ---------- vi-mode tweaks ----------
-# Zsh picks vi-mode because $EDITOR=nvim. Make it usable:
-KEYTIMEOUT=1   # 10ms Esc delay (default 400ms) — snappy normal-mode switch
-
-# Cursor shape reflects mode: block in normal, beam in insert
-function zle-keymap-select {
-    case $KEYMAP in
-        vicmd) echo -ne '\e[1 q' ;;
-        viins|main) echo -ne '\e[5 q' ;;
-    esac
-}
-zle -N zle-keymap-select
-echo -ne '\e[5 q'
+# ---------- keybindings ----------
+# Force emacs-mode: zsh would otherwise pick vi-mode from $EDITOR=nvim
+bindkey -e
 
 # ---------- zsh options ----------
 setopt AUTO_CD                # `dirname` jumps without `cd`
@@ -92,6 +82,10 @@ ZSH_AUTOSUGGEST_STRATEGY=(history completion)
 
 # fzf keybindings (Ctrl-R history, Ctrl-T files, Alt-C cd)
 [ -f ~/.fzf.zsh ] && source ~/.fzf.zsh
+
+# Ctrl-R: при отмене (Esc/Ctrl-C/Ctrl-G) вернуть набранный в fzf query в строку,
+# чтобы можно было дописать команду, а не начинать заново.
+export FZF_CTRL_R_OPTS='--bind=esc:print-query+abort,ctrl-c:print-query+abort,ctrl-g:print-query+abort'
 
 # ---------- SSH agent socket for tmux ----------
 if [[ $SSH_AUTH_SOCK && $SSH_AUTH_SOCK != $HOME/.ssh/ssh_auth_sock ]]; then
