@@ -1,0 +1,172 @@
+#!/usr/bin/env python3
+"""Sync LanguageTool personal dictionary into VoiceInk.
+
+Fetches the user word list from LanguageTool's API and inserts any words that
+are missing from VoiceInk's local Core Data store. Additive only — never
+deletes from VoiceInk.
+
+Required env: LANGUATE_TOOL_API_KEY (or LANGUAGE_TOOL_API_KEY).
+Optional env: LANGUAGE_TOOL_USERNAME (defaults to cherninely@gmail.com).
+
+Usage:
+    python3 ~/dictionary/sync.py              # do the sync
+    python3 ~/dictionary/sync.py --dry-run    # show what would be added
+    python3 ~/dictionary/sync.py --force      # ignore the "VoiceInk running" check
+"""
+
+import argparse
+import json
+import os
+import sqlite3
+import subprocess
+import sys
+import time
+import urllib.parse
+import urllib.request
+from pathlib import Path
+
+DEFAULT_USERNAME = "cherninely@gmail.com"
+LT_API = "https://api.languagetoolplus.com/v2/words"
+VOICEINK_DB = (
+    Path.home()
+    / "Library/Application Support/com.prakashjoshipax.VoiceInk/dictionary.store"
+)
+
+# Core Data stores timestamps as seconds since 2001-01-01 00:00:00 UTC.
+CORE_DATA_EPOCH = 978307200
+
+
+def fetch_lt_words(username: str, api_key: str) -> list[str]:
+    params = urllib.parse.urlencode(
+        {"username": username, "apiKey": api_key, "limit": 10000}
+    )
+    req = urllib.request.Request(f"{LT_API}?{params}")
+    with urllib.request.urlopen(req, timeout=30) as r:
+        data = json.loads(r.read())
+    return data.get("words", [])
+
+
+def voiceink_running() -> bool:
+    return (
+        subprocess.run(["pgrep", "-x", "VoiceInk"], capture_output=True).returncode == 0
+    )
+
+
+def main() -> int:
+    p = argparse.ArgumentParser(description=__doc__.split("\n")[0])
+    p.add_argument(
+        "--dry-run", action="store_true", help="show diff but don't write"
+    )
+    p.add_argument(
+        "--force", action="store_true", help="run even if VoiceInk is open"
+    )
+    args = p.parse_args()
+
+    api_key = os.environ.get("LANGUATE_TOOL_API_KEY") or os.environ.get(
+        "LANGUAGE_TOOL_API_KEY"
+    )
+    if not api_key:
+        print(
+            "error: set LANGUATE_TOOL_API_KEY (or LANGUAGE_TOOL_API_KEY) in your shell",
+            file=sys.stderr,
+        )
+        return 1
+
+    username = os.environ.get("LANGUAGE_TOOL_USERNAME", DEFAULT_USERNAME)
+
+    if not VOICEINK_DB.exists():
+        print(f"error: VoiceInk DB not found at {VOICEINK_DB}", file=sys.stderr)
+        return 1
+
+    if not args.dry_run and voiceink_running() and not args.force:
+        print(
+            "VoiceInk is running. Quit it first (Cmd+Q), or pass --force to write anyway.",
+            file=sys.stderr,
+        )
+        return 1
+
+    print(f"Fetching dictionary from LanguageTool ({username})...")
+    try:
+        lt_words = fetch_lt_words(username, api_key)
+    except urllib.error.HTTPError as e:
+        print(f"error: LT API returned {e.code}: {e.read().decode(errors='replace')}", file=sys.stderr)
+        return 1
+    print(f"  LanguageTool: {len(lt_words)} words")
+
+    conn = sqlite3.connect(VOICEINK_DB)
+    cur = conn.cursor()
+    existing = {row[0] for row in cur.execute("SELECT ZWORD FROM ZVOCABULARYWORD")}
+    print(f"  VoiceInk:     {len(existing)} words")
+
+    lt_set = set(lt_words)
+    new_words = [w for w in lt_words if w not in existing]
+    only_in_voiceink = sorted(existing - lt_set)
+    in_both = existing & lt_set
+
+    print(f"  in both:      {len(in_both)} words")
+    print(f"  only in LT:   {len(new_words)} words (would be added)")
+    print(f"  only in VI:   {len(only_in_voiceink)} words (kept untouched — additive sync)")
+
+    def show(title: str, words: list[str], cap: int) -> None:
+        if not words:
+            return
+        print(f"\n{title}:")
+        for w in words[:cap]:
+            print(f"  {w}")
+        if len(words) > cap:
+            print(f"  ... and {len(words) - cap} more")
+
+    if args.dry_run:
+        show("Words only in LanguageTool (would be added)", new_words, 50)
+        show("Words only in VoiceInk (untouched)", only_in_voiceink, 50)
+        print("\n(dry run — no changes written)")
+        return 0
+
+    if not new_words:
+        print("\nAlready in sync — nothing to add.")
+        return 0
+
+    show("Will add to VoiceInk", new_words, 15)
+
+    cur.execute("SELECT Z_ENT, Z_MAX FROM Z_PRIMARYKEY WHERE Z_NAME = 'VocabularyWord'")
+    row = cur.fetchone()
+    if row is None:
+        print("error: VocabularyWord entity missing from Z_PRIMARYKEY", file=sys.stderr)
+        return 1
+    z_ent, z_max = row
+    now_cd = time.time() - CORE_DATA_EPOCH
+
+    rows = []
+    next_pk = z_max
+    for w in new_words:
+        next_pk += 1
+        # Z_OPT=1 is Core Data's initial optimistic-lock version for new rows.
+        rows.append((next_pk, z_ent, 1, now_cd, w))
+
+    try:
+        cur.executemany(
+            "INSERT INTO ZVOCABULARYWORD (Z_PK, Z_ENT, Z_OPT, ZDATEADDED, ZWORD) "
+            "VALUES (?, ?, ?, ?, ?)",
+            rows,
+        )
+        cur.execute(
+            "UPDATE Z_PRIMARYKEY SET Z_MAX = ? WHERE Z_NAME = 'VocabularyWord'",
+            (next_pk,),
+        )
+        conn.commit()
+    except sqlite3.Error as e:
+        conn.rollback()
+        print(f"error: SQLite write failed: {e}", file=sys.stderr)
+        return 1
+    finally:
+        conn.close()
+
+    print(
+        f"\nDone. Added {len(new_words)} words. VoiceInk total: {len(existing) + len(new_words)}."
+    )
+    print("Reopen VoiceInk to see them in the dictionary UI.")
+    return 0
+
+
+if __name__ == "__main__":
+    sys.exit(main())

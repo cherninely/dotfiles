@@ -5,6 +5,7 @@
     },
     "permissions": {
         "allow": [
+            "Read(~/.claude/skills/**)",
             "MCPSearch",
             "WebSearch",
             "Bash(npm view *)",
@@ -60,6 +61,9 @@
             "Bash(*ssh amnezia*)",
             "Bash(*analyze.py --inspect-chart*)",
             "Bash(*yql-cli.sh*)",
+            "Bash(*monium-cli logs*)",
+            "Bash(*pnpm run lint*)",
+            "Bash(*pnpm run build*)",
             "mcp__context7__resolve-library-id",
             "mcp__context7__query-docs",
             "mcp__datacatalog__get_data_entity_description_by_id",
@@ -141,6 +145,7 @@
             "mcp__yt__get_attributes_bundle",
             "mcp__yt__get_attributes_pool",
             "mcp__yt__get_proxy",
+            "mcp__hyperenv-local__*",
             "mcp__yt__list_dir"
         ],
         "deny": [
