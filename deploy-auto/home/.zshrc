@@ -6,8 +6,8 @@ eval "$(/opt/homebrew/bin/brew shellenv)"
 export PATH="$HOME/.bin:$PATH"
 
 # ---------- Shared dotfiles ----------
-# .exports (env), .aliases, .functions, .extra (local-only), .path (optional)
-for file in ~/.{path,exports,aliases,functions,extra}; do
+# .exports (env), .aliases, .functions, .path (optional)
+for file in ~/.{path,exports,aliases,functions}; do
     [ -r "$file" ] && [ -f "$file" ] && source "$file"
 done
 unset file

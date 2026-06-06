@@ -145,6 +145,16 @@ function o() {
     fi;
 }
 
+# tm-resource: re-source ~/.zshrc во всех shell-пейнах всех tmux-сессий.
+# Пейны с активной интерактивкой (nvim, less, claude и т.п.) пропускаются,
+# чтобы не отправить туда мусор.
+function tm-resource() {
+    local socket="/tmp/tm-$(whoami)"
+    tmux -S "$socket" list-panes -a -F '#{pane_id} #{pane_current_command}' \
+        | awk '$2 ~ /^(zsh|bash|-zsh|-bash)$/ {print $1}' \
+        | xargs -I{} tmux -S "$socket" send-keys -t {} ' source ~/.zshrc' Enter
+}
+
 # `tre` is a shorthand for `tree` with hidden files and color enabled, ignoring
 # the `.git` directory, listing directories first. The output gets piped into
 # `less` with options to preserve color and line numbers, unless the output is
