@@ -5,8 +5,23 @@ function mkd() {
     mkdir -p "$@" && cd "$_";
 }
 
+# tm-boot: start the tmux server if it is not running (i.e. after a reboot).
+# The first session is tmux's default "0" with a single pane: only then
+# resurrect treats the restore as "from scratch" and removes "0" afterwards,
+# so continuum brings the saved sessions back without leaving a stray one.
+function tm-boot() {
+    local socket="/tmp/tm-$(whoami)" i
+    tmux -S "$socket" has-session 2>/dev/null && return
+    tmux -2 -S "$socket" new-session -d
+    for i in $(seq 1 30); do
+        tmux -S "$socket" has-session -t 0 2>/dev/null || break
+        sleep 1
+    done
+}
+
 # tma [name]: no arg -> attach last session, with arg -> attach specific
 function tma() {
+    tm-boot
     if [ $# -eq 0 ]; then
         tmux -2 -S "/tmp/tm-$(whoami)" attach;
     else
@@ -14,21 +29,76 @@ function tma() {
     fi
 }
 
-# tm [name]: создать новую сессию с двумя сплитами (слева под nvim, справа под claude)
-# Имя берётся из аргумента или из basename текущей директории.
+# tm [name]: создать новую сессию с двумя сплитами (слева под nvim, справа сразу
+# стартует claude через cs). Имя берётся из аргумента или из basename текущей директории.
 function tm() {
     local socket="/tmp/tm-$(whoami)"
     local name="${1:-$(basename "$PWD")}"
 
+    tm-boot
     if tmux -2 -S "$socket" has-session -t "$name" 2>/dev/null; then
         tmux -2 -S "$socket" attach -t "$name"
         return
     fi
 
-    tmux -2 -S "$socket" new-session  -d -s "$name"
+    tmux -2 -S "$socket" new-session  -d -s "$name" -c "$PWD"
     tmux -2 -S "$socket" split-window -h -t "$name" -l 40%
+    tmux -2 -S "$socket" send-keys    -t "${name}.2" 'cs' Enter
     tmux -2 -S "$socket" select-pane  -t "${name}.1"
     tmux -2 -S "$socket" attach       -t "$name"
+}
+
+# tmh [name]: tm, но сессия (и claude в ней) всегда стартует в каталоге Hyperenv.
+function tmh() {
+    local dir="$HOME/arcadia/hyperenv"
+    if [ ! -d "$dir" ]; then
+        echo "tmh: нет каталога $dir — arc примонтирован?" >&2
+        return 1
+    fi
+    (cd "$dir" && tm "${1:-hyperenv}")
+}
+
+# cs [args]: claude на личной подписке (прокси-переменные сброшены, модель из settings.json).
+# В tmux разговор получает постоянный UUID (--session-id): tmux-resurrect сохраняет его в
+# командной строке панели и после ребута запускает ту же строку через `cs *` (@resurrect-processes).
+# Claude отказывает в --session-id для уже существующего разговора — тогда флаг переводится в --resume.
+function cs() {
+    local uuid="" explicit=""
+    local -a args
+    args=()
+    while [ $# -gt 0 ]; do
+        case "$1" in
+            --session-id)   uuid="$2"; shift 2; continue ;;
+            --session-id=*) uuid="${1#*=}"; shift; continue ;;
+            -r|--resume|-c|--continue|--from-pr|--teleport) explicit=1 ;;
+        esac
+        args+=("$1")
+        shift
+    done
+
+    # Transcripts are kept per project directory and --resume only looks in the
+    # current one, so a uuid the pane remembers for another directory is useless here.
+    local project; project=~/.claude/projects/$(pwd -P | sed 's/[^A-Za-z0-9-]/-/g')
+
+    if [ -n "$TMUX" ] && [ -z "$uuid" ] && [ -z "$explicit" ]; then
+        uuid="$(tmux show-options -pqv @cc_uuid 2>/dev/null)"
+        if [ -n "$uuid" ] && [ ! -f "$project/$uuid.jsonl" ] \
+            && [ -n "$(find ~/.claude/projects -maxdepth 2 -name "$uuid.jsonl" 2>/dev/null | head -1)" ]; then
+            uuid=""
+        fi
+        [ -n "$uuid" ] || uuid="$(uuidgen | tr '[:upper:]' '[:lower:]')"
+    fi
+
+    if [ -n "$uuid" ]; then
+        [ -n "$TMUX" ] && tmux set-option -p @cc_uuid "$uuid" 2>/dev/null
+        if [ -f "$project/$uuid.jsonl" ]; then
+            args=(--resume "$uuid" "${args[@]}")
+        else
+            args=(--session-id "$uuid" "${args[@]}")
+        fi
+    fi
+
+    env -u ANTHROPIC_AUTH_TOKEN -u ANTHROPIC_BASE_URL -u ANTHROPIC_MODEL claude "${args[@]}"
 }
 
 # Change working directory to the top-most Finder window location

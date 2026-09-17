@@ -111,6 +111,6 @@ eval $(thefuck --alias fk)
 # AI
 alias c="claude" # work api billing
 alias cc="c --continue"
-alias cs="env -u ANTHROPIC_AUTH_TOKEN -u ANTHROPIC_BASE_URL -u ANTHROPIC_MODEL claude" # subscription (model from settings.json)
+# cs — функция в .functions (subscription + постоянный session-id для tmux-resurrect)
 alias csc="cs --continue"
 alias specinit="specify init . --ai claude --script sh --no-git --force"
