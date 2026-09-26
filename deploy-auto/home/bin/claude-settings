@@ -1,0 +1,120 @@
+#!/usr/bin/env python3
+"""Личная часть ~/.claude/settings.json в дотфайлах.
+
+Живой settings.json переписывает AISuite (разрешения, свои хуки, __aisuite),
+поэтому симлинк на дотфайлы не выживает. В дотфайлах храним только своё:
+верхние ключи кроме permissions/__aisuite, permissions.defaultMode и хуки,
+которые указывают на локальные файлы, а не в Аркадию или aisuite-tool.
+
+  claude-settings apply   влить личную часть в живой файл (с бэкапом)
+  claude-settings save    вытащить личную часть из живого файла в дотфайлы
+"""
+import json
+import os
+import shutil
+import sys
+import time
+
+LIVE = os.path.expanduser("~/.claude/settings.json")
+PERSONAL = os.path.expanduser(
+    "~/dotfiles/deploy-auto/external-apps/claude-settings.personal.json"
+)
+FOREIGN_KEYS = {"permissions", "hooks", "__aisuite"}
+MERGED_DICT_KEYS = {"env", "enabledPlugins"}
+
+
+def load(path):
+    if not os.path.exists(path):
+        return {}
+    with open(path) as f:
+        return json.load(f)
+
+
+def dump(path, data):
+    tmp = path + ".tmp"
+    with open(tmp, "w") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
+        f.write("\n")
+    os.replace(tmp, path)
+
+
+def is_personal_hook(hook):
+    cmd = hook.get("command", "")
+    return "aisuite" not in cmd and "arcadia/" not in cmd
+
+
+def extract(live):
+    personal = {k: v for k, v in live.items() if k not in FOREIGN_KEYS}
+    mode = live.get("permissions", {}).get("defaultMode")
+    if mode:
+        personal["permissions"] = {"defaultMode": mode}
+    hooks = {}
+    for event, groups in live.get("hooks", {}).items():
+        for group in groups:
+            mine = [h for h in group.get("hooks", []) if is_personal_hook(h)]
+            if mine:
+                hooks.setdefault(event, []).append({**group, "hooks": mine})
+    if hooks:
+        personal["hooks"] = hooks
+    return personal
+
+
+def merge(live, personal):
+    result = dict(live)
+    for key, value in personal.items():
+        if key == "hooks":
+            continue
+        if key in MERGED_DICT_KEYS or key == "permissions":
+            result[key] = {**result.get(key, {}), **value}
+        else:
+            result[key] = value
+
+    own = personal.get("hooks", {})
+    own_cmds = {h.get("command") for gs in own.values() for g in gs for h in g["hooks"]}
+    # Сначала убираем свои хуки из живого файла, потом добавляем заново:
+    # повторный apply не плодит дубли, а правки в дотфайлах заменяют старые.
+    hooks = {}
+    for event, groups in live.get("hooks", {}).items():
+        for group in groups:
+            rest = [h for h in group.get("hooks", []) if h.get("command") not in own_cmds]
+            if rest:
+                hooks.setdefault(event, []).append({**group, "hooks": rest})
+    for event, groups in own.items():
+        hooks.setdefault(event, []).extend(groups)
+    if hooks:
+        result["hooks"] = hooks
+    return result
+
+
+def backup(path):
+    if os.path.exists(path):
+        shutil.copy2(path, f"{path}.bak.{time.strftime('%Y%m%d-%H%M%S')}")
+
+
+def main():
+    cmd = sys.argv[1] if len(sys.argv) > 1 else ""
+    if cmd == "apply":
+        live, personal = load(LIVE), load(PERSONAL)
+        if not personal:
+            sys.exit(f"нет личной части: {PERSONAL}")
+        merged = merge(live, personal)
+        if merged == live:
+            print("без изменений")
+            return
+        backup(LIVE)
+        dump(LIVE, merged)
+        print(f"влито в {LIVE}")
+    elif cmd == "save":
+        personal = extract(load(LIVE))
+        if personal == load(PERSONAL):
+            print("без изменений")
+            return
+        dump(PERSONAL, personal)
+        print(f"сохранено в {PERSONAL}")
+    else:
+        print(__doc__.strip())
+        sys.exit(1)
+
+
+if __name__ == "__main__":
+    main()

@@ -29,8 +29,8 @@ function tma() {
     fi
 }
 
-# tm [name]: создать новую сессию с одной панелью, в которой сразу стартует claude через cs.
-# Имя берётся из аргумента или из basename текущей директории.
+# tm [name]: создать новую сессию с двумя сплитами (слева под nvim, справа сразу
+# стартует claude через cs). Имя берётся из аргумента или из basename текущей директории.
 function tm() {
     local socket="/tmp/tm-$(whoami)"
     local name="${1:-$(basename "$PWD")}"
@@ -41,9 +41,11 @@ function tm() {
         return
     fi
 
-    tmux -2 -S "$socket" new-session -d -s "$name" -n root -c "$PWD"
-    tmux -2 -S "$socket" send-keys   -t "$name" "cs -n $(printf '%q' "$name")" Enter
-    tmux -2 -S "$socket" attach      -t "$name"
+    tmux -2 -S "$socket" new-session  -d -s "$name" -n root -c "$PWD"
+    tmux -2 -S "$socket" split-window -h -t "$name" -l 40%
+    tmux -2 -S "$socket" send-keys    -t "${name}.2" "cs -n $(printf '%q' "$name")" Enter
+    tmux -2 -S "$socket" select-pane  -t "${name}.1"
+    tmux -2 -S "$socket" attach       -t "$name"
 }
 
 # tmh [name]: tm, но сессия (и claude в ней) всегда стартует в каталоге Hyperenv.
@@ -57,9 +59,8 @@ function tmh() {
 }
 
 # cs [args]: claude на личной подписке (прокси-переменные сброшены, модель из settings.json).
-# В tmux разговор получает постоянный UUID (--session-id), а панель — команду возврата
-# `cs --resume <uuid>` (@cc_resume): после выхода из claude и после ребута она набрана в
-# строке ввода и запускается по Enter (cc-tmux-state-persist restore).
+# В tmux разговор получает постоянный UUID (--session-id): tmux-resurrect сохраняет его в
+# командной строке панели и после ребута запускает ту же строку через `cs *` (@resurrect-processes).
 # Claude отказывает в --session-id для уже существующего разговора — тогда флаг переводится в --resume.
 function cs() {
     local uuid="" explicit=""
@@ -69,13 +70,7 @@ function cs() {
         case "$1" in
             --session-id)   uuid="$2"; shift 2; continue ;;
             --session-id=*) uuid="${1#*=}"; shift; continue ;;
-            -r|--resume)
-                # A uuid goes the --session-id way, so the pane remembers it.
-                if [[ "$2" =~ ^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$ ]]; then
-                    uuid="$2"; shift 2; continue
-                fi
-                explicit=1 ;;
-            -c|--continue|--from-pr|--teleport) explicit=1 ;;
+            -r|--resume|-c|--continue|--from-pr|--teleport) explicit=1 ;;
         esac
         args+=("$1")
         shift
@@ -86,7 +81,7 @@ function cs() {
     local project; project=~/.claude/projects/$(pwd -P | sed 's/[^A-Za-z0-9-]/-/g')
 
     if [ -n "$TMUX" ] && [ -z "$uuid" ] && [ -z "$explicit" ]; then
-        uuid="$(tmux show-options -pqv -t "$TMUX_PANE" @cc_uuid 2>/dev/null)"
+        uuid="$(tmux show-options -pqv @cc_uuid 2>/dev/null)"
         if [ -n "$uuid" ] && [ ! -f "$project/$uuid.jsonl" ] \
             && [ -n "$(find ~/.claude/projects -maxdepth 2 -name "$uuid.jsonl" 2>/dev/null | head -1)" ]; then
             uuid=""
@@ -94,13 +89,8 @@ function cs() {
         [ -n "$uuid" ] || uuid="$(uuidgen | tr '[:upper:]' '[:lower:]')"
     fi
 
-    local resume=""
     if [ -n "$uuid" ]; then
-        resume="cs --resume $uuid"
-        [ ${#args[@]} -gt 0 ] && resume="$resume $(printf '%q ' "${args[@]}")" && resume="${resume% }"
-        [ -n "$TMUX" ] && tmux set-option -p -t "$TMUX_PANE" @cc_uuid "$uuid" 2>/dev/null \
-            && tmux set-option -p -t "$TMUX_PANE" @cc_resume "$resume" 2>/dev/null \
-            && tmux set-option -pu -t "$TMUX_PANE" @cc_sleeping 2>/dev/null
+        [ -n "$TMUX" ] && tmux set-option -p @cc_uuid "$uuid" 2>/dev/null
         if [ -f "$project/$uuid.jsonl" ]; then
             args=(--resume "$uuid" "${args[@]}")
         else
@@ -108,23 +98,7 @@ function cs() {
         fi
     fi
 
-    # A tmux server started from inside claude keeps its markers in the server environment
-    # and every pane inherits them. Since 2.1.280 CLAUDE_CODE_CHILD_SESSION means "I am a
-    # subagent, do not write a transcript"; claude recognises an inherited copy by reading
-    # `tmux show-environment -g`, but that probe times out at 250 ms and loses the race when
-    # panes start together — the session then runs with no transcript and --resume never
-    # finds it again. A conversation started by hand is never a subagent.
-    env -u ANTHROPIC_AUTH_TOKEN -u ANTHROPIC_BASE_URL -u ANTHROPIC_MODEL \
-        -u CLAUDE_CODE_CHILD_SESSION claude "${args[@]}"
-    local rc=$?
-    # На выходе claude стирает заголовок панели, а по нему спящая панель показывает имя
-    # разговора во вкладке и в prefix+s; копию заголовка держит хук cc-tmux-state.sh.
-    if [ -n "$TMUX" ] && [ -n "$resume" ]; then
-        local title; title="$(tmux show-options -pqv -t "$TMUX_PANE" @cc_title 2>/dev/null)"
-        [ -n "$title" ] && tmux select-pane -t "$TMUX_PANE" -T "$title" 2>/dev/null
-    fi
-    [ -n "$ZSH_VERSION" ] && [ -n "$TMUX" ] && [ -n "$resume" ] && print -z -- "$resume"
-    return $rc
+    env -u ANTHROPIC_AUTH_TOKEN -u ANTHROPIC_BASE_URL -u ANTHROPIC_MODEL claude "${args[@]}"
 }
 
 # Change working directory to the top-most Finder window location

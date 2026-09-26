@@ -1,0 +1,72 @@
+#!/bin/bash
+# Put idle Claude Code sessions to sleep: claude exits, the pane keeps its tab name
+# and ✅/💤, and `cs --resume <uuid>` waits in the prompt for an Enter (`cs` types it
+# after claude returns). A running claude holds 0.5–1.3 GB whether anyone looks at it
+# or not; twenty of them ran the Mac into swap.
+#
+#   cc-sleep              every session that is not ⏳ working
+#   cc-sleep <target>...  the sessions in these windows/panes (tmux targets)
+#   cc-sleep --auto SECS  the same, untouched for at least SECS; called from
+#                         `cc-tmux-state-persist save`, i.e. every continuum save
+#
+# ⏳ working is never touched, and neither is a pane without @cc_resume (claude
+# started outside `cs` cannot be resumed from the prompt). A ❓ question does not
+# survive the exit, so a sleeping ❓ turns into ✅: the conversation is still there
+# to look at.
+# --auto also skips the window in front of an attached client: somebody is reading it.
+# Age comes from @cc_state_at, written by ~/.claude/hooks/cc-tmux-state.sh together
+# with the state; a pane without it (state set before the hook wrote one, or by
+# prefix+w/m) starts its clock on the first --auto pass.
+# claude gets SIGTERM, not a typed /exit: a draft in its input would swallow the
+# keys. @cc_sleeping tells the hook to keep the state on SessionEnd.
+
+sock="${TMUX%%,*}"
+[ -n "$sock" ] || sock="/tmp/tm-$(whoami)"
+t() { tmux -S "$sock" "$@"; }
+
+auto=""
+if [ "$1" = --auto ]; then
+    auto="$2"
+    shift 2
+fi
+
+# \037, not a tab: read collapses adjacent tabs and an empty state would shift the rest.
+fmt=$'#{pane_id}\037#{pane_pid}\037#{pane_current_command}\037#{@cc_state}\037#{@cc_state_at}\037#{@cc_resume}\037#{&&:#{window_active},#{session_attached}}'
+if [ $# -gt 0 ]; then
+    panes="$(for target in "$@"; do t list-panes -t "$target" -F "$fmt" 2>/dev/null; done)"
+else
+    panes="$(t list-panes -a -F "$fmt" 2>/dev/null)"
+fi
+
+now=$(date +%s)
+while IFS=$'\037' read -r pane pid cmd state at resume front; do
+    [[ $cmd =~ ^[0-9]+\.[0-9]+ ]] || continue
+    [ "$state" = working ] && continue
+    [ -n "$resume" ] || continue
+    if [ -n "$auto" ]; then
+        [ "$front" = 1 ] && continue
+        if [ -z "$at" ]; then
+            t set-option -p -t "$pane" @cc_state_at "$now"
+            continue
+        fi
+        [ $((now - at)) -ge "$auto" ] || continue
+    fi
+    claude_pid="$(pgrep -P "$pid" | while read -r c; do
+        # ps sees "claude", tmux the version the binary is named after.
+        [[ "$(basename "$(ps -o comm= -p "$c")")" =~ ^(claude|[0-9]+\.[0-9]+) ]] && echo "$c"
+    done | head -1)"
+    [ -n "$claude_pid" ] || continue
+    t set-option -p -t "$pane" @cc_sleeping 1
+    [ "$state" = blocked ] && t set-option -p -t "$pane" @cc_state done
+    kill -TERM "$claude_pid"
+    # claude wipes the pane title on exit. `cs` puts it back from @cc_title, but a
+    # shell keeps the `cs` it started with, so older panes need it done from here.
+    title="$(t show-options -pqv -t "$pane" @cc_title)"
+    if [ -n "$title" ]; then
+        (
+            for _ in $(seq 1 50); do kill -0 "$claude_pid" 2>/dev/null || break; sleep 0.2; done
+            t select-pane -t "$pane" -T "$title"
+        ) >/dev/null 2>&1 &
+    fi
+done <<<"$panes"
+exit 0

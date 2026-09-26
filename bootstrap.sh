@@ -12,6 +12,9 @@ function doIt() {
     # Stow
     stow --dir=deploy-auto --target="$HOME" --restow home
 
+    # settings.json переписывает AISuite, поэтому вливаем только личную часть
+    "$HOME/bin/claude-settings" apply
+
     # Конфиги приложений
     ln -sf "$(pwd)/deploy-auto/external-apps/rectangle.json" \
         "$HOME/Library/Application Support/Rectangle/RectangleConfig.json"

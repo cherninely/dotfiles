@@ -1,0 +1,262 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "DISABLE_BUG_COMMAND": "1",
+    "DISABLE_ERROR_REPORTING": "1",
+    "DISABLE_TELEMETRY": "1",
+    "ENABLE_TOOL_SEARCH": "true",
+    "FROM_AI_AGENT": "1",
+    "MCP_TIMEOUT": "120000"
+  },
+  "statusLine": {
+    "type": "command",
+    "command": "$HOME/.claude/statusline-command.sh"
+  },
+  "enabledPlugins": {
+    "code-review@claude-plugins-official": false,
+    "code-simplifier@claude-plugins-official": true,
+    "typescript-lsp@claude-plugins-official": true
+  },
+  "effortLevel": "xhigh",
+  "plansDirectory": "/Users/cherninely/Library/Mobile Documents/iCloud~md~obsidian/Documents/cherninely/Yandex/AI plans",
+  "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
+  "preferredNotifChannel": "terminal_bell",
+  "skipAutoPermissionPrompt": true,
+  "permissions": {
+    "defaultMode": "auto"
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "matcher": "permission_prompt|idle_prompt|elicitation_dialog",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Glass.aiff",
+            "async": true
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/cherninely/.config/iterm2/cc-status"
+          }
+        ]
+      },
+      {
+        "matcher": "permission_prompt|elicitation_dialog",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/cc-tmux-state.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PermissionRequest": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/cherninely/.config/iterm2/cc-status"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/cc-tmux-state.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/cherninely/.config/iterm2/cc-status"
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/rtk-rewrite.sh"
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/block-git-in-arcadia.sh",
+            "timeout": 10
+          },
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/block-pr-publish.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "Grep|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/block-wide-grep-glob.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "matcher": "WebFetch",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/block-webfetch-yandex-team.sh",
+            "timeout": 10
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/cherninely/.config/iterm2/cc-status"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/cc-tmux-state.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SessionEnd": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/cherninely/.config/iterm2/cc-status"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/cc-tmux-state.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/cherninely/.config/iterm2/cc-status"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/cc-tmux-state.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Funk.aiff",
+            "async": true
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/cherninely/.config/iterm2/cc-status"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/cc-tmux-state.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "StopFailure": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/cherninely/.config/iterm2/cc-status"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/cc-tmux-state.sh",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "SubagentStop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/cherninely/.config/iterm2/cc-status"
+          }
+        ]
+      }
+    ],
+    "UserPromptSubmit": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "/Users/cherninely/.config/iterm2/cc-status"
+          }
+        ]
+      },
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "$HOME/.claude/hooks/cc-tmux-state.sh",
+            "async": true
+          }
+        ]
+      }
+    ]
+  }
+}

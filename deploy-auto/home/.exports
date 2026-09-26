@@ -14,8 +14,24 @@ PATH="$HOME/arcadia:$PATH"
 export NODE_PATH=./node_modules:$NODE_PATH
 
 export NVM_DIR="$HOME/.nvm"
-  [ -s "/opt/homebrew/opt/nvm/nvm.sh" ] && \. "/opt/homebrew/opt/nvm/nvm.sh"  # This loads nvm
-  [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion
+# Полная загрузка nvm.sh стоит ~0.4 c на каждое новое окно, и почти всё это —
+# резолв версии из alias/default. Кладём её на PATH сами, а сам nvm подтягиваем
+# только когда его позвали. Нестандартный default (lts/*, node) — грузим как раньше.
+_nvm_default=""
+[ -r "$NVM_DIR/alias/default" ] && _nvm_default="$(<"$NVM_DIR/alias/default")"
+if [ -n "$_nvm_default" ] && [ -d "$NVM_DIR/versions/node/$_nvm_default/bin" ]; then
+    PATH="$NVM_DIR/versions/node/$_nvm_default/bin:$PATH"
+    nvm() {
+        unfunction nvm
+        \. "/opt/homebrew/opt/nvm/nvm.sh"
+        [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+        nvm "$@"
+    }
+elif [ -s "/opt/homebrew/opt/nvm/nvm.sh" ]; then
+    \. "/opt/homebrew/opt/nvm/nvm.sh"
+    [ -s "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/opt/homebrew/opt/nvm/etc/bash_completion.d/nvm"
+fi
+unset _nvm_default
 
 export LANG=en_US.UTF-8
 export LC_ALL=en_US.UTF-8
@@ -60,8 +76,21 @@ export BASH_SILENCE_DEPRECATION_WARNING=1;
 # pyenv
 export PYENV_ROOT="$HOME/.pyenv"
 export PATH="$PYENV_ROOT/bin:$PATH"
-eval "$(pyenv init --path)"
-eval "$(pyenv init -)"
+# Развёрнутый вывод `pyenv init -`: он же, но без запуска bash для чистки PATH
+# и без `pyenv rehash` — вместе это ~0.24 c на окно. Rehash нужен только после
+# установки пакетов с бинарниками, тогда вызови `pyenv rehash` руками.
+export PATH="$PYENV_ROOT/shims:$PATH"
+export PYENV_SHELL=zsh
+[ -r /opt/homebrew/opt/pyenv/completions/pyenv.zsh ] && \
+    source /opt/homebrew/opt/pyenv/completions/pyenv.zsh
+pyenv() {
+    local command=${1:-}
+    [ "$#" -gt 0 ] && shift
+    case "$command" in
+    rehash|shell) eval "$(command pyenv "sh-$command" "$@")" ;;
+    *)            command pyenv "$command" "$@" ;;
+    esac
+}
 
 # pnpm
 export PNPM_HOME="$HOME/Library/pnpm"

@@ -1,11 +1,14 @@
 #!/bin/bash
-# Claude Code sessions that need the user, for the tmux status line: ❓N ✅N
-# (blocked on a question / turn finished, written by ~/.claude/hooks/cc-tmux-state.sh).
-# Sessions still working are deliberately not shown — they need nothing.
-# Only panes that actually run claude count — its process name is the version
-# (e.g. 2.1.272) — so a stale @cc_state left by a crashed session is ignored.
-# Runs from status-right via @onedark_widgets; falls back to the tm() socket
-# when tmux does not pass $TMUX to #() jobs.
+# Claude Code sessions that need the user, for the right corner of the tmux status
+# line: ❓N ✅N (blocked on a question / turn finished, written by
+# ~/.claude/hooks/cc-tmux-state.sh). Sessions still working are deliberately not
+# shown — they need nothing. Only panes that actually run claude count — its process
+# name is the version (e.g. 2.1.272) — so a stale @cc_state left by a crashed session
+# is ignored.
+# Prints a styled block in the onedark palette, like the tabs: yellow when something
+# is blocked, green when only finished turns; nothing at all when nothing needs me.
+# Runs from status-right; falls back to the tm() socket when tmux does not pass
+# $TMUX to #() jobs.
 
 sock="${TMUX%%,*}"
 [ -n "$sock" ] || sock="/tmp/tm-$(whoami)"
@@ -13,6 +16,10 @@ sock="${TMUX%%,*}"
 tmux -S "$sock" list-panes -a -F '#{pane_current_command} #{@cc_state}' 2>/dev/null \
 | awk '$1 ~ /^[0-9]+\.[0-9]+/ { n[$2]++ }
        END {
+           if (n["blocked"])   c = "#e5c07b"
+           else if (n["done"]) c = "#98c379"
+           else exit
+           printf "#[fg=%s,bg=#282c34,nobold]\xee\x82\xb2#[fg=#282c34,bg=%s,bold] ", c, c
            if (n["blocked"]) printf "❓%d ", n["blocked"]
            if (n["done"])    printf "✅%d ", n["done"]
        }'

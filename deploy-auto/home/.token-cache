@@ -1,0 +1,77 @@
+#!/usr/bin/env zsh
+
+# Значения, за которыми надо ходить в сеть или в skotty, резолвятся по цепочке:
+# уже заданная переменная -> свежий файл кэша -> вызов команды.
+#
+# Срок кэша по умолчанию — 8 часов, как TOKEN_MAX_AGE в самом fetch-token
+# (taxi/architecture/fetch-token/main.go). Там же сказано, почему именно
+# столько: «Most tokens are valid for more than a day». На macOS своего кэша
+# у fetch-token нет — TAXIDEVEXP-14.
+#
+# Ни этот кэш, ни кэш fetch-token не умеют проверять, жив ли токен: оба
+# смотрят только на возраст файла. Отозванный раньше срока токен виден
+# только по отказу потребителя — тогда `ya-tokens-refresh`.
+
+YA_TOKEN_CACHE_DIR="${YA_TOKEN_CACHE_DIR:-$HOME/.cache/yandex-tokens}"
+YA_TOKEN_CACHE_TTL="${YA_TOKEN_CACHE_TTL:-28800}"
+
+# cached_export [-t секунды] ПЕРЕМЕННАЯ команда [аргументы...]
+cached_export() {
+    local ttl="$YA_TOKEN_CACHE_TTL"
+    if [ "$1" = "-t" ]; then ttl=$2; shift 2; fi
+
+    local var=$1; shift
+    eval "local current=\${$var:-}"
+    [ -n "$current" ] && return 0
+
+    local file="$YA_TOKEN_CACHE_DIR/$var"
+
+    # Без корпоративной сети идти некуда. Отдаём кэш любого возраста и молчим:
+    # это не поломка, а ноутбук в самолёте.
+    if [ -n "$YA_TOKEN_CACHE_OFFLINE" ]; then
+        [ -f "$file" ] && export "$var=$(<"$file")"
+        return 0
+    fi
+
+    if [ -f "$file" ] && [ $(( $(date +%s) - $(stat -f %m "$file") )) -lt "$ttl" ]; then
+        export "$var=$(<"$file")"
+        return 0
+    fi
+
+    # </dev/null: без него fetch-token без живой сессии skotty уходит
+    # в интерактивный запрос и висит до таймаута
+    local value
+    value=$("$@" </dev/null 2>/dev/null | tr -d '[:space:]')
+
+    if [ -n "$value" ]; then
+        mkdir -p "$YA_TOKEN_CACHE_DIR" && chmod 700 "$YA_TOKEN_CACHE_DIR"
+        printf '%s' "$value" > "$file" && chmod 600 "$file"
+        export "$var=$value"
+    elif [ -f "$file" ]; then
+        # Молча подставить протухшее — значит спрятать поломку. Говорим вслух.
+        printf '%s: обновить не удалось, беру из кэша (%s). Проверь skotty и сеть.\n' \
+            "$var" "$(ya-tokens-age "$file")" >&2
+        export "$var=$(<"$file")"
+    else
+        printf '%s: получить не удалось, переменная не задана.\n' "$var" >&2
+    fi
+}
+
+ya-tokens-age() {
+    local sec=$(( $(date +%s) - $(stat -f %m "$1") ))
+    if [ "$sec" -lt 3600 ]; then printf '%d мин назад' $(( sec / 60 ))
+    else printf '%d ч назад' $(( sec / 3600 )); fi
+}
+
+ya-tokens-status() {
+    local file
+    for file in "$YA_TOKEN_CACHE_DIR"/*(N); do
+        printf '%-24s получен %s\n' "${file:t}" "$(ya-tokens-age "$file")"
+    done
+    printf '\nЖив ли токен — кэш не знает. Проверить: https://ant.sec.yandex-team.ru/\n'
+}
+
+ya-tokens-refresh() {
+    rm -f "$YA_TOKEN_CACHE_DIR"/*(N)
+    printf 'Кэш токенов очищен, следующий новый терминал получит свежие.\n'
+}

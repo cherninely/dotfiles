@@ -104,10 +104,6 @@ alias mine='sudo chown -R $USER .'
 # Python
 alias python=python3
 
-# thefuck alias
-eval $(thefuck --alias)
-eval $(thefuck --alias fk)
-
 # AI
 alias c="claude" # work api billing
 alias cc="c --continue"

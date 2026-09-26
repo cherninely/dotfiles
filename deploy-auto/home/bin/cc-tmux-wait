@@ -1,0 +1,46 @@
+#!/bin/bash
+# prefix+w for Claude Code sessions in tmux: toggle 💤 on the current window. 💤 means
+# the conversation waits for something outside (a colleague's OK, a nightly run): the
+# tab fades to dim grey instead of asking for attention, and the right-corner summary
+# does not count it. Without a 💤 in the window: put it on the window's claude pane,
+# whatever it shows now (✅ read, ❓ a question that has to wait, or nothing). With
+# one: drop it, the tab is plain again. The mark also goes away by itself on the next
+# message or turn: the hook (~/.claude/hooks/cc-tmux-state.sh) overwrites the state.
+# A pane that is ⏳ working is left alone: claude is doing something there and the
+# mark would flip back within seconds. A pane counts as claude when its process name
+# is the version (2.1.272), as in cc-tmux-summary. Called from .tmux.conf as
+#   run-shell "~/bin/cc-tmux-wait '#{window_id}' '#{client_name}'"
+# (run-shell expands formats, so both come from the client that pressed the key).
+# Prints nothing on purpose: run-shell would open any output in view mode.
+
+window="$1"
+client="$2"
+[ -n "$window" ] || exit 0
+
+sock="${TMUX%%,*}"
+[ -n "$sock" ] || sock="/tmp/tm-$(whoami)"
+t() { tmux -S "$sock" "$@"; }
+say() { [ -n "$client" ] && t display-message -c "$client" "$1" 2>/dev/null; }
+
+waiting_panes=() other_panes=() working=0
+while read -r pane cmd state; do
+    [[ $cmd =~ ^[0-9]+\.[0-9]+ ]] || continue
+    case "$state" in
+        waiting) waiting_panes+=("$pane") ;;
+        working) working=1 ;;
+        *)       other_panes+=("$pane") ;;
+    esac
+done < <(t list-panes -t "$window" -F '#{pane_id} #{pane_current_command} #{@cc_state}' 2>/dev/null)
+
+if [ ${#waiting_panes[@]} -gt 0 ]; then
+    for p in "${waiting_panes[@]}"; do t set-option -pu -t "$p" @cc_state 2>/dev/null; done
+    say "💤 cleared"
+elif [ ${#other_panes[@]} -gt 0 ]; then
+    for p in "${other_panes[@]}"; do t set-option -p -t "$p" @cc_state waiting 2>/dev/null; done
+    say "💤 waiting: prefix+w again or the next message clears it"
+elif [ "$working" = 1 ]; then
+    say "claude is working here (⏳), nothing to wait for outside"
+else
+    say "no claude pane in this window"
+fi
+exit 0

@@ -1,0 +1,75 @@
+#!/bin/bash
+# Names a tmux session after the conversation in its first window, so the choose-tree
+# list (which always prints the session name first) shows what the first tab shows.
+# The name is that conversation's title as claude publishes it ("✳ name": /rename,
+# `cs -n`); a Tracker key in it, or in the session name, wins and gives "KEY title"
+# with the title from the tracker. Cut to 40 characters. With several claude windows
+# only the first one counts; a session whose first window runs no claude, or whose
+# claude has not published a title yet, keeps its name. The job runs every
+# status-interval, so a hand rename of a session with a conversation is undone within
+# seconds: rename the conversation instead (/rename). Prints nothing: it runs as a #()
+# job from status-right.
+#
+# Titles come from `ya tool gena-startrek-cli` (about a second, needs ~/arcadia
+# mounted) and are cached for good in ~/.cache/cc-ticket-titles/<KEY>. A failed
+# lookup is remembered for 10 minutes, otherwise an unmounted Arcadia would cost a
+# second every 5 s; meanwhile the session carries the conversation name.
+
+sock="${TMUX%%,*}"
+[ -n "$sock" ] || sock="/tmp/tm-$(whoami)"
+cache=~/.cache/cc-ticket-titles
+max=40
+mkdir -p "$cache"
+t() { tmux -S "$sock" "$@"; }
+
+title_for() {
+    local key=$1 f="$cache/$1" s to
+    if [ -s "$f" ]; then cat "$f"; return; fi
+    if [ -f "$f.miss" ] && [ -z "$(find "$f.miss" -mmin +10 2>/dev/null)" ]; then return; fi
+    [ -x ~/arcadia/ya ] || { touch "$f.miss"; return; }
+    to=$(command -v timeout || command -v gtimeout || true)
+    s=$(${to:+$to 20} ~/arcadia/ya tool gena-startrek-cli issues get "$key" --json 2>/dev/null </dev/null \
+        | jq -r '.summary // empty' 2>/dev/null)
+    if [ -n "$s" ]; then
+        printf '%s\n' "$s" > "$f"; rm -f "$f.miss"; printf '%s\n' "$s"
+    else
+        touch "$f.miss"
+    fi
+}
+
+# tmux replaces ':' and '.' in a session name with '_'; they are swapped for '·' here
+# first, otherwise the name would never equal the target and the session would be
+# renamed every 5 s. perl -CSD counts characters whatever the job's locale is.
+target_name() {
+    printf '%s' "$1" | perl -CSD -Mutf8 -pe 's/^\s*✳\s*//; s/:\s+/ · /g; s/[:.]/·/g; s/\s+/ /g; s/^ | $//g; s/^(.{'"$((max - 1))"'}).+/$1…/'
+}
+
+# Names already taken, read once: a second session on the same ticket or with the same
+# conversation name keeps its name.
+taken=$(t list-sessions -F '#{session_name}' 2>/dev/null)
+
+# One tmux call for everything: per session its first window's claude pane title
+# (claude's process name is its version).
+t list-panes -a -F '#{session_id}¦#{session_name}¦#{window_index}¦#{pane_current_command}¦#{pane_title}' 2>/dev/null \
+| awk -F'¦' '
+    !($1 in first) { first[$1] = $3; order[++n] = $1; name[$1] = $2 }
+    $3 == first[$1] && !($1 in conv) && $4 ~ /^[0-9]+\.[0-9]+/ { conv[$1] = $5 }
+    END { for (i = 1; i <= n; i++) { id = order[i]; print id "¦" name[id] "¦" conv[id] } }' \
+| while IFS='¦' read -r id name conv; do
+    new=""
+    key=$(printf '%s\n%s\n' "$name" "$conv" | perl -ne 'if (/\b([A-Z][A-Z0-9]+-[0-9]+)\b/) { print "$1\n"; exit }')
+    if [ -n "$key" ]; then
+        title=$(title_for "$key")
+        [ -n "$title" ] && new=$(target_name "$key $title")
+    fi
+    # Only a title claude has published counts: before that the pane still shows what
+    # the shell left there (the host name).
+    if [ -z "$new" ]; then
+        case "$conv" in *✳*) new=$(target_name "$conv") ;; esac
+    fi
+    [ -n "$new" ] || continue
+    [ "$new" = "$name" ] && continue
+    printf '%s\n' "$taken" | grep -qxF -- "$new" && continue
+    # rename-session expands formats, so a '#' in a title has to be doubled.
+    t rename-session -t "$id" "$(printf '%s' "$new" | sed 's/#/##/g')" 2>/dev/null
+done

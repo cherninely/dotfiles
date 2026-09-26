@@ -1,34 +1,37 @@
 #!/bin/bash
-# prefix+m for Claude Code sessions in tmux: toggle the ✅ of the current session.
-# With a ✅ anywhere in the session: drop it from every pane ("read, parked") so
-# the session looks fresh again while the conversation keeps running. Without
-# one: put ✅ back on the session's claude panes (undo a park, or flag a session
-# to come back to). Panes that are ⏳ working or ❓ blocked are never touched:
-# claude is busy or stuck there and the hook owns that state. A pane counts as
-# claude when its process name is the version (2.1.272), as in cc-tmux-summary.
+# prefix+m for Claude Code sessions in tmux: toggle the ✅ of the current window.
+# With a ✅ in the window: drop it ("read, parked") so the tab looks fresh again
+# while the conversation keeps running. Without one: put ✅ back on the window's
+# claude pane (undo a park, or flag a tab to come back to). Only the window the
+# key was pressed in: a session is a folder of tabs and each tab parks on its own.
+# Panes that are ⏳ working or ❓ blocked are never touched: claude is busy or stuck
+# there and the hook owns that state. A 💤 waiting pane (prefix+w, ~/bin/cc-tmux-wait)
+# is not touched either: it is parked on purpose. A pane counts as claude when its
+# process name is the version (2.1.272), as in cc-tmux-summary.
 # Called from .tmux.conf as
-#   run-shell "~/bin/cc-tmux-park '#{session_id}' '#{client_name}'"
+#   run-shell "~/bin/cc-tmux-park '#{window_id}' '#{client_name}'"
 # (run-shell expands formats, so both come from the client that pressed the key).
 # Prints nothing on purpose: run-shell would open any output in view mode.
 
-session="$1"
+window="$1"
 client="$2"
-[ -n "$session" ] || exit 0
+[ -n "$window" ] || exit 0
 
 sock="${TMUX%%,*}"
 [ -n "$sock" ] || sock="/tmp/tm-$(whoami)"
 t() { tmux -S "$sock" "$@"; }
 say() { [ -n "$client" ] && t display-message -c "$client" "$1" 2>/dev/null; }
 
-done_panes=() free_panes=() busy=0
+done_panes=() free_panes=() busy=0 waiting=0
 while read -r pane cmd state; do
     [[ $cmd =~ ^[0-9]+\.[0-9]+ ]] || continue
     case "$state" in
         done)            done_panes+=("$pane") ;;
         working|blocked) busy=1 ;;
+        waiting)         waiting=1 ;;
         *)               free_panes+=("$pane") ;;
     esac
-done < <(t list-panes -s -t "$session" -F '#{pane_id} #{pane_current_command} #{@cc_state}' 2>/dev/null)
+done < <(t list-panes -t "$window" -F '#{pane_id} #{pane_current_command} #{@cc_state}' 2>/dev/null)
 
 if [ ${#done_panes[@]} -gt 0 ]; then
     for p in "${done_panes[@]}"; do t set-option -pu -t "$p" @cc_state 2>/dev/null; done
@@ -36,9 +39,11 @@ if [ ${#done_panes[@]} -gt 0 ]; then
 elif [ ${#free_panes[@]} -gt 0 ]; then
     for p in "${free_panes[@]}"; do t set-option -p -t "$p" @cc_state done 2>/dev/null; done
     say "✅ set"
+elif [ "$waiting" = 1 ]; then
+    say "💤 waiting here, prefix+w clears it"
 elif [ "$busy" = 1 ]; then
     say "claude is busy here (⏳/❓), nothing to toggle"
 else
-    say "no claude pane in this session"
+    say "no claude pane in this window"
 fi
 exit 0

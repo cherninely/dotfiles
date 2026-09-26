@@ -1,0 +1,72 @@
+#!/bin/bash
+# Carry the Claude Code panes through a reboot. tmux-resurrect saves layout and
+# commands but no user options, so after a restore every tab came back without
+# its ❓/✅/💤 (@cc_state, see ~/.claude/hooks/cc-tmux-state.sh).
+#   save     - @resurrect-hook-post-save-all: dump "session:window.pane<TAB>state<TAB>resume",
+#              then cc-sleep --auto
+#   restore  - @resurrect-hook-post-restore-all: set the states back by position
+# The dump is only as fresh as the last continuum save (every 15 min by default).
+# ⏳ working comes back as ✅ done: after a reboot nothing is running any more,
+# the turn was cut and the result has to be looked at.
+# The claude hook does not clear a restored state on SessionStart for a resume.
+#
+# claude is not in @resurrect-processes: twenty sessions starting at once with
+# their MCP servers ran the Mac out of memory. Instead restore types the resume
+# command (@cc_resume, set by `cs`) into the prompt without running it, so a
+# session starts only when its tab gets an Enter. Panes that ran claude before
+# @cc_resume existed are taken from the claude command line in the resurrect file.
+
+dir="${HOME}/.local/share/tmux/resurrect"
+file="${CC_STATE_FILE:-$dir/cc_state.tsv}"
+last="${CC_RESURRECT_LAST:-$dir/last}"
+
+# Wait for the shell to draw its prompt: keys typed before zle starts can be eaten.
+prefill() {
+    local i
+    for i in $(seq 1 50); do
+        case "$(tmux display -p -t "$1" '#{pane_current_command}' 2>/dev/null)" in
+            zsh|-zsh|bash)
+                [ -n "$(tmux capture-pane -p -t "$1" | tr -d '[:space:]')" ] && break ;;
+        esac
+        sleep 0.2
+    done
+    tmux send-keys -t "$1" -l -- "$2"
+}
+
+case "$1" in
+    save)
+        tmux list-panes -a -F "#{session_name}:#{window_index}.#{pane_index}	#{@cc_state}	#{@cc_resume}" 2>/dev/null |
+            awk -F'\t' '$2 != "" || $3 != ""' >"$file.tmp" && mv "$file.tmp" "$file"
+        # Continuum saves every 15 minutes, which is the only timer tmux has: sessions
+        # idle for 4 hours go to sleep here.
+        "$(dirname "$0")/cc-sleep" --auto 14400
+        ;;
+    restore)
+        list="$(
+            {
+                [ -f "$file" ] && awk -F'\t' '{ print "s\t" $1 "\t" $2 "\t" $3 }' "$file"
+                [ -f "$last" ] && awk -F'\t' '$1 == "pane" && $11 ~ /^:claude / {
+                    cmd = substr($11, 2); sub(/^claude /, "cs ", cmd); sub(/--session-id/, "--resume", cmd)
+                    print "l\t" $2 ":" $3 "." $6 "\t\t" cmd }' "$last"
+            } | awk -F'\t' '
+                $1 == "s" { state[$2] = $3; if ($4 != "") cmd[$2] = $4; seen[$2] = 1; order[++n] = $2 }
+                $1 == "l" { if (!($2 in cmd)) cmd[$2] = $4; if (!($2 in seen)) { seen[$2] = 1; order[++n] = $2 } }
+                END { for (i = 1; i <= n; i++) print order[i] "\037" state[order[i]] "\037" cmd[order[i]] }'
+        )"
+        [ -n "$list" ] || exit 0
+
+        # \037, not a tab: read collapses adjacent tabs, and an empty state
+        # shifted the resume command into it.
+        while IFS=$'\037' read -r target state cmd; do
+            id="$(tmux display -p -t "$target" '#{pane_id}' 2>/dev/null)" || continue
+            [ "$state" = working ] && state=done
+            [ -n "$state" ] && tmux set-option -p -t "$id" @cc_state "$state"
+            if [ -n "$cmd" ]; then
+                tmux set-option -p -t "$id" @cc_resume "$cmd"
+                prefill "$id" "$cmd" &
+            fi
+        done <<<"$list"
+        wait
+        ;;
+esac
+exit 0
