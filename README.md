@@ -36,4 +36,5 @@ Install Codeium
 * [Arc](docs/arc.md)
 * [Shell](docs/shell.md)
 * [Tmux](docs/tmux.md)
+* [Скиллы Codex: источники и обновление](docs/agent-skills.md)
 
