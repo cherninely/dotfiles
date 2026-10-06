@@ -1,0 +1,56 @@
+#!/usr/bin/env bash
+set -euo pipefail
+
+if [[ "$(uname -s)" != Darwin ]]; then
+    exit 0
+fi
+
+revision=88b3642ac4733c47daf12e0f2837bc789eda63c6
+runtime_dir="$HOME/.phone-harness"
+cli_path="$HOME/.local/bin/phone-harness"
+
+if ! command -v uv >/dev/null 2>&1; then
+    printf '%s\n' 'phone-harness: install uv first (brew install uv).' >&2
+    exit 1
+fi
+if [[ -e "$cli_path" && ! -L "$cli_path" ]]; then
+    printf 'phone-harness: refusing to replace %s.\n' "$cli_path" >&2
+    exit 1
+fi
+
+if [[ ! -f "$runtime_dir/pyproject.toml" ]]; then
+    if [[ -e "$runtime_dir" ]]; then
+        printf 'phone-harness: unrecognized directory %s.\n' "$runtime_dir" >&2
+        exit 1
+    fi
+    download_dir=$(mktemp -d)
+    trap 'rm -rf "$download_dir"' EXIT
+    curl --fail --location --silent --show-error \
+        "https://codeload.github.com/ShawnPana/phone-harness/tar.gz/$revision" \
+        --output "$download_dir/source.tar.gz"
+    tar -xzf "$download_dir/source.tar.gz" -C "$download_dir"
+    mv "$download_dir/phone-harness-$revision" "$runtime_dir"
+    printf '%s\n' "$revision" > "$runtime_dir/.source-revision"
+elif [[ ! -f "$runtime_dir/.source-revision" ]] || \
+     [[ "$(cat "$runtime_dir/.source-revision")" != "$revision" ]]; then
+    printf 'phone-harness: existing source is not marked as revision %s.\n' "$revision" >&2
+    exit 1
+fi
+
+if [[ ! -f "$runtime_dir/SKILL.md" ]]; then
+    printf 'phone-harness: SKILL.md is missing from %s.\n' "$runtime_dir" >&2
+    exit 1
+fi
+
+if [[ ! -x "$runtime_dir/.venv/bin/phone-harness" ]]; then
+    uv venv --python 3.12 "$runtime_dir/.venv"
+    uv pip install --python "$runtime_dir/.venv/bin/python" -e "$runtime_dir"
+fi
+
+export PHONE_HARNESS_TELEMETRY=0
+"$runtime_dir/.venv/bin/phone-harness" config set telemetry false
+"$runtime_dir/.venv/bin/phone-harness" config set platform ios
+"$runtime_dir/.venv/bin/phone-harness" config set ios.restore_clipboard true
+mkdir -p "$HOME/.local/bin"
+ln -sfn "$runtime_dir/.venv/bin/phone-harness" "$cli_path"
+printf 'phone-harness ready: %s\n' "$cli_path"
